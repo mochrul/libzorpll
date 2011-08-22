@@ -44,7 +44,7 @@ main(void)
   
   a = z_sockaddr_unix_new("sock");
   l = z_stream_listener_new("sessionid", a, 0, 255, test_accepted, NULL);
-  z_listener_start(l);
+  g_return_val_if_fail(z_listener_start(l), 254);
   
   c = z_stream_connector_new("sessionid", NULL, a, 0, test_connected, NULL, NULL);
   z_connector_start(c, &dest);

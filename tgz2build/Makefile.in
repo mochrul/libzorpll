@@ -187,7 +187,7 @@ EXTRA_DIST = \
 	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.files \
 	libzorpll.files.in
 
-MAINTAINERCLEANFILES = control changelog 
+MAINTAINERCLEANFILES = control changelog
 all: all-am
 
 .SUFFIXES:

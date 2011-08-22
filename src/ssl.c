@@ -499,7 +499,7 @@ typedef struct _ZSSLCADirectory
 } ZSSLCADirectory;
 
 static int 
-z_ssl_X509_name_cmp(X509_NAME **a, X509_NAME **b)
+z_ssl_X509_name_cmp(const X509_NAME * const *a, const X509_NAME * const *b)
 {
   return(X509_NAME_cmp(*a, *b));
 }

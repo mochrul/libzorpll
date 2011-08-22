@@ -1,4 +1,4 @@
-AM_CPPFLAGS=-I$(top_srcdir)/src -I../src -Wno-error=format -Wno-error=int-to-pointer-cast -Wno-error=pointer-sign -Wno-error=shadow -Wno-error=sign-compare -Wno-error=strict-prototypes -Wno-error=unused-result -Wno-error=unused-variable
+AM_CPPFLAGS=-I$(top_srcdir)/src -I../src
 
 check_PROGRAMS = zcrypt test_readline test_registry test_conns test_ssl test_streams test_random test_valid_chars test_sockaddr test_blob test_base64 test_codegzip test_codecipher portrandom
 

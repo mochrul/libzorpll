@@ -40,6 +40,8 @@ libzorpll_la_SOURCES = \
 	code.c \
 	code_cipher.c \
 	code_gzip.c \
+	headerset.c \
+	zcp.c \
 	zurlparse.c
 	
 

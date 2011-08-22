@@ -31,9 +31,9 @@
 #ifdef G_OS_WIN32
 #  include <winsock2.h>
 #include <io.h>
-/* NOTE: on windows handles opened with socket() must call closesocket() 
+/* NOTE: on windows handles opened with socket() must call closesocket()
          and must NOT call any other close that triggers undefined behavior... */
-#define close closesocket 
+#define close closesocket
 #else
 #  include <netinet/tcp.h>
 #  include <netinet/in.h>

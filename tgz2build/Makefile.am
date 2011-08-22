@@ -6,4 +6,4 @@ EXTRA_DIST =  \
 libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.files: libzorpll.files.in
 	cp $< $@
 
-MAINTAINERCLEANFILES=control changelog 
+MAINTAINERCLEANFILES=control changelog

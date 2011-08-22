@@ -1,6 +1,6 @@
-Summary: libzorpll3.9-0 library needed by various Zorp components
-Name: libzorpll3.9-0
-Version: 3.9.0.1
+Summary: libzorpll3.9-1 library needed by various Zorp components
+Name: libzorpll3.9-1
+Version: 3.9.1.0
 Release: 1
 License: GPL
 Group: Libraries
@@ -26,9 +26,9 @@ This package contains low level library functions needed by Zorp and
 associated programs.
 
 %package -n libzorpll-dev
-Summary: libzorpll3.9-0 development package
+Summary: libzorpll3.9-1 development package
 Group: Development/Libraries
-Requires: libzorpll3.9-0 = %{version}
+Requires: libzorpll3.9-1 = %{version}
 Provides: libzorpll-devel
 %description -n libzorpll-dev
 Zorp is a new generation firewall. It is essentially a transparent proxy

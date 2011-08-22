@@ -90,9 +90,9 @@ LDFLAGS = -g
 LIBOBJS = 
 LIBS =  -lz -lcrypt -lresolv -lpthread -lcap  -pthread -Wl,--export-dynamic -lgmodule-2.0 -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0   -L/home/coroner/zwa/install/zorp-mainline-4.0/lib -lssl -lcrypto  
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
-LIBZORPLL_LT_AGE = 1
-LIBZORPLL_LT_COMPAT_BRANCH = 3.9-0
-LIBZORPLL_LT_COMPAT_PL = 0
+LIBZORPLL_LT_AGE = 0
+LIBZORPLL_LT_COMPAT_BRANCH = 3.9-1
+LIBZORPLL_LT_COMPAT_PL = 1
 LIBZORPLL_LT_CURRENT = 1
 LIBZORPLL_LT_RELEASE = 3.9
 LIPO = 
@@ -119,16 +119,16 @@ PACKAGE_VERSION =
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 RANLIB = ranlib
-RELEASE_TAG = zorp40gpl
+RELEASE_TAG = zorp40stable
 SED = /bin/sed
 SET_MAKE = 
 SHELL = /bin/bash
 SNAPSHOT_VERSION = 
-SOURCE_REVISION = ssh+git://coroner@git.balabit//var/scm/git/zorp/libzorpll--mainline--4.0#master#bc22a17ea06f1dc6e17121f9014eb367db144428
+SOURCE_REVISION = ssh+git://coroner@git.balabit//var/scm/git/zorp/libzorpll--mainline--4.0#master#6e24c9aa806b8ebce122e661aa3ed95744199291
 STRIP = strip
-VERSION = 3.9.0.1
-ZORPLIBLL_VERSION = 3.9.0.1
-ZORPLIBLL_WIN_VERSION = 3,9,0,1
+VERSION = 3.9.1.0
+ZORPLIBLL_VERSION = 3.9.1.0
+ZORPLIBLL_WIN_VERSION = 3,9,1,0
 ZORPLIB_PIDFILE_DIR = NONE/var/run/zorp
 ZORPLIB_TEMP_DIR = NONE/var/lib/zorp/tmp
 ZORP_LIBS = 
@@ -185,14 +185,14 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
 EXTRA_DIST = changelog control copyright rules \
-	libzorpll3.9-0.config \
-	libzorpll3.9-0.install \
-	libzorpll3.9-0.postinst \
-	libzorpll3.9-0.shlibs \
-	libzorpll3.9-0.templates \
-	libzorpll3.9-0-memtrace.lintian-overrides
+	libzorpll3.9-1.config \
+	libzorpll3.9-1.install \
+	libzorpll3.9-1.postinst \
+	libzorpll3.9-1.shlibs \
+	libzorpll3.9-1.templates \
+	libzorpll3.9-1-memtrace.lintian-overrides
 
-noinst_SCRIPTS = libzorpll3.9-0.postinst
+noinst_SCRIPTS = libzorpll3.9-1.postinst
 MAINTAINERCLEANFILES = control changelog copyright rules libzorpll.shlibs.in
 all: all-am
 
@@ -380,22 +380,22 @@ uninstall-am:
 	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am
 
 
-libzorpll3.9-0.config: libzorpll.config.in
+libzorpll3.9-1.config: libzorpll.config.in
 	cp $< $@
 
-libzorpll3.9-0.install: libzorpll.install.in
+libzorpll3.9-1.install: libzorpll.install.in
 	cp $< $@
 
-libzorpll3.9-0.postinst: libzorpll.postinst.in
+libzorpll3.9-1.postinst: libzorpll.postinst.in
 	$(top_builddir)/config.status --file $@:$<
 
-libzorpll3.9-0.shlibs: libzorpll.shlibs.in
+libzorpll3.9-1.shlibs: libzorpll.shlibs.in
 	cp $< $@
 
-libzorpll3.9-0.templates: libzorpll.templates.in
+libzorpll3.9-1.templates: libzorpll.templates.in
 	cp $< $@
 
-libzorpll3.9-0-memtrace.lintian-overrides: libzorpll-memtrace.lintian-overrides.in
+libzorpll3.9-1-memtrace.lintian-overrides: libzorpll-memtrace.lintian-overrides.in
 	cp $< $@
 
 libzorpll.shlibs.in: libzorpll.shlibs.in.in

@@ -46,22 +46,22 @@ int main(void)
   else if (pid != 0) 
     {
       close(pair[1]);
-      write(pair[0], "1\n2\n3\n", 6);
-      write(pair[0], "0123", 4);
-      write(pair[0], "4567\n", 5);
-      write(pair[0], "0123456789", 10);
-      write(pair[0], "abc\nAabc\nabcdef\n", 16); /* Because of truncate A will be eliminated */
-      write(pair[0], "0123456789", 10);
-      write(pair[0], "0123456789", 10);
-      write(pair[0], "012345678\nAabcdef\n", 18); /* Because of truncate A will be eliminated */
-      write(pair[0], "012345678\nAabcdef", 17);
+      g_return_val_if_fail(write(pair[0], "1\n2\n3\n", 6) == 6, 253);
+      g_return_val_if_fail(write(pair[0], "0123", 4) == 4, 253);
+      g_return_val_if_fail(write(pair[0], "4567\n", 5) == 5, 253);
+      g_return_val_if_fail(write(pair[0], "0123456789", 10) == 10, 253);
+      g_return_val_if_fail(write(pair[0], "abc\nAabc\nabcdef\n", 16) == 16, 253); /* Because of truncate A will be eliminated */
+      g_return_val_if_fail(write(pair[0], "0123456789", 10) == 10, 253);
+      g_return_val_if_fail(write(pair[0], "0123456789", 10) == 10, 253);
+      g_return_val_if_fail(write(pair[0], "012345678\nAabcdef\n", 18) == 18, 253); /* Because of truncate A will be eliminated */
+      g_return_val_if_fail(write(pair[0], "012345678\nAabcdef", 17) == 17, 253);
       close(pair[0]);
       waitpid(pid, &status, 0);
     }
   else
     {
-      int rc;
-      int i;
+      gint rc;
+      guint i;
       
       printf("%d\n", getpid());
       sleep(1);  
@@ -79,17 +79,17 @@ int main(void)
       rc = z_stream_line_get(input, &line, &length, NULL);
       while (rc == G_IO_STATUS_NORMAL)
         {
-          if (i >= (int)(sizeof(expected_outputs) / sizeof(gchar *)) ||
+          if (i >= (sizeof(expected_outputs) / sizeof(gchar *)) ||
               line[0] != 'A' ||
-              (int)strlen(expected_outputs[i]) != length - 1 ||
+              strlen(expected_outputs[i]) != length - 1 ||
               memcmp(expected_outputs[i], line + 1, length - 1) != 0)
             {
-              printf("Error checking line: [%.*s] (length: %d), should be: %s\n", length-1, line+1, length-1,expected_outputs[i]);
+              printf("Error checking line: [%.*s] (length: %"G_GSIZE_FORMAT"), should be: %s\n", (int) length - 1, line + 1, length - 1, expected_outputs[i]);
               _exit(1);
             }
           else
             {
-              printf("line ok: %.*s\n", length, line);
+              printf("line ok: %.*s\n", (int) length, line);
             }
           if (!z_stream_unget(input, "A", 1, NULL))
             {
@@ -99,9 +99,9 @@ int main(void)
           rc = z_stream_line_get(input, &line, &length, NULL);
           i++;
         }
-      if (i < (int)(sizeof(expected_outputs) / sizeof(gchar *)))
+      if (i < (sizeof(expected_outputs) / sizeof(gchar *)))
         {
-          printf("Missing output %d of %d\n", i, (int)(sizeof(expected_outputs) / sizeof(gchar *)));
+          printf("Missing output %u of %"G_GSIZE_FORMAT"\n", i, (sizeof(expected_outputs) / sizeof(gchar *)));
           _exit(1);
         }
       close(pair[1]);

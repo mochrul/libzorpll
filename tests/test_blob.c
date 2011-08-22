@@ -232,7 +232,7 @@ main(void)
 {
   ZBlobSystem *blobsys;
   ZBlob *blob;
-  gchar *blobptr;
+  /*gchar *blobptr;*/
   gsize blobptr_size;
   const gchar *blobfile;
 
@@ -256,10 +256,17 @@ main(void)
 
   /* Create blob in the default blob system */
   blob = z_blob_new(NULL, 500);
-  blobptr_size = 10;
-  /*blobptr = z_blob_get_ptr(blob, 0, &blobptr_size, -1);*/
-  blobfile = z_blob_get_file(blob, NULL, NULL, 0644, -1);
-  /* Leave it allocated and locked, let's see what happens when the blobsys is destroyed */
+  if (blob == NULL)
+    {
+      send_log(NULL, CORE_DEBUG, 3, "Cannot alocate blob in the default blob system;");
+    }
+  else
+    {
+      blobptr_size = 10;
+      /*blobptr = z_blob_get_ptr(blob, 0, &blobptr_size, -1);*/
+      blobfile = z_blob_get_file(blob, NULL, NULL, 0644, -1);
+      /* Leave it allocated and locked, let's see what happens when the blobsys is destroyed */
+    }
   
   /* Deinitialise default blob system */
   z_blob_system_default_destroy();

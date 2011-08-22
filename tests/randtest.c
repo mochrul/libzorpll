@@ -35,7 +35,7 @@ static double rt_log2(double x)
 static int mp, sccfirst;
 static unsigned int monte[MONTEN];
 static long inmont, mcount;
-static double cexp, incirc, montex, montey, montepi,
+static double c_exp, incirc, montex, montey, montepi,
 	      scc, sccun, sccu0, scclast, scct1, scct2, scct3,
 	      ent, chisq, datasum;
 
@@ -151,12 +151,12 @@ void rt_end(double *r_ent, double *r_chisq, double *r_mean,
        we sum of all the data which will be used to compute the
        mean. */
        
-    cexp = totalc / (binary ? 2.0 : 256.0);  /* Expected count per bin */
+    c_exp = totalc / (binary ? 2.0 : 256.0);  /* Expected count per bin */
     for (i = 0; i < (binary ? 2 : 256); i++) {
-       double a = ccount[i] - cexp;;
+       double a = ccount[i] - c_exp;;
        
        prob[i] = ((double) ccount[i]) / totalc;       
-       chisq += (a * a) / cexp;
+       chisq += (a * a) / c_exp;
        datasum += ((double) i) * ccount[i];
     }
 

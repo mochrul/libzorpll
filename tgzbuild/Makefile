@@ -88,9 +88,9 @@ LDFLAGS = -g
 LIBOBJS = 
 LIBS =  -lz -lcrypt -lresolv -lpthread -lcap  -pthread -Wl,--export-dynamic -lgmodule-2.0 -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0   -L/home/coroner/zwa/install/zorp-mainline-4.0/lib -lssl -lcrypto  
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
-LIBZORPLL_LT_AGE = 1
-LIBZORPLL_LT_COMPAT_BRANCH = 3.9-0
-LIBZORPLL_LT_COMPAT_PL = 0
+LIBZORPLL_LT_AGE = 0
+LIBZORPLL_LT_COMPAT_BRANCH = 3.9-1
+LIBZORPLL_LT_COMPAT_PL = 1
 LIBZORPLL_LT_CURRENT = 1
 LIBZORPLL_LT_RELEASE = 3.9
 LIPO = 
@@ -117,16 +117,16 @@ PACKAGE_VERSION =
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 RANLIB = ranlib
-RELEASE_TAG = zorp40gpl
+RELEASE_TAG = zorp40stable
 SED = /bin/sed
 SET_MAKE = 
 SHELL = /bin/bash
 SNAPSHOT_VERSION = 
-SOURCE_REVISION = ssh+git://coroner@git.balabit//var/scm/git/zorp/libzorpll--mainline--4.0#master#bc22a17ea06f1dc6e17121f9014eb367db144428
+SOURCE_REVISION = ssh+git://coroner@git.balabit//var/scm/git/zorp/libzorpll--mainline--4.0#master#6e24c9aa806b8ebce122e661aa3ed95744199291
 STRIP = strip
-VERSION = 3.9.0.1
-ZORPLIBLL_VERSION = 3.9.0.1
-ZORPLIBLL_WIN_VERSION = 3,9,0,1
+VERSION = 3.9.1.0
+ZORPLIBLL_VERSION = 3.9.1.0
+ZORPLIBLL_WIN_VERSION = 3,9,1,0
 ZORPLIB_PIDFILE_DIR = NONE/var/run/zorp
 ZORPLIB_TEMP_DIR = NONE/var/lib/zorp/tmp
 ZORP_LIBS = 
@@ -184,7 +184,7 @@ top_builddir = ..
 top_srcdir = ..
 EXTRA_DIST = \
 	libzorpll-dev.files \
-	libzorpll3.9-0.files \
+	libzorpll3.9-1.files \
 	libzorpll.files.in
 
 MAINTAINERCLEANFILES = control changelog 
@@ -374,7 +374,7 @@ uninstall-am:
 	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am
 
 
-libzorpll3.9-0.files: libzorpll.files.in
+libzorpll3.9-1.files: libzorpll.files.in
 	cp $< $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

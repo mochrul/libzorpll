@@ -389,6 +389,15 @@ z_stream_ssl_ctrl_method(ZStream *s, guint function, gpointer value, guint vlen)
         }
       break;
 
+    case ZST_CTRL_GET_BUFFERED_BYTES:
+      /* we stop propagation here: this ctrl message queries the bytes
+         buffered *above* the SSL layer. */
+      if (vlen == sizeof(gsize))
+        {
+          ret = TRUE;
+        }
+      break;
+
     default:
       ret = z_stream_ctrl_method(s, ZST_CTRL_MSG_FORWARD | function, value, vlen);
       break;

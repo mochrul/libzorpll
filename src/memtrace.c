@@ -168,13 +168,15 @@ z_mem_trace_init_internal(void)
   
   if (!mem_trace_initialized)
     {
+#if defined(__AMD64__) || defined(AMD64) || defined (__x86_64__)
       gpointer temp_buf[10];
+#endif /* __amd64__ */
 
       mem_trace_initialized = TRUE;
 
-  #if defined(__AMD64__) || defined(AMD64) || defined (__x86_64__)
+#if defined(__AMD64__) || defined(AMD64) || defined (__x86_64__)
       backtrace(temp_buf, 5);
-  #endif /* __amd64__ */
+#endif /* __amd64__ */
       
       z_mem_trace_init_pointers();
       

@@ -86,6 +86,7 @@ am_libzorpll_la_OBJECTS = libzorpll_la-cap.lo libzorpll_la-connect.lo \
 	libzorpll_la-streamblob.lo libzorpll_la-streamtee.lo \
 	libzorpll_la-code_base64.lo libzorpll_la-code.lo \
 	libzorpll_la-code_cipher.lo libzorpll_la-code_gzip.lo \
+	libzorpll_la-headerset.lo libzorpll_la-zcp.lo \
 	libzorpll_la-zurlparse.lo
 libzorpll_la_OBJECTS = $(am_libzorpll_la_OBJECTS)
 libzorpll_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -189,9 +190,9 @@ LDFLAGS = -g
 LIBOBJS = 
 LIBS =  -lz -lcrypt -lresolv -lpthread -lcap  -pthread -Wl,--export-dynamic -lgmodule-2.0 -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0   -L/home/coroner/zwa/install/zorp-mainline-4.0/lib -lssl -lcrypto  
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
-LIBZORPLL_LT_AGE = 1
-LIBZORPLL_LT_COMPAT_BRANCH = 3.9-0
-LIBZORPLL_LT_COMPAT_PL = 0
+LIBZORPLL_LT_AGE = 0
+LIBZORPLL_LT_COMPAT_BRANCH = 3.9-1
+LIBZORPLL_LT_COMPAT_PL = 1
 LIBZORPLL_LT_CURRENT = 1
 LIBZORPLL_LT_RELEASE = 3.9
 LIPO = 
@@ -218,16 +219,16 @@ PACKAGE_VERSION =
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 RANLIB = ranlib
-RELEASE_TAG = zorp40gpl
+RELEASE_TAG = zorp40stable
 SED = /bin/sed
 SET_MAKE = 
 SHELL = /bin/bash
 SNAPSHOT_VERSION = 
-SOURCE_REVISION = ssh+git://coroner@git.balabit//var/scm/git/zorp/libzorpll--mainline--4.0#master#bc22a17ea06f1dc6e17121f9014eb367db144428
+SOURCE_REVISION = ssh+git://coroner@git.balabit//var/scm/git/zorp/libzorpll--mainline--4.0#master#6e24c9aa806b8ebce122e661aa3ed95744199291
 STRIP = strip
-VERSION = 3.9.0.1
-ZORPLIBLL_VERSION = 3.9.0.1
-ZORPLIBLL_WIN_VERSION = 3,9,0,1
+VERSION = 3.9.1.0
+ZORPLIBLL_VERSION = 3.9.1.0
+ZORPLIBLL_WIN_VERSION = 3,9,1,0
 ZORPLIB_PIDFILE_DIR = NONE/var/run/zorp
 ZORPLIB_TEMP_DIR = NONE/var/lib/zorp/tmp
 ZORP_LIBS = 
@@ -322,6 +323,8 @@ libzorpll_la_SOURCES = \
 	code.c \
 	code_cipher.c \
 	code_gzip.c \
+	headerset.c \
+	zcp.c \
 	zurlparse.c
 
 libzorpll_la_LDFLAGS = \
@@ -415,6 +418,7 @@ include ./$(DEPDIR)/libzorpll_la-code_gzip.Plo
 include ./$(DEPDIR)/libzorpll_la-connect.Plo
 include ./$(DEPDIR)/libzorpll_la-crypt.Plo
 include ./$(DEPDIR)/libzorpll_la-error.Plo
+include ./$(DEPDIR)/libzorpll_la-headerset.Plo
 include ./$(DEPDIR)/libzorpll_la-io.Plo
 include ./$(DEPDIR)/libzorpll_la-listen.Plo
 include ./$(DEPDIR)/libzorpll_la-log.Plo
@@ -440,6 +444,7 @@ include ./$(DEPDIR)/libzorpll_la-streamline.Plo
 include ./$(DEPDIR)/libzorpll_la-streamssl.Plo
 include ./$(DEPDIR)/libzorpll_la-streamtee.Plo
 include ./$(DEPDIR)/libzorpll_la-thread.Plo
+include ./$(DEPDIR)/libzorpll_la-zcp.Plo
 include ./$(DEPDIR)/libzorpll_la-zobject.Plo
 include ./$(DEPDIR)/libzorpll_la-zurlparse.Plo
 
@@ -708,6 +713,20 @@ libzorpll_la-code_gzip.lo: code_gzip.c
 #	source='code_gzip.c' object='libzorpll_la-code_gzip.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libzorpll_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libzorpll_la-code_gzip.lo `test -f 'code_gzip.c' || echo '$(srcdir)/'`code_gzip.c
+
+libzorpll_la-headerset.lo: headerset.c
+	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libzorpll_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libzorpll_la-headerset.lo -MD -MP -MF $(DEPDIR)/libzorpll_la-headerset.Tpo -c -o libzorpll_la-headerset.lo `test -f 'headerset.c' || echo '$(srcdir)/'`headerset.c
+	$(am__mv) $(DEPDIR)/libzorpll_la-headerset.Tpo $(DEPDIR)/libzorpll_la-headerset.Plo
+#	source='headerset.c' object='libzorpll_la-headerset.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libzorpll_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libzorpll_la-headerset.lo `test -f 'headerset.c' || echo '$(srcdir)/'`headerset.c
+
+libzorpll_la-zcp.lo: zcp.c
+	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libzorpll_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libzorpll_la-zcp.lo -MD -MP -MF $(DEPDIR)/libzorpll_la-zcp.Tpo -c -o libzorpll_la-zcp.lo `test -f 'zcp.c' || echo '$(srcdir)/'`zcp.c
+	$(am__mv) $(DEPDIR)/libzorpll_la-zcp.Tpo $(DEPDIR)/libzorpll_la-zcp.Plo
+#	source='zcp.c' object='libzorpll_la-zcp.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libzorpll_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libzorpll_la-zcp.lo `test -f 'zcp.c' || echo '$(srcdir)/'`zcp.c
 
 libzorpll_la-zurlparse.lo: zurlparse.c
 	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libzorpll_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libzorpll_la-zurlparse.lo -MD -MP -MF $(DEPDIR)/libzorpll_la-zurlparse.Tpo -c -o libzorpll_la-zurlparse.lo `test -f 'zurlparse.c' || echo '$(srcdir)/'`zurlparse.c

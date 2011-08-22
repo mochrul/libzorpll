@@ -203,13 +203,13 @@
 #define ZORPLIBLL_PACKAGE "libzorpll"
 
 /* Zorp low level library, source revision */
-#define ZORPLIBLL_REVISION "ssh+git://coroner@git.balabit//var/scm/git/zorp/libzorpll--mainline--4.0#master#bc22a17ea06f1dc6e17121f9014eb367db144428"
+#define ZORPLIBLL_REVISION "ssh+git://coroner@git.balabit//var/scm/git/zorp/libzorpll--mainline--4.0#master#6e24c9aa806b8ebce122e661aa3ed95744199291"
 
 /* Zorp low level library version */
-#define ZORPLIBLL_VERSION "3.9.0.1"
+#define ZORPLIBLL_VERSION "3.9.1.0"
 
 /* Binary compatibility version */
-#define ZORPLIB_COMPAT_BRANCH "3.9-0"
+#define ZORPLIB_COMPAT_BRANCH "3.9-1"
 
 /* enable caps */
 #define ZORPLIB_ENABLE_CAPS 1

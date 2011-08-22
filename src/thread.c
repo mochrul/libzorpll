@@ -29,7 +29,7 @@ static gboolean use_threadpools = FALSE;
 gint max_threads = 100;
 static gint num_threads = 0;
 static gint idle_threads = -1;
-static gint max_stack_size = 256 * 1024;
+static gint max_stack_size = 512 * 1024;
 static GPrivate *current_thread;
 
 /**
@@ -332,10 +332,10 @@ z_thread_stack_size_arg(const gchar *option_name G_GNUC_UNUSED, const gchar *val
       return FALSE;
     }
 
-  if (max_stack_size > 256 * 1024)
+  if (max_stack_size > 8192 * 1024)
     {
-      fprintf(stderr, "Stack size limit exceeded, set default value 256kiB;\n");
-      max_stack_size = 256 * 1024;
+      fprintf(stderr, "Stack size limit exceeded, set default value 8MB;\n");
+      max_stack_size = 8192 * 1024;
     }
   return TRUE;
 }

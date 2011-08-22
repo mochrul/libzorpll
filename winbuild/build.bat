@@ -9,10 +9,10 @@ cd %COMPILE_ENV%\out
 
 rem no runtime package
 rem if not %ERRORLEVEL%==0 goto exitt
-rem zip -q -m -r ..\libzorpll\libzorpll3.9-0_3.9.0.1_i386.zip bin\*.*
+rem zip -q -m -r ..\libzorpll\libzorpll3.9-1_3.9.1.0_i386.zip bin\*.*
 
 if not %ERRORLEVEL%==0 goto exitt
-zip -q -m -r ..\libzorpll\libzorpll-dev_3.9.0.1_i386.zip lib\*.* include\*.* debug\*.*
+zip -q -m -r ..\libzorpll\libzorpll-dev_3.9.1.0_i386.zip lib\*.* include\*.* debug\*.*
 if not %ERRORLEVEL%==0 goto exitt
 
 cd %@dirname%
@@ -28,7 +28,7 @@ rem
 cd %COMPILE_ENV%\out
 rem if not %ERRORLEVEL%==0 goto exitt
 rem 
-rem zip -q -m -r ..\libzorpll\libzorpll-dbg-dev_3.9.0.1_i386.zip bin\*.* debug\*.*
+rem zip -q -m -r ..\libzorpll\libzorpll-dbg-dev_3.9.1.0_i386.zip bin\*.* debug\*.*
 rem if not %ERRORLEVEL%==0 goto exitt
 dir ..\libzorpll
 
