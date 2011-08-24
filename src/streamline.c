@@ -878,6 +878,19 @@ z_stream_line_ctrl_method(ZStream *s, guint function, gpointer value, guint vlen
       ret = z_stream_ctrl_method(s, function, value, vlen);
       break;
 
+    case ZST_CTRL_GET_BUFFERED_BYTES:
+      if (vlen == sizeof(gsize))
+        {
+          gsize *size = (gsize *) value;
+
+          *size += self->end - self->pos;
+
+          ret = TRUE;
+          if (s->child)
+            ret = z_stream_ctrl(s->child, ZST_CTRL_MSG_FORWARD | function, value, vlen);
+        }
+      break;
+
     default:
       ret = z_stream_ctrl_method(s, ZST_CTRL_MSG_FORWARD | function, value, vlen);
       break;

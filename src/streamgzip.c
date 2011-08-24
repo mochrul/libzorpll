@@ -658,6 +658,20 @@ z_stream_gzip_ctrl_method(ZStream *stream, guint function, gpointer value, guint
     case ZST_CTRL_SET_CALLBACK_PRI:
       ret = z_stream_ctrl_method(stream, function, value, vlen);
       break;
+
+    case ZST_CTRL_GET_BUFFERED_BYTES:
+      if (vlen == sizeof(gsize))
+        {
+          gsize *size = (gsize *) value;
+          ZStreamGzip *self = Z_CAST(stream, ZStreamGzip);
+
+          *size += self->decode.avail_in;
+
+          ret = TRUE;
+          if (stream->child)
+            ret = z_stream_ctrl(stream->child, ZST_CTRL_MSG_FORWARD | function, value, vlen);
+        }
+      break;
       
     default:
       ret = z_stream_ctrl_method(stream, ZST_CTRL_MSG_FORWARD | function, value, vlen);

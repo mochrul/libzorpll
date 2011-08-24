@@ -12,7 +12,7 @@ int main(void)
   for (i = 0; i < 10; i++)
     {
       snprintf(buf, sizeof(buf), "key%d", i);
-      z_registry_add(buf, ZR_PROXY, (gpointer) i);
+      z_registry_add(buf, ZR_PROXY, GINT_TO_POINTER(i));
     }
   for (i = 0; i < 10; i++) 
     {

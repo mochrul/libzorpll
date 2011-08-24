@@ -47,31 +47,44 @@ extern "C" {
 #define ZST_CTRL_MSG(x)       ((x)&0xFFFF)
 #define ZST_CTRL_MSG_FLAGS(x) ((x) & 0xFF000000)
 
-#define ZST_CTRL_MSG_FORWARD  0x80000000
+/* stream flags */
+enum
+{
+  ZST_CTRL_MSG_FORWARD          = 0x80000000,
+};
 
-#define ZST_CTRL_GET_FD               (0x01)
-#define ZST_CTRL_SET_COND_READ        (0x02)
-#define ZST_CTRL_SET_COND_WRITE       (0x03)
-#define ZST_CTRL_SET_COND_PRI         (0x04)
-#define ZST_CTRL_SET_CALLBACK_READ    (0x06)
-#define ZST_CTRL_SET_CALLBACK_WRITE   (0x07)
-#define ZST_CTRL_SET_CALLBACK_PRI     (0x08)
-#define ZST_CTRL_SET_TIMEOUT_BLOCK    (0x0A)
-#define ZST_CTRL_GET_COND_READ        (0x0C)
-#define ZST_CTRL_GET_COND_WRITE       (0x0D)
-#define ZST_CTRL_GET_COND_PRI         (0x0E)
-#define ZST_CTRL_GET_CALLBACK_READ    (0x10)
-#define ZST_CTRL_GET_CALLBACK_WRITE   (0x11)
-#define ZST_CTRL_GET_CALLBACK_PRI     (0x12)
-#define ZST_CTRL_SET_NONBLOCK         (0x14)
-#define ZST_CTRL_GET_NONBLOCK         (0x15)
-#define ZST_CTRL_GET_BROKEN           (0x16)
-#define ZST_CTRL_SET_CLOSEONEXEC      (0x17)
-#define ZST_CTRL_GET_KEEPALIVE        (0x18)
-#define ZST_CTRL_SET_KEEPALIVE        (0x19)
+/* message */
+enum
+{
+  ZST_CTRL_GET_FD               = 0x01,
+  ZST_CTRL_SET_COND_READ        = 0x02,
+  ZST_CTRL_SET_COND_WRITE       = 0x03,
+  ZST_CTRL_SET_COND_PRI         = 0x04,
+  ZST_CTRL_SET_CALLBACK_READ    = 0x06,
+  ZST_CTRL_SET_CALLBACK_WRITE   = 0x07,
+  ZST_CTRL_SET_CALLBACK_PRI     = 0x08,
+  ZST_CTRL_SET_TIMEOUT_BLOCK    = 0x0A,
+  ZST_CTRL_GET_COND_READ        = 0x0C,
+  ZST_CTRL_GET_COND_WRITE       = 0x0D,
+  ZST_CTRL_GET_COND_PRI         = 0x0E,
+  ZST_CTRL_GET_CALLBACK_READ    = 0x10,
+  ZST_CTRL_GET_CALLBACK_WRITE   = 0x11,
+  ZST_CTRL_GET_CALLBACK_PRI     = 0x12,
+  ZST_CTRL_SET_NONBLOCK         = 0x14,
+  ZST_CTRL_GET_NONBLOCK         = 0x15,
+  ZST_CTRL_GET_BROKEN           = 0x16,
+  ZST_CTRL_SET_CLOSEONEXEC      = 0x17,
+  ZST_CTRL_GET_KEEPALIVE        = 0x18,
+  ZST_CTRL_SET_KEEPALIVE        = 0x19,
+  ZST_CTRL_GET_BUFFERED_BYTES   = 0x20,
+};
 
-#define ZST_LINE_OFS	('L' << 8)
-#define ZST_CTRL_SSL_OFS              ('S' << 8)
+/* stream type */
+enum
+{
+  ZST_CTRL_LINE_OFS             = ('L' << 8),
+  ZST_CTRL_SSL_OFS              = ('S' << 8),
+};
 
 typedef struct _ZStream ZStream;
 typedef struct _ZStreamContext ZStreamContext;
@@ -177,14 +190,15 @@ struct _ZStream
 {
   ZObject super;
   const gchar *name;  /* const */
-  gint timeout;
 
   /** current umbrella state in the current stack */
   gint umbrella_state;
   /** umbrella flags requested by the stream */
   gint umbrella_flags;
   GList *ungot_bufs;
-  
+
+  gint timeout;
+
   /* stream structure pointers */
   ZRefCount struct_ref;         /**< stream structure pointers */
   ZStream *parent;              /**< stream structure pointers */
@@ -195,20 +209,20 @@ struct _ZStream
   time_t time_open;
   guint64 bytes_recvd, bytes_sent;      /**< bytes received/sent counters for accounting info logging */
   
-  gboolean want_read;       /**< do we want read callbacks? */
   gpointer user_data_read;  /**< opaque pointer, can be used by read callback */
   GDestroyNotify user_data_read_notify;
   ZStreamCallback read_cb;  /**< pointer to read callback */
+  gboolean want_read;       /**< do we want read callbacks? */
 
   gboolean want_pri;        /**< do we want urgent data callbacks? */
   gpointer user_data_pri;   /**< opaque pointer, can be used by pri callback */
   GDestroyNotify user_data_pri_notify;
   ZStreamCallback pri_cb;   /**< pointer to urgent data callback */
 
-  gboolean want_write;      /**< do we want write callbacks */
   gpointer user_data_write; /**< opaque pointer, can be used by write callback */
   GDestroyNotify user_data_write_notify;
   ZStreamCallback write_cb; /**< pointer to write callback */
+  gboolean want_write;      /**< do we want write callbacks */
 };
 
 
@@ -218,6 +232,7 @@ gboolean z_stream_restore_context(ZStream *self, ZStreamContext *context);
 GIOStatus z_stream_read(ZStream *self, void *buf, gsize count, gsize *bytes_read, GError **err);
 GIOStatus z_stream_write(ZStream *self, const void *buf, gsize count, gsize *bytes_written, GError **err);
 gboolean z_stream_set_cond(ZStream *s, guint type, gboolean value);
+gboolean z_stream_get_cond(ZStream *s, guint type, gboolean *value);
 gboolean z_stream_set_callback(ZStream *s, guint type, ZStreamCallback callback, gpointer user_data, GDestroyNotify notify);
 ZStream *z_stream_push(ZStream *self, ZStream *new_top);
 ZStream *z_stream_pop(ZStream *self);
@@ -576,6 +591,18 @@ z_stream_get_keepalive(ZStream *self)
 }
 
 void z_stream_set_keepalive(ZStream *self, gint keepalive);
+
+
+static inline gsize
+z_stream_get_buffered_bytes(ZStream *self)
+{
+  gsize bytes = 0;
+
+  if (z_stream_ctrl(self, ZST_CTRL_GET_BUFFERED_BYTES, &bytes, sizeof(bytes)))
+    return bytes;
+  else
+    return G_MAXSIZE;
+}
 
 ZStream *
 z_stream_search_stack(ZStream *top, gint direction, ZClass *class_);

@@ -4,13 +4,13 @@
 #include <stdio.h>
 #include <string.h>
 
-int main()
+int main(void)
 {
   gchar buf[4096], buf2[4096];
   gchar *compressed = NULL;
   gsize length = 0;
   ZCode *gz;
-  gint i, j;
+  guint i, j;
 
   memset(buf, 'A', sizeof(buf));
   memset(buf2, 'B', sizeof(buf2));
@@ -41,7 +41,7 @@ int main()
     }
   if (z_code_get_result_length(gz) != 4096 * 2 * sizeof(buf))
     {
-      fprintf(stderr, "Decompression resulted different length, than compressed length='%d', result='%d' ???\n", length, z_code_get_result_length(gz));
+      fprintf(stderr, "Decompression resulted different length, than compressed length='%"G_GSIZE_FORMAT"', result='%"G_GSIZE_FORMAT"' ???\n", length, z_code_get_result_length(gz));
       return 1;
     }
   for (i = 0; i < 4096; i++)

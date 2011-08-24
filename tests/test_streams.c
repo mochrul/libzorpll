@@ -141,7 +141,7 @@ test_streamline(void)
     }
   stream = z_stream_line_new(z_stream_fd_new(fds[0], "fdstream"), 4096, ZRL_RETURN_EOL);
   
-  write(fds[1], "abcdef\r\n", 8);
+  g_return_val_if_fail(write(fds[1], "abcdef\r\n", 8) == 8, 1);
   
   if (z_stream_line_get(stream, &line, &length, NULL) != G_IO_STATUS_NORMAL)
     {
@@ -150,7 +150,7 @@ test_streamline(void)
     }
   if (strncmp(line, "abcdef\r\n", 8) != 0)
     {
-      fprintf(stderr, "comparison mismatch, line='%.*s'", length, line);
+      fprintf(stderr, "comparison mismatch, line='%*.s'", (int)length, line);
       goto exit;
     }
   res = 0;
@@ -190,7 +190,7 @@ test_streamgzip_with_headers(void)
     }
   fdstream = z_stream_fd_new(fds[0], "fdstream");
   
-  write(fds[1], compressed_file, sizeof(compressed_file));
+  g_return_val_if_fail(write(fds[1], compressed_file, sizeof(compressed_file)) == sizeof(compressed_file), 1);
 
   stream = z_stream_gzip_new(fdstream, Z_SGZ_GZIP_HEADER, 6, 32768);
 
@@ -226,7 +226,7 @@ test_streamgzip_with_headers(void)
     }
   if (length != 6 || strncmp(contents, "abcdef", 6) != 0)
     {
-      fprintf(stderr, "comparison mismatch, content='%.*s'", length, contents);
+      fprintf(stderr, "comparison mismatch, content='%.*s'", (int)length, contents);
       goto exit;
     }
   res = 0;
@@ -256,7 +256,7 @@ test_streamgzip_no_headers(void)
     }
   fdstream = z_stream_fd_new(fds[0], "fdstream");
   
-  write(fds[1], compressed_file, sizeof(compressed_file));
+  g_return_val_if_fail(write(fds[1], compressed_file, sizeof(compressed_file)) == sizeof(compressed_file), 1);
 
   stream = z_stream_gzip_new(fdstream, 0, 6, 32768);
 
@@ -273,7 +273,7 @@ test_streamgzip_no_headers(void)
     }
   if (length != 6 || strncmp(contents, "abcdef", 6) != 0)
     {
-      fprintf(stderr, "comparison mismatch, content='%.*s'", length, contents);
+      fprintf(stderr, "comparison mismatch, content='%.*s'", (int)length, contents);
       goto exit;
     }
   res = 0;

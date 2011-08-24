@@ -64,7 +64,7 @@ int
 check_for_error(ZCode *c, const char *src, int srclen, int shall_be_error)
 {
   int i;
-  int has_error, partly_processed;
+  int has_error;
   char dummy[1024];
   
   printf("Testing '%s' for errors: ", src);
@@ -92,8 +92,9 @@ int
 main(void)
 {
   int i, len;
-  unsigned char *src;
+  char *src;
   unsigned char q;
+  unsigned char *usrc;
   ZCode *enc, *dec, *dec_noerr;
   
   enc = z_code_base64_encode_new(0, 0);
@@ -189,10 +190,10 @@ main(void)
 
   /***********************************************************************/
   /* invalid input - error tolerant */
-  src = "aW5neW9tYm\xffluZ3lvbQ==";
-  printf("\nTesting the decoder with invalid input, transforming '%s'\n", src);
-  len = strlen(src);
-  i = z_code_transform(dec_noerr, src, len);
+  usrc = (unsigned char *) "aW5neW9tYm\xffluZ3lvbQ==";
+  printf("\nTesting the decoder with invalid input, transforming '%s'\n", usrc);
+  len = strlen((char *) usrc);
+  i = z_code_transform(dec_noerr, usrc, len);
   printf("Decoded '%d' bytes, closing decoder\n", i);
   z_code_finish(dec_noerr);
   get_and_dump(dec_noerr, 1024, "ingyombingyom", 13);
@@ -221,18 +222,18 @@ main(void)
     return error("\nerror in finishing");
 
   len = z_code_get_result_length(enc);
-  src = (char*)malloc(len);
-  i = z_code_get_result(enc, src, len);
+  usrc = (unsigned char*)malloc(len);
+  i = z_code_get_result(enc, usrc, len);
   if (i != len)
     return error("Error getting the result");
 
   printf("Decoding the result (%d, %d)\n", i, len);
-  if (!z_code_transform(dec, src, len))
+  if (!z_code_transform(dec, usrc, len))
     return error("Error decoding the result");
   len = z_code_get_result_length(dec);
   if (len != BLOCKSIZE)
       return error("Result length doesn't match");
-  i = z_code_get_result(dec, src, len);
+  i = z_code_get_result(dec, usrc, len);
   if (i != len)
       return error("Can't decode the result");
   printf("Checking the pattern in the result\n");
@@ -243,7 +244,7 @@ main(void)
           printf("%8d\r", i);
           fflush(stdout);
         }
-      if (src[i] != (i & 0xff))
+      if (usrc[i] != (i & 0xff))
         return error("Decoded pattern doesn't match");
     }
   printf("Done.                    \n");

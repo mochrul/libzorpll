@@ -1,9 +1,10 @@
 #include <zorp/code_cipher.h>
 #include <string.h>
 
-int main()
+int main(void)
 {
-  gchar buf[4097], buf2[4097], key[128], iv[128];
+  gchar buf[4097], buf2[4097];
+  unsigned char key[128], iv[128];
   gchar *encrypted = NULL;
   gsize length = 0;
   ZCode *cipher;
@@ -53,7 +54,7 @@ int main()
     }
   if (z_code_get_result_length(cipher) != 4096 * 2 * sizeof(buf))
     {
-      fprintf(stderr, "Decryption resulted different length, than encrypted length='%d', result='%d' ???\n", 4096 * 2 * sizeof(buf), z_code_get_result_length(cipher));
+      fprintf(stderr, "Decryption resulted different length, than encrypted length='%"G_GSIZE_FORMAT"', result='%"G_GSIZE_FORMAT"' ???\n", 4096 * 2 * sizeof(buf), z_code_get_result_length(cipher));
       return 1;
     }
   for (i = 0; i < 4096; i++)

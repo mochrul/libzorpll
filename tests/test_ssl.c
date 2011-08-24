@@ -30,9 +30,10 @@ test_server(gint fd)
   SSL_accept(ssl_session->ssl);
   z_stream_write(stream, "helloka", 7, &bw, NULL);
   z_stream_read(stream, buf, sizeof(buf), &br, NULL);
-  printf("%.*s", br, buf);
+  printf("%.*s", (int)br, buf);
   if (memcmp(buf, "haliho", br) == 0)
     return 0;
+
   return 1;
 }
 
@@ -54,9 +55,10 @@ test_client(gint fd)
   
   z_stream_write(stream, "haliho", 6, &bw, NULL);
   z_stream_read(stream, buf, sizeof(buf), &br, NULL);
-  printf("%.*s", br, buf);
+  printf("%.*s", (int)br, buf);
   if (memcmp(buf, "helloka", br) == 0)
     return 0;
+
   return 1;
 }
 

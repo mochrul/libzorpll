@@ -72,6 +72,7 @@ typedef ZClass ZInterface;
 #define Z_CAST(inst, class_) ((class_ *) z_object_check_compatible((ZObject *) inst, Z_CLASS(class_)))
 
 #define Z_FUNCS(inst, class_) ((class_##Funcs *) (z_object_check_compatible((ZObject *) inst, Z_CLASS(class_))->isa->funcs))
+#define Z_FUNCS_CALL(inst, class_, func_name, ...) Z_FUNCS(inst, class_)->func_name(inst, ## __VA_ARGS__)
 #define Z_SUPER(inst, class_) ((class_##Funcs *) (z_object_check_compatible((ZObject *) inst, Z_CLASS(class_))->isa->super_class->funcs))
 #define Z_FUNCS_COUNT(class_) ((sizeof(class_##Funcs)-sizeof(gint))/sizeof(void (*)(void)))
 #define Z_NEW(class_)         (class_ *) z_object_new(Z_CLASS(class_))

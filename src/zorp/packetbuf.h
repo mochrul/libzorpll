@@ -99,6 +99,22 @@ gboolean z_pktbuf_put_u16s(ZPktBuf *self, gint e, gsize n, const guint16 *d);
 gboolean z_pktbuf_put_u32s(ZPktBuf *self, gint e, gsize n, const guint32 *d);
 gboolean z_pktbuf_put_u64s(ZPktBuf *self, gint e, gsize n, const guint64 *d);
 
+static inline gboolean z_pktbuf_get_u16_le(ZPktBuf *self, guint16 *res) { return z_pktbuf_get_u16(self, G_LITTLE_ENDIAN, res); }
+static inline gboolean z_pktbuf_get_u64_le(ZPktBuf *self, guint64 *res) { return z_pktbuf_get_u64(self, G_LITTLE_ENDIAN, res); }
+static inline gboolean z_pktbuf_get_u32_le(ZPktBuf *self, guint32 *res) { return z_pktbuf_get_u32(self, G_LITTLE_ENDIAN, res); }
+
+static inline gboolean z_pktbuf_put_u16_le(ZPktBuf *self, guint16 res) { return z_pktbuf_put_u16(self, G_LITTLE_ENDIAN, res); }
+static inline gboolean z_pktbuf_put_u32_le(ZPktBuf *self, guint32 res) { return z_pktbuf_put_u32(self, G_LITTLE_ENDIAN, res); }
+static inline gboolean z_pktbuf_put_u64_le(ZPktBuf *self, guint64 res) { return z_pktbuf_put_u64(self, G_LITTLE_ENDIAN, res); }
+
+static inline gboolean z_pktbuf_get_u16_be(ZPktBuf *self, guint16 *res) { return z_pktbuf_get_u16(self, G_BIG_ENDIAN, res); }
+static inline gboolean z_pktbuf_get_u32_be(ZPktBuf *self, guint32 *res) { return z_pktbuf_get_u32(self, G_BIG_ENDIAN, res); }
+static inline gboolean z_pktbuf_get_u64_be(ZPktBuf *self, guint64 *res) { return z_pktbuf_get_u64(self, G_BIG_ENDIAN, res); }
+
+static inline gboolean z_pktbuf_put_u16_be(ZPktBuf *self, guint16 res) { return z_pktbuf_put_u16(self, G_BIG_ENDIAN, res); }
+static inline gboolean z_pktbuf_put_u32_be(ZPktBuf *self, guint32 res) { return z_pktbuf_put_u32(self, G_BIG_ENDIAN, res); }
+static inline gboolean z_pktbuf_put_u64_be(ZPktBuf *self, guint64 res) { return z_pktbuf_put_u64(self, G_BIG_ENDIAN, res); }
+
 static inline gboolean z_pktbuf_get_s8(ZPktBuf *self, gint8 *res)   { return z_pktbuf_get_u8(self, (guint8*)res); }
 static inline gboolean z_pktbuf_get_c8(ZPktBuf *self, gchar *res)   { return z_pktbuf_get_u8(self, (guint8*)res); }
 static inline gboolean z_pktbuf_get_s16(ZPktBuf *self, gint e, gint16 *res) { return z_pktbuf_get_u16(self, e, (guint16*)res); }
@@ -110,6 +126,22 @@ static inline gboolean z_pktbuf_put_c8(ZPktBuf *self, gchar d)   { return z_pktb
 static inline gboolean z_pktbuf_put_s16(ZPktBuf *self, gint e, gint16 d) { return z_pktbuf_put_u16(self, e, (guint16)d); }
 static inline gboolean z_pktbuf_put_s32(ZPktBuf *self, gint e, gint32 d) { return z_pktbuf_put_u32(self, e, (guint32)d); }
 static inline gboolean z_pktbuf_put_s64(ZPktBuf *self, gint e, gint64 d) { return z_pktbuf_put_u64(self, e, (guint64)d); }
+
+static inline gboolean z_pktbuf_get_s16_le(ZPktBuf *self, gint16 *res) { return z_pktbuf_get_s16(self, G_LITTLE_ENDIAN, res); }
+static inline gboolean z_pktbuf_get_s64_le(ZPktBuf *self, gint64 *res) { return z_pktbuf_get_s64(self, G_LITTLE_ENDIAN, res); }
+static inline gboolean z_pktbuf_get_s32_le(ZPktBuf *self, gint32 *res) { return z_pktbuf_get_s32(self, G_LITTLE_ENDIAN, res); }
+
+static inline gboolean z_pktbuf_put_s16_le(ZPktBuf *self, gint16 res) { return z_pktbuf_put_s16(self, G_LITTLE_ENDIAN, res); }
+static inline gboolean z_pktbuf_put_s32_le(ZPktBuf *self, gint32 res) { return z_pktbuf_put_s32(self, G_LITTLE_ENDIAN, res); }
+static inline gboolean z_pktbuf_put_s64_le(ZPktBuf *self, gint64 res) { return z_pktbuf_put_s64(self, G_LITTLE_ENDIAN, res); }
+
+static inline gboolean z_pktbuf_get_s16_be(ZPktBuf *self, gint16 *res) { return z_pktbuf_get_s16(self, G_BIG_ENDIAN, res); }
+static inline gboolean z_pktbuf_get_s32_be(ZPktBuf *self, gint32 *res) { return z_pktbuf_get_s32(self, G_BIG_ENDIAN, res); }
+static inline gboolean z_pktbuf_get_s64_be(ZPktBuf *self, gint64 *res) { return z_pktbuf_get_s64(self, G_BIG_ENDIAN, res); }
+
+static inline gboolean z_pktbuf_put_s16_be(ZPktBuf *self, gint16 res) { return z_pktbuf_put_s16(self, G_BIG_ENDIAN, res); }
+static inline gboolean z_pktbuf_put_s32_be(ZPktBuf *self, gint32 res) { return z_pktbuf_put_s32(self, G_BIG_ENDIAN, res); }
+static inline gboolean z_pktbuf_put_s64_be(ZPktBuf *self, gint64 res) { return z_pktbuf_put_s64(self, G_BIG_ENDIAN, res); }
 
 static inline gboolean z_pktbuf_get_s8s(ZPktBuf *self, gsize n, gint8 *res)   { return z_pktbuf_get_u8s(self, n, (guint8*)res); }
 static inline gboolean z_pktbuf_get_c8s(ZPktBuf *self, gsize n, gchar *res)   { return z_pktbuf_get_u8s(self, n, (guint8*)res); }

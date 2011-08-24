@@ -529,7 +529,7 @@ z_stream_ctrl_method(ZStream *s, guint function, gpointer value, guint vlen)
           res = TRUE;
         }
       break;
-      
+
     default:
       if (s->child)
         {
@@ -601,6 +601,44 @@ z_stream_set_cond(ZStream *s, guint type, gboolean value)
     default:
       break;
     }
+  return ret;
+}
+
+/**
+ * This function returns the value of the appropriate want_read/want_write flags.
+ *
+ * @param[in] s ZStream instance
+ * @param[out] v store actual value here; not modified if returns FALSE; NULL-tolerant
+ *
+ * @returns TRUE on success
+ **/
+gboolean
+z_stream_get_cond(ZStream *s, guint type, gboolean *v)
+{
+  gboolean ret = FALSE;
+  gboolean value;
+
+  switch (type)
+    {
+    case G_IO_IN:
+      ret = z_stream_ctrl(s, ZST_CTRL_SET_COND_READ, &value, sizeof(value));
+      break;
+
+    case G_IO_OUT:
+      ret = z_stream_ctrl(s, ZST_CTRL_SET_COND_WRITE, &value, sizeof(value));
+      break;
+
+    case G_IO_PRI:
+      ret = z_stream_ctrl(s, ZST_CTRL_SET_COND_PRI, &value, sizeof(value));
+      break;
+
+    default:
+      break;
+    }
+
+  if (ret && v)
+    *v = value;
+
   return ret;
 }
 
@@ -1297,7 +1335,10 @@ z_stream_unget_packet_method(ZStream *self, ZPktBuf *pack, GError **error)
   for (p = self; p; p = p->child)
     {
       if ((p->umbrella_flags & G_IO_IN))
-        p->ungot_bufs = g_list_prepend(p->ungot_bufs, pack);
+        {
+          p->ungot_bufs = g_list_prepend(p->ungot_bufs, pack);
+          break;
+        }
     }
   z_return(TRUE);
 }
