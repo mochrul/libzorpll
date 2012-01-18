@@ -1,0 +1,28 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+CONFFILE=/etc/libzorpll.conf
+
+case "$1" in 
+    configure|reconfigure)
+        EMAIL=""
+        if db_get zorplib/admin-email && [ -n "$RET" ] && [ "x$RET" != "xNONE" ]; then
+            EMAIL=$RET
+        fi
+        cat > "$CONFFILE" <<EOF
+################################################################################
+# Config file for /usr/lib/libzorpll/failure_notify*
+#
+
+ADMIN_EMAIL='$EMAIL'
+SUBJECT='Notification from \$HOSTNAME: \$Z_NAME \$Z_EVENT'
+EOF
+    ;;
+    *)
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

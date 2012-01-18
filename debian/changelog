@@ -1,0 +1,350 @@
+libzorpll (3.9.1.0-6) unstable; urgency=low
+
+  * Renamed debian-patches to it's real name. Closes: #643203
+
+ -- SZALAY Attila <sasa@debian.org>  Tue, 04 Oct 2011 23:28:59 +0200
+
+libzorpll (3.9.1.0-5) unstable; urgency=low
+
+  * Fixed compilation problem with dpkg. Closes: #643203
+
+ -- SZALAY Attila <sasa@debian.org>  Thu, 29 Sep 2011 21:45:57 +0200
+
+libzorpll (3.9.1.0-4) unstable; urgency=low
+
+  * Fixed a compilation error in some architectures.
+
+ -- SZALAY Attila <sasa@debian.org>  Fri, 02 Sep 2011 08:44:34 +0200
+
+libzorpll (3.9.1.0-3) unstable; urgency=low
+
+  * Updated policy to version 3.9.2.
+  * Added build-arch and build-indep targets.
+
+ -- SZALAY Attila <sasa@debian.org>  Thu, 01 Sep 2011 21:19:33 +0200
+
+libzorpll (3.9.1.0-2) unstable; urgency=low
+
+  * Fixed more compilation error. Closes: #639198
+
+ -- SZALAY Attila <sasa@debian.org>  Thu, 25 Aug 2011 18:38:51 +0200
+
+libzorpll (3.9.1.0-1) unstable; urgency=low
+
+  * New upstream version.
+  * Moved to a new build infrastructure.
+  * Fixed compilation warnings. Closes: #634429
+  * Changed libcap debendency do linux-only. Closes: #634320
+
+ -- SZALAY Attila <sasa@debian.org>  Wed, 24 Aug 2011 19:38:41 +0200
+
+libzorpll (3.9.0.1-11) unstable; urgency=low
+
+  * Fixed bugs appear because of libssl version 1.0
+
+ -- SZALAY Attila <sasa@debian.org>  Tue, 10 May 2011 21:04:41 +0200
+
+libzorpll (3.9.0.1-10) unstable; urgency=low
+
+  [ Christian Perrier ]
+  * Debconf templates and debian/control reviewed by the debian-l10n-
+    english team as part of the Smith review project. Closes: #620468
+  * [Debconf translation updates]
+  * Danish (Joe Hansen).  Closes: #621127
+  * German (Chris Leick).  Closes: #622285
+  * French (Steve Petruzzello).  Closes: #622738
+  * Czech (Michal Simunek).  Closes: #622789
+  * Spanish; (Francisco Javier Cuadrado).  Closes: #623025
+  * Russian (Yuri Kozlov).  Closes: #623362
+  * Swedish (Martin Bagge / brother).  Closes: #623406
+  * Portuguese (Américo Monteiro).  Closes: #623538
+  * Dutch; (Jeroen Schot).  Closes: #623589
+
+  [ SZALAY Attila ]
+  * Integrated localization changes.
+  * Removed libzorpll.la file Closes: #622441
+
+ -- SZALAY Attila <sasa@debian.org>  Thu, 05 May 2011 00:35:38 +0200
+
+libzorpll (3.9.0.1-9) unstable; urgency=low
+
+  * Bump the version because the previous upload was lost somewhere.
+
+ -- SZALAY Attila <sasa@debian.org>  Tue, 22 Mar 2011 20:47:05 +0100
+
+libzorpll (3.9.0.1-8) unstable; urgency=low
+
+  * Removed libzorpll.so from libzorpll3.9-0-memtrace package to prevent
+    file conflict. (Closes: #618998)
+
+ -- SZALAY Attila <sasa@debian.org>  Mon, 21 Mar 2011 20:56:15 +0100
+
+libzorpll (3.9.0.1-7) unstable; urgency=low
+
+  * Removing /etc/libzorpll.conf when purging.
+
+ -- SZALAY Attila <sasa@debian.org>  Sun, 20 Mar 2011 19:06:47 +0100
+
+libzorpll (3.9.0.1-6) unstable; urgency=low
+
+  * Circumveit the problem that the new debian.tar.gz does not contains the
+    Makefile.  (Closes: #617661)
+
+ -- SZALAY Attila <sasa@debian.org>  Sat, 19 Mar 2011 00:31:49 +0100
+
+libzorpll (3.9.0.1-5) unstable; urgency=low
+
+  * Moved from experimental to unstable.
+
+ -- SZALAY Attila <sasa@debian.org>  Fri, 11 Mar 2011 21:41:16 +0100
+
+libzorpll (3.9.0.1-4) experimental; urgency=low
+
+  * Added gettextization because of the admin email question.
+
+ -- SZALAY Attila <sasa@debian.org>  Thu, 10 Mar 2011 21:54:13 +0100
+
+libzorpll (3.9.0.1-3) experimental; urgency=low
+
+  * Removed useless Conflict to libzorpll3.3-0
+  * Switched to dpkg-source 3.0 (quilt) format
+  * Enabled the feature to send email if the zorp is abnormally terminate.
+
+ -- SZALAY Attila <sasa@debian.org>  Wed, 09 Mar 2011 21:38:36 +0100
+
+libzorpll (3.9.0.1-2) experimental; urgency=low
+
+  * Added make check to check the compilation.
+  * Removed unknown option disable-dmalloc.
+  * Fixed the compilation problem in kfreeBSD (Closes: #616554)
+
+ -- SZALAY Attila <sasa@debian.org>  Sun, 06 Mar 2011 12:08:33 +0100
+
+libzorpll (3.9.0.1-1) experimental; urgency=low
+
+  * New upstream version.
+
+ -- SZALAY Attila <sasa@debian.org>  Mon, 28 Feb 2011 23:19:37 +0100
+
+libzorpll (3.3.0.12-4) unstable; urgency=low
+
+  * Fixed process.c compilation error when libcap is not
+    available (Closes: #586467)
+
+ -- SZALAY Attila <sasa@debian.org>  Sun, 20 Jun 2010 21:38:47 +0200
+
+libzorpll (3.3.0.12-3) unstable; urgency=low
+
+  * Do distclean instead of clean. (Sorry to be this noisy but it
+    building from source here at me.)
+
+ -- SZALAY Attila <sasa@debian.org>  Sat, 19 Jun 2010 00:32:49 +0200
+
+libzorpll (3.3.0.12-2) unstable; urgency=low
+
+  * Fixed FTBFS. (Closes: #586287)
+
+ -- SZALAY Attila <sasa@debian.org>  Fri, 18 Jun 2010 22:33:25 +0200
+
+libzorpll (3.3.0.12-1) unstable; urgency=low
+
+  * New upstream version.
+  * Re-create the package to be able to compile in unstable.
+
+ -- SZALAY Attila <sasa@debian.org>  Tue, 15 Jun 2010 23:49:23 +0200
+
+libzorpll (3.0.6.4.2+nmu2) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix "postinst-must-call-ldconfig /usr/lib/libzorpll-3.0.so.6.4.0"
+    by creating post{rm,inst} stubs and adding dh_makeshlibs in debian/rules.
+    (closes: #553009).
+  * Fix "FTBFS on GNU/kFreeBSD" by adjusting build and runtime dependencies;
+    patch from Petr Salinger (closes: #375025).
+
+ -- gregor herrmann <gregoa@debian.org>  Sun, 20 Dec 2009 19:22:33 +0100
+
+libzorpll (3.0.6.4.2+nmu1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix bashism in debian/rules (Closes: #478609)
+  * Bump Standards-Version to 3.8.0.
+
+ -- Chris Lamb <chris@chris-lamb.co.uk>  Sat, 07 Jun 2008 22:35:01 +0100
+
+libzorpll (3.0.6.4.2) unstable; urgency=low
+
+  * New upstream version.
+  * Use dh_install instead of dh_movefile.
+
+ -- SZALAY Attila <sasa@debian.org>  Sun, 22 Jan 2006 20:36:57 +0000
+
+libzorpll (3.0.6.4) unstable; urgency=low
+
+  * New upstream version.
+  * Changed binary package name to contains soversion. Closes: #337090, #337705, #337652
+
+ -- SZALAY Attila <sasa@debian.org>  Sun,  6 Nov 2005 20:47:40 +0000
+
+libzorpll (3.0.6.2) unstable; urgency=low
+
+  * New upstream version
+
+ -- SZALAY Attila <sasa@debian.org>  Tue, 14 Jun 2005 19:34:56 +0000
+
+libzorpll (2.0.26.24-5) unstable; urgency=low
+
+  * libtool build-dependency added
+
+ -- SZALAY Attila <sasa@debian.org>  Wed, 25 May 2005 22:27:27 +0200
+
+libzorpll (2.0.26.24-4) unstable; urgency=low
+
+  * dependency to automake was missing 
+
+ -- Magosányi Árpád (mag) <mag@debian.org>  Sun, 25 Jul 2004 08:16:37 +0200
+
+libzorpll (2.0.26.24-3) unstable; urgency=low
+
+  * trying to fix upload related problems with new version 
+
+ -- Magosányi Árpád (mag) <mag@debian.org>  Mon, 14 Jun 2004 10:37:16 +0200
+
+libzorpll (2.0.26.24-2) unstable; urgency=low
+
+  * the package name is libzorpll actually
+
+ -- Magosányi Árpád (mag) <mag@debian.org>  Mon, 14 Jun 2004 01:37:08 +0200
+
+zorplibll (2.0.26.24-1) unstable; urgency=low
+
+  * Merged upstream to unoff.
+
+ -- Magosányi Árpád (mag) <mag@debian.org>  Fri, 16 Apr 2004 20:12:03 +0000
+
+zorplibll (2.0.26.23-1) testing; urgency=low
+ 
+  * squished some lintian warnings (suidregister, copyright boilerplate)
+  * the source package name is zorplibll now
+
+ -- Magosányi Árpád (mag) <mag@debian.org>  Mon, 10 Nov 2003 20:27:59 +0000
+libzorpll (2.0.1.1-1) unstable; urgency=low
+
+  * New upstream version.
+  * Recreate shlib debendency 
+
+ -- Szalay Attila <sasa@debian.org>  Thu, 21 Nov 2002 19:36:47 +0100
+
+libzorpll (1.5.58-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Wed, 20 Nov 2002 15:25:39 +0100
+
+libzorpll (1.5.57-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Mon, 18 Nov 2002 08:10:23 +0100
+
+libzorpll (1.5.54-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Wed, 13 Nov 2002 17:08:07 +0100
+
+libzorpll (1.5.53-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Thu, 24 Oct 2002 09:42:44 +0200
+
+libzorpll (1.5.44-2) unstable; urgency=low
+
+  * Fix debianization problems.
+
+ -- Szalay Attila <sasa@debian.org>  Mon, 21 Oct 2002 11:22:56 +0200
+
+libzorpll (1.5.44-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Fri, 18 Oct 2002 15:35:21 +0200
+
+libzorpll (1.5.43-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Thu, 10 Oct 2002 14:15:04 +0200
+
+libzorpll (1.5.42-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Tue,  8 Oct 2002 13:19:48 +0200
+
+libzorpll (1.5.41-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Wed,  2 Oct 2002 11:02:56 +0200
+
+libzorpll (1.5.40-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Fri, 27 Sep 2002 15:08:31 +0200
+
+libzorpll (1.5.36-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Mon, 16 Sep 2002 13:27:24 +0200
+
+libzorpll (1.5.35-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Thu, 12 Sep 2002 14:08:06 +0200
+
+libzorpll (1.5.32-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Thu,  5 Sep 2002 14:49:18 +0200
+
+libzorpll (1.5.31-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Wed,  4 Sep 2002 15:26:25 +0200
+
+libzorpll (1.5.30-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Tue, 27 Aug 2002 11:10:44 +0200
+
+libzorpll (1.5.27-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Thu, 22 Aug 2002 14:36:32 +0200
+
+libzorpll (1.5.26-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Szalay Attila <sasa@debian.org>  Wed, 21 Aug 2002 13:53:17 +0200
+
+libzorpll (1.5.25-2) unstable; urgency=low
+
+  * Fill shlibs correctly.
+
+ -- Szalay Attila <sasa@debian.org>  Sun, 18 Aug 2002 15:57:15 +0200
+
+libzorpll (1.5.25-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Szalay Attila <sasa@debian.org>  Thu,  8 Aug 2002 21:22:59 +0200

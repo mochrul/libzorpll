@@ -1,0 +1,59 @@
+Source: libzorpll
+Section: libs
+Priority: optional
+Maintainer: SZALAY Attila <sasa@debian.org>
+Standards-Version: 3.9.2
+Build-Depends: libssl-dev, libglib2.0-dev, debhelper (>= 7), libcap-dev [linux-any], zlib1g-dev, binutils (>= 2.14.90.0.7), po-debconf
+
+Package: libzorpll3.9-1
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Zorp low-level functions
+ Zorp is an application-layer firewall using a modular architecture of
+ strict protocol-analyzing transparent proxies, giving fine-grained
+ control over the mediated traffic. Configuration decisions are
+ scriptable in the Python-based configuration language.
+ .
+ This package contains low-level library functions needed by Zorp and
+ associated programs.
+
+Package: libzorpll-dev
+Section: libdevel
+Architecture: any
+Depends: libzorpll3.9-1 (= ${binary:Version}), ${misc:Depends}, libglib2.0-dev, libcap-dev [linux-any], libssl-dev
+Description: Zorp low-level functions - development files
+ Zorp is an application-layer firewall using a modular architecture of
+ strict protocol-analyzing transparent proxies, giving fine-grained
+ control over the mediated traffic. Configuration decisions are
+ scriptable in the Python-based configuration language.
+ .
+ This package contains the development files necessary to create programs
+ based on libzorpll.
+
+Package: libzorpll3.9-1-dbg
+Section: debug
+Architecture: any
+Priority: extra
+Depends: libzorpll3.9-1 (= ${binary:Version}), ${misc:Depends}
+Description: Zorp low-level functions - debugging version
+ Zorp is an application-layer firewall using a modular architecture of
+ strict protocol-analyzing transparent proxies, giving fine-grained
+ control over the mediated traffic. Configuration decisions are
+ scriptable in the Python-based configuration language.
+ .
+ This package contains the debugging symbols for libzorpll3.9-0.
+
+Package: libzorpll3.9-1-memtrace
+Section: debug
+Architecture: any
+Priority: extra
+Depends: libzorpll3.9-1 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Zorp low-level functions - memory debugging version
+ Zorp is an application-layer firewall using a modular architecture of
+ strict protocol-analyzing transparent proxies, giving fine-grained
+ control over the mediated traffic. Configuration decisions are
+ scriptable in the Python-based configuration language.
+ .
+ This package contains the same library as libzorpll but with memtrace memory
+ debugging code enabled.

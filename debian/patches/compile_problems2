@@ -1,0 +1,88 @@
+Index: libzorpll-3.9.1.0/src/streamgzip.c
+===================================================================
+--- libzorpll-3.9.1.0.orig/src/streamgzip.c	2011-09-01 21:28:57.000000000 +0200
++++ libzorpll-3.9.1.0/src/streamgzip.c	2011-09-01 21:29:06.000000000 +0200
+@@ -685,7 +685,7 @@
+ {
+   ZStreamGzip *self = Z_CAST(s, ZStreamGzip);
+   gboolean ret = FALSE;
+-  gboolean child_readable, child_writeable, child_enable;
++  gboolean child_readable, child_enable;
+ 
+   z_enter();
+   
+@@ -714,7 +714,6 @@
+ 
+   if (s->want_write)
+     {
+-      child_writeable = !!(self->child_cond & G_IO_OUT);
+       if (self->encode.avail_out == self->buffer_length)
+         ret = TRUE;
+     }
+Index: libzorpll-3.9.1.0/src/memtrace.c
+===================================================================
+--- libzorpll-3.9.1.0.orig/src/memtrace.c	2011-09-01 21:28:57.000000000 +0200
++++ libzorpll-3.9.1.0/src/memtrace.c	2011-09-01 21:29:06.000000000 +0200
+@@ -693,7 +693,7 @@
+         {
+           backtrace_info = temp_brk;
+           temp_brk = 0;
+-          assert(0);
++          assert(backtrace_info == 0);
+         }
+     }
+   else
+Index: libzorpll-3.9.1.0/src/io.c
+===================================================================
+--- libzorpll-3.9.1.0.orig/src/io.c	2011-09-01 21:28:57.000000000 +0200
++++ libzorpll-3.9.1.0/src/io.c	2011-09-01 21:29:06.000000000 +0200
+@@ -201,7 +201,7 @@
+ z_fd_set_our_tos(gint fd, guint8 tos)
+ {
+   socklen_t len;
+-  cap_t saved_caps;
++  G_GNUC_UNUSED cap_t saved_caps;
+   
+   saved_caps = cap_save();
+   len = sizeof(tos);
+Index: libzorpll-3.9.1.0/src/socket.c
+===================================================================
+--- libzorpll-3.9.1.0.orig/src/socket.c	2011-09-01 21:28:57.000000000 +0200
++++ libzorpll-3.9.1.0/src/socket.c	2011-09-01 21:29:06.000000000 +0200
+@@ -37,7 +37,7 @@
+ GIOStatus
+ z_bind(gint fd, ZSockAddr *addr, guint32 sock_flags)
+ {
+-  cap_t saved_caps;
++  G_GNUC_UNUSED cap_t saved_caps;
+   GIOStatus rc;
+   
+   z_enter();
+Index: libzorpll-3.9.1.0/tests/test_blob.c
+===================================================================
+--- libzorpll-3.9.1.0.orig/tests/test_blob.c	2011-09-01 21:28:57.000000000 +0200
++++ libzorpll-3.9.1.0/tests/test_blob.c	2011-09-01 21:29:06.000000000 +0200
+@@ -232,9 +232,9 @@
+ {
+   ZBlobSystem *blobsys;
+   ZBlob *blob;
+-  /*gchar *blobptr;*/
+-  gsize blobptr_size;
+-  const gchar *blobfile;
++  /*gchar *blobptr;
++  gsize blobptr_size; */
++  G_GNUC_UNUSED const gchar *blobfile;
+ 
+   z_thread_init();
+   /*verbose_level=9;*/
+@@ -262,8 +262,8 @@
+     }
+   else
+     {
+-      blobptr_size = 10;
+-      /*blobptr = z_blob_get_ptr(blob, 0, &blobptr_size, -1);*/
++      /*blobptr_size = 10;
++      blobptr = z_blob_get_ptr(blob, 0, &blobptr_size, -1);*/
+       blobfile = z_blob_get_file(blob, NULL, NULL, 0644, -1);
+       /* Leave it allocated and locked, let's see what happens when the blobsys is destroyed */
+     }

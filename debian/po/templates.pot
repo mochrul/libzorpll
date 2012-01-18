@@ -1,0 +1,33 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: libzorpll@packages.debian.org\n"
+"POT-Creation-Date: 2011-04-06 07:05+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: string
+#. Description
+#: ../libzorpll3.9-1.templates:2001
+msgid "Email address for Zorp notifications:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../libzorpll3.9-1.templates:2001
+msgid ""
+"Some Zorp applications are able to send a notification email in case of an "
+"unexpected process termination. Leave this empty (or specify \"NONE\") if no "
+"such notifications should be sent."
+msgstr ""

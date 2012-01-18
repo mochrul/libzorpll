@@ -1,0 +1,35 @@
+# Danish translation libzorpll.
+# Copyright (C) 2011 libzorpll & nedenstående oversættere.
+# This file is distributed under the same license as the libzorpll package.
+# Joe Hansen <joedalton2@yahoo.dk>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libzorpll\n"
+"Report-Msgid-Bugs-To: libzorpll@packages.debian.org\n"
+"POT-Creation-Date: 2011-04-06 07:05+0200\n"
+"PO-Revision-Date: 2011-04-06 17:30+01:00\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <debian-l10n-danish@lists.debian.org> \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: string
+#. Description
+#: ../libzorpll3.9-1.templates:2001
+msgid "Email address for Zorp notifications:"
+msgstr "E-post-adresse for Zorppåmindelser:"
+
+#. Type: string
+#. Description
+#: ../libzorpll3.9-1.templates:2001
+msgid ""
+"Some Zorp applications are able to send a notification email in case of an "
+"unexpected process termination. Leave this empty (or specify \"NONE\") if no "
+"such notifications should be sent."
+msgstr ""
+"Nogle Zorpprogrammer kan sende en påmindelsesbesked i tilfælde af, at der "
+"opstår en uventet procesterminering. Efterlad denne tom (eller angiv »NONE«) "
+"hvis ingen sådanne påmindelser skal sendes."

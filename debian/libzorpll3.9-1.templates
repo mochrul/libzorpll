@@ -1,0 +1,16 @@
+# These templates have been reviewed by the debian-l10n-english
+# team
+#
+# If modifications/additions/rewording are needed, please ask
+# debian-l10n-english@lists.debian.org for advice.
+#
+# Even minor modifications require translation updates and such
+# changes should be coordinated with translators and reviewers.
+
+Template: zorplib/admin-email
+Type: string
+Default: NONE
+_Description: Email address for Zorp notifications:
+ Some Zorp applications are able to send a notification email in case
+ of an unexpected process termination. Leave this empty (or specify
+ "NONE") if no such notifications should be sent.

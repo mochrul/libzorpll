@@ -1,0 +1,36 @@
+# Translation of libzorpll debconf template to French
+# Copyright (C) 2011 Debian French l10n Team
+# This file is distributed under the same license as the libzorpll package.
+# Steve Petruzzello <dlist@bluewin.ch>, 2011
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libzorpll_3.0.6.4.2+nmu1\n"
+"Report-Msgid-Bugs-To: libzorpll@packages.debian.org\n"
+"POT-Creation-Date: 2011-04-06 07:05+0200\n"
+"PO-Revision-Date: 2011-04-07 10:11+0200\n"
+"Last-Translator: Steve Petruzzello <dlist@bluewin.ch>\n"
+"Language-Team: French <debian-l10n-french@lists.debian.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: string
+#. Description
+#: ../libzorpll3.9-1.templates:2001
+msgid "Email address for Zorp notifications:"
+msgstr "Adresse électronique de notification pour Zorp :"
+
+#. Type: string
+#. Description
+#: ../libzorpll3.9-1.templates:2001
+msgid ""
+"Some Zorp applications are able to send a notification email in case of an "
+"unexpected process termination. Leave this empty (or specify \"NONE\") if no "
+"such notifications should be sent."
+msgstr ""
+"Certaines applications Zorp peuvent envoyer un courrier électronique "
+"lorsqu'un processus se termine de manière inattendue. Si vous ne souhaitez "
+"pas activer les notifications, vous pouvez laisser ce champ vide ou "
+"mentionner « NONE » (sans les guillemets)."
