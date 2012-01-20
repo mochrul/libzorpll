@@ -1,0 +1,26 @@
+From: SZALAY Attila <sasa@debian.org>
+Date: Fri, 20 Jan 2012 13:29:40 +0100
+Subject: compile_problems3
+
+---
+ src/zorp/io.h |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/zorp/io.h b/src/zorp/io.h
+index 3fdf4b2..536c145 100644
+--- a/src/zorp/io.h
++++ b/src/zorp/io.h
+@@ -34,9 +34,9 @@ void z_fd_set_our_tos(gint fd, guint8 tos);
+ 
+ #else
+ 
+-#define z_fd_get_peer_tos(fd, tos)
+-#define z_fd_get_our_tos(fd, tos)
+-#define z_fd_set_our_tos(fd, tos)
++#define z_fd_get_peer_tos(fd, tos) {}
++#define z_fd_get_our_tos(fd, tos) {}
++#define z_fd_set_our_tos(fd, tos) {}
+ 
+ #endif
+ 
+-- 
