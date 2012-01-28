@@ -667,11 +667,4 @@ ZStreamFuncs z_stream_buf_funcs =
 /**
  * ZStreamBuf class descriptor.
  **/
-ZClass ZStreamBuf__class =
-{
-  Z_CLASS_HEADER,
-  &ZStream__class,
-  "ZStreamBuf",
-  sizeof(ZStreamBuf),
-  &z_stream_buf_funcs.super
-};
+Z_CLASS_DEF(ZStreamBuf, ZStream, z_stream_buf_funcs);

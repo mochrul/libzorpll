@@ -1,10 +1,10 @@
-Summary: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@ library needed by various Zorp components
-Name: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@
+Summary: libzorpll@BINARY_BRANCH@@LIBZORPLL_LT_COMPAT_BRANCH@ library needed by various Zorp components
+Name: libzorpll@BINARY_BRANCH@@LIBZORPLL_LT_COMPAT_BRANCH@
 Version: @VERSION@
 Release: 1
 License: GPL
 Group: Libraries
-Source: libzorpll_%{version}.tar.gz
+Source: libzorpll@BINARY_BRANCH@_%{version}.tar.gz
 URL: http://www.balabit.com/
 Packager: ZorpOS Maintaners <zorpos@balabit.com>
 Vendor: Balabit IT Ltd.
@@ -25,12 +25,12 @@ are scriptable with the Python based configuration language.
 This package contains low level library functions needed by Zorp and
 associated programs.
 
-%package -n libzorpll-dev
-Summary: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@ development package
+%package -n libzorpll@BINARY_BRANCH@-dev
+Summary: libzorpll@BINARY_BRANCH@@LIBZORPLL_LT_COMPAT_BRANCH@ development package
 Group: Development/Libraries
-Requires: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@ = %{version}
+Requires: libzorpll@BINARY_BRANCH@@LIBZORPLL_LT_COMPAT_BRANCH@ = %{version}
 Provides: libzorpll-devel
-%description -n libzorpll-dev
+%description -n libzorpll@BINARY_BRANCH@-dev
 Zorp is a new generation firewall. It is essentially a transparent proxy
 firewall, with strict protocol analyzing proxies, a modular architecture,
 and fine-grained control over the mediated traffic. Configuration decisions
@@ -40,7 +40,7 @@ This package contains the development files necessary to create programs
 based on libzorpll.
 
 %prep
-%setup -q -n libzorpll-%{version}
+%setup -q -n libzorpll@BINARY_BRANCH@-%{version}
 
 %build
 ./configure --prefix=%{prefix} --mandir=%{_mandir} --infodir=%{_infodir} \
@@ -58,7 +58,7 @@ make install DESTDIR="$RPM_BUILD_ROOT"
 %{prefix}/lib/libzorpll-*.so*
 #%{_infodir}/*
 #%{_mandir}/*/*
-%files -n libzorpll-dev
+%files -n libzorpll@BINARY_BRANCH@-dev
 %defattr(-,root,root)
 %{prefix}/include/zorp/*.h
 %{prefix}/lib/libzorpll.a

@@ -1,29 +1,33 @@
 EXTRA_DIST = changelog control copyright rules \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.config \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.install \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.postinst \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.shlibs \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.templates \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@-memtrace.lintian-overrides
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.config \
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.install \
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.postinst \
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.shlibs \
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.templates \
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@-memtrace.lintian-overrides \
+	libzorpll@BINARY_BRANCH@-dev.install
 
-noinst_SCRIPTS=libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.postinst
+noinst_SCRIPTS=libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.postinst
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.config: libzorpll.config.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.config: libzorpll.config.in
 	cp $< $@
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.install: libzorpll.install.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.install: libzorpll.install.in
 	cp $< $@
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.postinst: libzorpll.postinst.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.postinst: libzorpll.postinst.in
 	$(top_builddir)/config.status --file $@:$<
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.shlibs: libzorpll.shlibs.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.shlibs: libzorpll.shlibs.in
 	cp $< $@
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.templates: libzorpll.templates.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.templates: libzorpll.templates.in
 	cp $< $@
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@-memtrace.lintian-overrides: libzorpll-memtrace.lintian-overrides.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@-memtrace.lintian-overrides: libzorpll-memtrace.lintian-overrides.in
+	cp $< $@
+
+libzorpll@BINARY_BRANCH@-dev.install: libzorpll-dev.install.in
 	cp $< $@
 
 libzorpll.shlibs.in: libzorpll.shlibs.in.in

@@ -5,12 +5,13 @@ set -e
 ZWACONF=./.zwaconf
 
 TARGET=
+SRCDIR=$ZWA_WORK_DIR/libzorpll
 
 get_version(){
-  if [ -f debian/changelog ];then
-      head -1 debian/changelog | sed -e 's/.*(\([^)]*\)).*/\1/'
+  if [ -f $SRCDIR/debian/changelog ];then
+      head -1 $SRCDIR/debian/changelog | sed -e 's/.*(\([^)]*\)).*/\1/'
   else
-      head VERSION
+      head $SRCDIR/VERSION
   fi
 }
 

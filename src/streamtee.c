@@ -401,11 +401,4 @@ z_stream_tee_funcs =
 /**
  * ZStreamTee class descriptor.
  **/
-ZClass ZStreamTee__class =
-{
-  Z_CLASS_HEADER,
-  &ZStream__class,
-  "ZStreamTee",
-  sizeof(ZStreamTee),
-  &z_stream_tee_funcs.super,
-};
+Z_CLASS_DEF(ZStreamTee, ZStream, z_stream_tee_funcs);

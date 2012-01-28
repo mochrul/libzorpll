@@ -333,12 +333,4 @@ z_stream_blob_funcs =
 /**
  * ZStreamBlob class descriptor.
  **/
-ZClass ZStreamBlob__class =
-{
-  Z_CLASS_HEADER,
-  &ZStream__class,
-  "ZStreamBlob",
-  sizeof(ZStreamBlob),
-  &z_stream_blob_funcs.super
-};
-
+Z_CLASS_DEF(ZStreamBlob, ZStream, z_stream_blob_funcs);

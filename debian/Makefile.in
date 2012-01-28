@@ -56,6 +56,7 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BINARY_BRANCH = @BINARY_BRANCH@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -66,6 +67,7 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DEPS_CPPFLAGS = @DEPS_CPPFLAGS@
 DEPS_LIBS = @DEPS_LIBS@
+DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -99,6 +101,7 @@ LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
@@ -118,6 +121,8 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 RANLIB = @RANLIB@
 RELEASE_TAG = @RELEASE_TAG@
 SED = @SED@
@@ -136,6 +141,7 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
@@ -168,7 +174,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -185,14 +190,15 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRA_DIST = changelog control copyright rules \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.config \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.install \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.postinst \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.shlibs \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.templates \
-	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@-memtrace.lintian-overrides
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.config \
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.install \
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.postinst \
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.shlibs \
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.templates \
+	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@-memtrace.lintian-overrides \
+	libzorpll@BINARY_BRANCH@-dev.install
 
-noinst_SCRIPTS = libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.postinst
+noinst_SCRIPTS = libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.postinst
 MAINTAINERCLEANFILES = control changelog copyright rules libzorpll.shlibs.in
 all: all-am
 
@@ -380,22 +386,25 @@ uninstall-am:
 	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am
 
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.config: libzorpll.config.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.config: libzorpll.config.in
 	cp $< $@
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.install: libzorpll.install.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.install: libzorpll.install.in
 	cp $< $@
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.postinst: libzorpll.postinst.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.postinst: libzorpll.postinst.in
 	$(top_builddir)/config.status --file $@:$<
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.shlibs: libzorpll.shlibs.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.shlibs: libzorpll.shlibs.in
 	cp $< $@
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.templates: libzorpll.templates.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.templates: libzorpll.templates.in
 	cp $< $@
 
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@-memtrace.lintian-overrides: libzorpll-memtrace.lintian-overrides.in
+libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@-memtrace.lintian-overrides: libzorpll-memtrace.lintian-overrides.in
+	cp $< $@
+
+libzorpll@BINARY_BRANCH@-dev.install: libzorpll-dev.install.in
 	cp $< $@
 
 libzorpll.shlibs.in: libzorpll.shlibs.in.in

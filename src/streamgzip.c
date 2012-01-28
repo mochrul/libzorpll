@@ -973,11 +973,4 @@ ZStreamFuncs z_stream_gzip_funcs =
   NULL,
 };
 
-ZClass ZStreamGzip__class = 
-{
-  Z_CLASS_HEADER,
-  &ZStream__class,
-  "ZStreamGzip",
-  sizeof(ZStreamGzip),
-  &z_stream_gzip_funcs.super
-};
+Z_CLASS_DEF(ZStreamGzip, ZStream, z_stream_gzip_funcs);

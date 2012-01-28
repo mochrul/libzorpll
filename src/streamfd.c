@@ -946,11 +946,4 @@ z_stream_fd_funcs =
 /**
  * ZStreamFD class descriptor.
  **/
-ZClass ZStreamFD__class =
-{
-  Z_CLASS_HEADER,
-  &ZStream__class,
-  "ZStreamFD",
-  sizeof(ZStreamFD),
-  &z_stream_fd_funcs.super,
-};
+Z_CLASS_DEF(ZStreamFD, ZStream, z_stream_fd_funcs);
