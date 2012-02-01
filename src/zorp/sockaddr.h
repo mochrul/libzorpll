@@ -111,6 +111,16 @@ z_sockaddr_inet_get_sa(ZSockAddr *s)
   return (struct sockaddr_in *) z_sockaddr_get_sa(s);
 }
 
+gboolean z_sockaddr_inet6_check(ZSockAddr *s);
+
+static inline const struct sockaddr_in6 *
+z_sockaddr_inet6_get_sa(ZSockAddr *s)
+{
+  g_assert(z_sockaddr_inet6_check(s));
+
+  return (struct sockaddr_in6 *) z_sockaddr_get_sa(s);
+}
+
 /**
  * This ZSockAddrInet specific function returns the address part of the
  * address.
@@ -123,6 +133,20 @@ z_sockaddr_inet_get_address(ZSockAddr *s)
   g_assert(z_sockaddr_inet_check(s));
   
   return z_sockaddr_inet_get_sa(s)->sin_addr;
+}
+
+/**
+ * This ZSockAddrInet6 specific function returns the address part of the
+ * address.
+ *
+ * @param[in] s ZSockAddrInet6 instance
+ **/
+static inline struct in6_addr
+z_sockaddr_inet6_get_address(ZSockAddr *s)
+{
+  g_assert(z_sockaddr_inet6_check(s));
+
+  return z_sockaddr_inet6_get_sa(s)->sin6_addr;
 }
 
 /**
@@ -170,6 +194,37 @@ z_sockaddr_inet_set_port(ZSockAddr *s, guint16 port)
   g_assert(z_sockaddr_inet_check(s));
   
   ((struct sockaddr_in *) &s->sa)->sin_port = htons(port);
+}
+
+/**
+ * This ZSockAddrInet6 specific function returns the port part of the
+ * address.
+ *
+ * @param[in] s ZSockAddrInet6 instance
+ *
+ * @returns the port in host byte order
+ **/
+static inline guint16
+z_sockaddr_inet6_get_port(ZSockAddr *s)
+{
+  g_assert(z_sockaddr_inet6_check(s));
+
+  return ntohs(z_sockaddr_inet6_get_sa(s)->sin6_port);
+}
+
+/**
+ * This ZSockAddrInet6 specific function sets the port part of the
+ * address.
+ *
+ * @param[in] s ZSockAddrInet6 instance
+ * @param[in] port new port in host byte order
+ **/
+static inline void
+z_sockaddr_inet6_set_port(ZSockAddr *s, guint16 port)
+{
+  g_assert(z_sockaddr_inet6_check(s));
+
+  ((struct sockaddr_in6 *) &s->sa)->sin6_port = htons(port);
 }
 
 ZSockAddr *z_sockaddr_inet_new(const gchar *ip, guint16 port);

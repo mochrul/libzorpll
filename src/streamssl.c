@@ -457,11 +457,6 @@ z_stream_ssl_watch_check(ZStream *s, GSource *src G_GNUC_UNUSED)
           if (SSL_pending(self->ssl->ssl))
             z_return(TRUE);
         }
-      else
-        {
-          if (s->want_pri)
-            z_return(TRUE);
-        }
     }
   z_return(FALSE);
 }
@@ -565,11 +560,4 @@ ZStreamFuncs z_stream_ssl_funcs =
 /**
  * ZStreamSsl class descriptor
  **/
-ZClass ZStreamSsl__class =
-{
-  Z_CLASS_HEADER,
-  &ZStream__class,
-  "ZStreamSsl",
-  sizeof(ZStreamSsl),
-  &z_stream_ssl_funcs.super,
-};
+Z_CLASS_DEF(ZStreamSsl, ZStream, z_stream_ssl_funcs);

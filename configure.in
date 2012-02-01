@@ -5,6 +5,7 @@ dnl makes use of in addition to the standard CFLAGS/LDFLAGS/etc. These are:
 dnl
 dnl RELEASE_TAG        - Debian release tag which is put to debian/changelog
 dnl SNAPSHOT_VERSION   - snapshot version to add to version number
+dnl BINARY_BRANCH      - the value is added to all source/binary packages
 dnl SOURCE_REVISION    - Revision of the source-tree, will added to the version string
 dnl
 AC_INIT(src/log.c)
@@ -50,6 +51,13 @@ fi
 
 if test -z "$RELEASE_TAG"; then
 	RELEASE_TAG=zorp30dbg
+fi
+
+if test -n "$BINARY_BRANCH"; then
+	BINARY_BRANCH="-$BINARY_BRANCH"
+	PACKAGE=$PACKAGE$BINARY_BRANCH
+else
+	BINARY_BRANCH=""
 fi
 
 if test -z "$libexecdir" || test "x${libexecdir}" = "xNONE"; then
@@ -359,6 +367,7 @@ AC_DEFINE_UNQUOTED(ZORPLIB_ENABLE_TOS, `enable_value $enable_tos`, [enable ToS m
 AC_DEFINE_UNQUOTED(ZORPLIB_PIDFILE_DIR, "$ZORPLIB_PIDFILE_DIR", [default PID file directory])
 AC_DEFINE_UNQUOTED(ZORPLIB_LIBEXECDIR, "`eval echo ${libexecdir}`", [libexecdir])
 AC_DEFINE_UNQUOTED(ZORPLIB_COMPAT_BRANCH,"`eval echo ${LIBZORPLL_LT_COMPAT_BRANCH}`", [Binary compatibility version])
+AC_DEFINE_UNQUOTED(ZORPLIB_BINARY_BRANCH,"`eval echo ${BINARY_BRANCH}`", [Binary branch])
 AC_DEFINE_UNQUOTED(ZORPLIB_TEMP_DIR, "$ZORPLIB_TEMP_DIR", [default temporary directory])
 
 cat <<EOF
@@ -393,6 +402,7 @@ DEPS_LIBS="$LIBS $GLIB_LIBS $OPENSSL_LIBS"
 LIBS="$ZORP_LIBS $DEPS_LIBS"
 
 AC_SUBST(SNAPSHOT_VERSION)
+AC_SUBST(BINARY_BRANCH)
 AC_SUBST(RELEASE_TAG)
 AC_SUBST(SOURCE_REVISION)
 AC_SUBST(ZORPLIBLL_VERSION)
