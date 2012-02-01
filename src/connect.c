@@ -570,14 +570,7 @@ ZConnectorFuncs z_connector_funcs =
 #ifdef G_OS_WIN32
   LIBZORPLL_EXTERN
 #endif 
-ZClass ZConnector__class = 
-{
-  Z_CLASS_HEADER,
-  Z_CLASS(ZObject),               // super_class 
-  "ZConnector",                   // name
-  sizeof(ZConnector),             // size
-  &z_connector_funcs.super        // funcs
-};
+Z_CLASS_DEF(ZConnector, ZObject, z_connector_funcs);
 
 /**
  * ZStreamConnector virtual methods.

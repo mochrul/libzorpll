@@ -758,6 +758,21 @@ z_sockaddr_inet6_new2(struct sockaddr_in6 *sin6)
 
   return (ZSockAddr *) addr;
 }
+
+/**
+ * This function checks whether the given ZSockAddr instance is in fact a
+ * ZSockAddrInet instance.
+ *
+ * @param[in] s ZSockAddr instance
+ *
+ * @returns TRUE if s is a ZSockAddrInet
+ **/
+gboolean
+z_sockaddr_inet6_check(ZSockAddr *s)
+{
+  return (s->sa_funcs == &inet6_sockaddr_funcs);
+}
+
 #endif
 
 #ifndef G_OS_WIN32

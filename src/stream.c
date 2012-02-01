@@ -1242,11 +1242,15 @@ z_stream_read_chunk(ZStream *self, void *buf, gsize len, gsize *bytes_read, GErr
   GIOStatus status = G_IO_STATUS_NORMAL;
   gsize bytes;
 
+  /* Only works on a blocking stream. */
+  g_return_val_if_fail(z_stream_get_nonblock(self) == FALSE, G_IO_STATUS_ERROR);
+
   g_return_val_if_fail((error == NULL) || (*error == NULL), G_IO_STATUS_ERROR);
 
   z_enter();
   *bytes_read = 0;
-  while (status == G_IO_STATUS_NORMAL && len > 0)
+  while (len > 0 &&
+         (status == G_IO_STATUS_NORMAL || status == G_IO_STATUS_AGAIN))
     {
       status = z_stream_read(self, buf, len, &bytes, error);
       if (status == G_IO_STATUS_NORMAL)
@@ -1514,11 +1518,4 @@ ZStreamFuncs z_stream_funcs =
 #ifdef G_OS_WIN32
   LIBZORPLL_EXTERN
 #endif
-ZClass ZStream__class = 
-{
-  Z_CLASS_HEADER,
-  &ZObject__class,
-  "ZStream",
-  sizeof(ZStream),
-  &z_stream_funcs.super,
-};
+Z_CLASS_DEF(ZStream, ZObject, z_stream_funcs);

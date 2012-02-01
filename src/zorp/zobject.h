@@ -69,6 +69,16 @@ typedef ZClass ZInterface;
 
 #define Z_CLASS(class_)       (&class_##__class)
 
+#define Z_CLASS_DEF(klass_, super_class, class_methods) \
+  ZClass klass_##__class =                              \
+    {                                                   \
+      Z_CLASS_HEADER,                                   \
+      Z_CLASS(super_class),                             \
+      #klass_,                                          \
+      sizeof(klass_),                                   \
+      (ZObjectFuncs*) &class_methods,                   \
+    }
+
 #define Z_CAST(inst, class_) ((class_ *) z_object_check_compatible((ZObject *) inst, Z_CLASS(class_)))
 
 #define Z_FUNCS(inst, class_) ((class_##Funcs *) (z_object_check_compatible((ZObject *) inst, Z_CLASS(class_))->isa->funcs))
