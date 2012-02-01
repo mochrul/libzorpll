@@ -1,3 +1,9 @@
+libzorpll (3.9.1.1-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- SZALAY Attila <sasa@debian.org>  Wed, 01 Feb 2012 22:48:39 +0100
+
 libzorpll (3.9.1.0-6) unstable; urgency=low
 
   * Renamed debian-patches to it's real name. Closes: #643203
