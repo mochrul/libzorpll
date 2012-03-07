@@ -358,14 +358,7 @@ ZListenerFuncs z_listener_funcs =
 /**
  * ZListener class descriptor.
  **/
-ZClass ZListener__class = 
-{
-  Z_CLASS_HEADER,
-  Z_CLASS(ZObject),               /* super_class */
-  "ZListener",                    /* name */
-  sizeof(ZListener),              /* size */
-  &z_listener_funcs.super         /* funcs */
-};
+Z_CLASS_DEF(ZListener, ZObject, z_listener_funcs);
 
 /**
  * Stream listener.
@@ -466,11 +459,4 @@ ZListenerFuncs z_stream_listener_funcs =
 /**
  * ZListener class descriptor.
  **/
-ZClass ZStreamListener__class = 
-{
-  Z_CLASS_HEADER,
-  Z_CLASS(ZListener),               /* super_class */
-  "ZStreamListener",                /* name */
-  sizeof(ZStreamListener),          /* size */
-  &z_stream_listener_funcs.super    /* funcs */
-};
+Z_CLASS_DEF(ZStreamListener, ZListener, z_stream_listener_funcs);

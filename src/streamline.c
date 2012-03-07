@@ -1137,11 +1137,4 @@ ZStreamFuncs z_stream_line_funcs =
 /**
  * ZStreamLine class descriptor.
  **/
-ZClass ZStreamLine__class = 
-{
-  Z_CLASS_HEADER,
-  &ZStream__class,
-  "ZStreamLine",
-  sizeof(ZStreamLine),
-  &z_stream_line_funcs.super,
-};
+Z_CLASS_DEF(ZStreamLine, ZStream, z_stream_line_funcs);

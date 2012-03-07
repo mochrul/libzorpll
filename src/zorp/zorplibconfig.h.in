@@ -207,6 +207,9 @@
 /* Zorp low level library version */
 #undef ZORPLIBLL_VERSION
 
+/* Binary branch */
+#undef ZORPLIB_BINARY_BRANCH
+
 /* Binary compatibility version */
 #undef ZORPLIB_COMPAT_BRANCH
 
