@@ -5,11 +5,11 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-DDEBUG=`if (echo $(DEB_BUILD_OPTIONS) | grep -q debug) then \
-                echo "--enable-debug --enable-trace"; \
-        else \
-                echo ""; \
-        fi`
+ifneq (,$(filter debug,$(DEB_BUILD_OPTIONS)))
+    DDEBUG = --enable-debug --enable-trace
+else
+    DDEBUG =
+endif
 
 ifneq (,$(filter noopt,$(DEB_BUILD_OPTIONS)))
     CFLAGS += -O0

@@ -621,15 +621,15 @@ z_stream_get_cond(ZStream *s, guint type, gboolean *v)
   switch (type)
     {
     case G_IO_IN:
-      ret = z_stream_ctrl(s, ZST_CTRL_SET_COND_READ, &value, sizeof(value));
+      ret = z_stream_ctrl(s, ZST_CTRL_GET_COND_READ, &value, sizeof(value));
       break;
 
     case G_IO_OUT:
-      ret = z_stream_ctrl(s, ZST_CTRL_SET_COND_WRITE, &value, sizeof(value));
+      ret = z_stream_ctrl(s, ZST_CTRL_GET_COND_WRITE, &value, sizeof(value));
       break;
 
     case G_IO_PRI:
-      ret = z_stream_ctrl(s, ZST_CTRL_SET_COND_PRI, &value, sizeof(value));
+      ret = z_stream_ctrl(s, ZST_CTRL_GET_COND_PRI, &value, sizeof(value));
       break;
 
     default:

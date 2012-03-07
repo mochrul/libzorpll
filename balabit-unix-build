@@ -49,6 +49,9 @@ case "$cmd" in
   prepare-dist)
     VERSION=`get_version`
     #sed_file winbuild/build.bat
+    ./configure
+    make dist
+    rm -rf *.tar.gz autom4te.cache
     ;;
   dist-exclude-list|build-exclude-list)
     echo "out obj *.aqt *.ncb *.suo *.vcproj.*.user config.h"
@@ -58,9 +61,6 @@ case "$cmd" in
       unset SNAPSHOT_VERSION
     fi
     ./autogen.sh
-    ./configure
-    make dist
-    rm -rf *.tar.gz autom4te.cache
     ;;
   configure)
 
@@ -108,8 +108,6 @@ case "$cmd" in
       CONFOPTS="$CONFOPTS --enable-mem-trace"
     fi
 
-    # variables ripped from Ubuntu zlib packaging
-    CFLAGS="$CFLAGS -Wall -g -O3" \
     ./configure --prefix $TARGET --disable-dmalloc $CONFOPTS
     ;;
   make)

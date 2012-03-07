@@ -78,6 +78,10 @@ AC_ARG_ENABLE(trace,
               [  --enable-trace       Enable trace information & messages (default: no)],,
               enable_trace=no)
 
+AC_ARG_ENABLE(werror,
+              [  --enable-werror      When enabled, treat compiler warnings as errors (default: yes)],,
+              enable_werror=yes)
+
 AC_ARG_ENABLE(mem-trace,
               [  --enable-mem-trace   Enable memory trace (default: no)],,
               enable_mem_trace=no)
@@ -109,6 +113,10 @@ if test "x$enable_debug" = "xyes"; then
   CFLAGS="$CFLAGS -O0"
 else
   CFLAGS="$CFLAGS -O2"
+fi
+
+if test "x$enable_werror" = "xyes"; then
+  CFLAGS="$CFLAGS -Werror"
 fi
 
 dnl Checks for programs.
@@ -386,14 +394,7 @@ tos: $enable_tos
 
 EOF
 
-# -Wbad-function-cast cannot be used because in log.c we cast g_hash_table_lookup
-# return value (which is a pointer) to int.
-CFLAGS="$CFLAGS -D_GNU_SOURCE -Wall -Werror -Wshadow -W -Wstrict-prototypes -Werror-implicit-function-declaration -Wpointer-arith -g"
-
-if test "x$enable_debug" = "xno"; then
-	dnl CFLAGS="$CFLAGS -Werror"
-	CFLAGS="$CFLAGS"
-fi
+CFLAGS="$CFLAGS -D_GNU_SOURCE -Wall -Wshadow -W -Wstrict-prototypes -Werror-implicit-function-declaration -Wpointer-arith -g"
 
 DEPS_CPPFLAGS="$CPPFLAGS $GLIB_CFLAGS $OPENSSL_CFLAGS"
 CPPFLAGS="-I$top_srcdir/lib -I$top_srcdir $DEPS_CPPFLAGS"
@@ -427,13 +428,8 @@ AC_OUTPUT(
 Makefile
 dist.conf
 debian/Makefile
-solbuild/Makefile
-solbuild/rules.conf
-solbuild/pkginfo.lib
-solbuild/pkginfo.dev
 winbuild/Makefile
 winbuild/build.bat
-tgzbuild/Makefile
 tgz2build/Makefile
 src/libzorpll.rc
 src/Makefile
