@@ -7,8 +7,6 @@ EXTRA_DIST = changelog control copyright rules \
 	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@-memtrace.lintian-overrides \
 	libzorpll@BINARY_BRANCH@-dev.install
 
-noinst_SCRIPTS=libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.postinst
-
 libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.config: libzorpll.config.in
 	cp $< $@
 
