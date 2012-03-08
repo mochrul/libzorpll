@@ -1,4 +1,4 @@
-EXTRA_DIST = changelog control copyright rules \
+EXTRA_DIST = changelog control copyright rules compat \
 	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.config \
 	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.install \
 	libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@.postinst \
