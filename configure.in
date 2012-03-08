@@ -236,7 +236,7 @@ if test "x$ac_cv_header_crypt_h" = "xyes"; then
 fi
 
 AM_PATH_GLIB_2_0($GLIB_MIN_VERSION,,
-    AC_MSG_ERROR(Cannot find GLIB version >= $GLIB_MIN_VERSION: is pkg-config in path?), gthread gmodule gobject)
+    AC_MSG_ERROR(Cannot find GLIB version >= $GLIB_MIN_VERSION: is pkg-config in path?), gthread)
 
 
 dnl ***************************************************************************
