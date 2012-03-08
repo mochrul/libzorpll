@@ -22,3 +22,5 @@ Makefile.in
 semantic.cache
 *.rej
 *.orig
+/m4
+/INSTALL
