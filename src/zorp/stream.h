@@ -544,13 +544,21 @@ z_stream_broken(ZStream *s)
  * @param[in] s ZStream instance
  * @param[in] timeout new timeout value
  *
- * @returns always TRUE
+ * Emits a SET_TIMEOUT_BLOCK control message that propagates down through the
+ * stream stack.
+ *
+ * @returns TRUE if setting the timeout succeeded
  **/
 static inline gboolean
 z_stream_set_timeout(ZStream *s, gint timeout)
 {
-  s->timeout = timeout;
-  return TRUE;
+  gboolean ret = TRUE;
+
+  if (!z_stream_ctrl(s, ZST_CTRL_MSG_FORWARD | ZST_CTRL_SET_TIMEOUT_BLOCK,
+                     &timeout, sizeof(timeout)))
+    ret = FALSE;
+
+  return ret;
 }
 
 /**

@@ -685,7 +685,7 @@ z_stream_gzip_watch_prepare(ZStream *s, GSource *src G_GNUC_UNUSED, gint *timeou
 {
   ZStreamGzip *self = Z_CAST(s, ZStreamGzip);
   gboolean ret = FALSE;
-  gboolean child_readable, child_writeable, child_enable;
+  gboolean child_readable, child_enable;
 
   z_enter();
   
@@ -714,7 +714,6 @@ z_stream_gzip_watch_prepare(ZStream *s, GSource *src G_GNUC_UNUSED, gint *timeou
 
   if (s->want_write)
     {
-      child_writeable = !!(self->child_cond & G_IO_OUT);
       if (self->encode.avail_out == self->buffer_length)
         ret = TRUE;
     }

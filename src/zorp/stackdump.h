@@ -31,9 +31,17 @@ typedef void ZSignalContext;
   (ZSignalContext *) (((char *) &p) + 16)
 
 void z_stackdump_log(ZSignalContext *context);
+
 #ifdef G_OS_WIN32
 void z_enable_write_dump_file();
+  #ifndef _SYSCRT
+  int z_set_unhandled_exception_filter(void);
+  #else
+  void z_set_unhandled_exception_filter(void);
+  #endif
+
 #endif
+
 #ifdef __cplusplus
 }
 #endif
