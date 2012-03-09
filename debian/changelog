@@ -1,3 +1,10 @@
+libzorpll (3.9.1.3-1) unstable; urgency=low
+
+  * New upstream version.
+  * New configure.in option --enable-werror. Closes: #661371
+
+ -- SZALAY Attila <sasa@debian.org>  Fri, 09 Mar 2012 23:07:22 +0100
+
 libzorpll (3.9.1.1-1) unstable; urgency=low
 
   * New upstream version.
