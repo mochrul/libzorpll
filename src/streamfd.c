@@ -45,6 +45,7 @@ typedef struct _ZStreamFD
   GIOChannel *channel;
   gint fd;
   gint keepalive;
+  gboolean shutdown;
   GPollFD pollfd;
 #ifdef G_OS_WIN32
   int winsock_event;
@@ -76,9 +77,14 @@ z_stream_fd_watch_prepare(ZStream *s, GSource *src G_GNUC_UNUSED, gint *timeout)
 #endif
 
   z_enter();
+
   *timeout = -1;
+
   if (mypollfd->revents)
-    z_return(TRUE);
+    {
+      *timeout = 0;
+      z_return(TRUE);
+    }
 
 #ifdef G_OS_WIN32
   if (mystream->super.want_write)
@@ -135,7 +141,16 @@ z_stream_fd_watch_prepare(ZStream *s, GSource *src G_GNUC_UNUSED, gint *timeout)
   
   if (mystream->super.want_pri)
     mypollfd->events |= G_IO_PRI;
-  
+
+  if (mypollfd->events != 0 && mystream->shutdown)
+    {
+      *timeout = 0;
+      z_return(TRUE);
+    }
+
+  if (mypollfd->events == 0)
+    mypollfd->events = G_IO_ERR;
+
 #endif
   z_return(FALSE);
 }
@@ -152,6 +167,9 @@ z_stream_fd_watch_check(ZStream *s, GSource *src G_GNUC_UNUSED)
 #endif
 
   z_enter();
+
+  if ((mypollfd->events & ~G_IO_ERR) != 0 && mystream->shutdown)
+    z_return(TRUE);
 
 #ifdef G_OS_WIN32
   WSAEnumNetworkEvents(mystream->fd, mypollfd->fd, &evs); //(HANDLE) 
@@ -203,31 +221,28 @@ z_stream_fd_watch_dispatch(ZStream *s, GSource *src)
 #endif
 
   mypollfd->revents = 0;
-  
-  if (poll_cond & (G_IO_ERR | G_IO_HUP) && rc)
+
+  if (mystream->shutdown ||
+      (poll_cond & (G_IO_ERR | G_IO_HUP) && rc))
     {
       if (mystream->super.want_read)
         rc = (*mystream->super.read_cb)(&mystream->super, poll_cond, mystream->super.user_data_read);
-        
+
       else if (mystream->super.want_write)
         rc = (*mystream->super.write_cb)(&mystream->super, poll_cond, mystream->super.user_data_write);
-        
-      else
+
+      else if (!mystream->shutdown)
         {
-          /*LOG
-            This message indicates that the system call poll() indicates
-            a broken connection on the given fd, but Zorp didn't request
-            that. This may either indicate an internal error, or some kind
-            of interoperability problem between your operating system
-            and Zorp.
-           */
-          z_log(mystream->super.name, CORE_ERROR, 4, "Internal error, POLLERR or POLLHUP was received on an inactive fd; fd='%d'", mypollfd->fd);
-          g_source_destroy(src);
+          /* basically an EOF */
+          z_log(mystream->super.name, CORE_DEBUG, 6, "POLLERR or POLLHUP received, handling as EOF; poll_cond='%x'", poll_cond);
+          mystream->shutdown = TRUE;
+          g_source_remove_poll(src, mypollfd);
         }
+
       z_return(rc);
     }
-    
-  if (mystream->super.want_read && (poll_cond & G_IO_IN) && rc)
+
+  if (mystream->super.want_read && ((poll_cond & G_IO_IN) || mystream->shutdown) && rc)
     {
       if (mystream->super.read_cb)
         {
@@ -235,10 +250,10 @@ z_stream_fd_watch_dispatch(ZStream *s, GSource *src)
         }
       else
         {
-	  /*LOG
-	    This message indicates an internal error, read event occurred, but no read
-	    callback is set. Please report this event to the Balabit QA Team (devel@balabit.com).
-	   */
+          /*LOG
+            This message indicates an internal error, read event occurred, but no read
+            callback is set. Please report this event to the Balabit QA Team (devel@balabit.com).
+           */
           z_log(mystream->super.name, CORE_ERROR, 3, "Internal error, no read callback is set;");
         }
     }
@@ -451,6 +466,12 @@ z_stream_fd_write_method(ZStream *stream,
 
   z_enter();
   g_return_val_if_fail ((error == NULL) || (*error == NULL), G_IO_STATUS_ERROR);
+
+  if (self->shutdown)
+    {
+      g_set_error(error, G_IO_CHANNEL_ERROR, G_IO_CHANNEL_ERROR_FAILED, "Channel already shut down");
+      z_return(G_IO_STATUS_ERROR);
+    }
   
   if (!z_stream_wait_fd(self, G_IO_OUT | G_IO_HUP, self->super.timeout))
     {
@@ -498,6 +519,13 @@ z_stream_fd_write_pri_method(ZStream *stream,
 
   z_enter();
   g_return_val_if_fail ((error == NULL) || (*error == NULL), G_IO_STATUS_ERROR);  
+
+  if (self->shutdown)
+    {
+      g_set_error(error, G_IO_CHANNEL_ERROR, G_IO_CHANNEL_ERROR_FAILED, "Channel already shut down");
+      z_return(G_IO_STATUS_ERROR);
+    }
+
   do
     {
       if (!z_stream_wait_fd(self, G_IO_OUT | G_IO_HUP, self->super.timeout))
@@ -888,6 +916,7 @@ z_stream_fd_new(gint fd, const gchar *name)
   self->channel = g_io_channel_unix_new(fd);
 #endif
   self->keepalive = 0;
+  self->shutdown = FALSE;
   g_io_channel_set_encoding(self->channel, NULL, NULL);
   g_io_channel_set_buffered(self->channel, FALSE);
   g_io_channel_set_close_on_unref(self->channel, FALSE);

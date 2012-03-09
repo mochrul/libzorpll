@@ -33,6 +33,9 @@
 
 #if defined(__i386__) && ZORPLIB_ENABLE_STACKDUMP
 
+#ifdef G_OS_WIN32
+#define _WIN32_WINNT _WIN32_WINNT_WINXP
+#endif
 /**
  * Log parts of the current stack in hexadecimal form.
  *
@@ -290,29 +293,40 @@ z_write_minidump(EXCEPTION_POINTERS* exception_pointers)
   hMiniDump = LoadLibrary("dbghelp.dll");
   if (hMiniDump)
     lpfnMiniDumpWriteDump = (LPFNMiniDumpWriteDump) GetProcAddress(hMiniDump, "MiniDumpWriteDump");
-
+  else
+  {
+    ret = GetLastError();
+    z_log(NULL, CORE_ERROR, 0, _T("Failed to load library dbghelp.dll: error='%08x'"), ret);
+    goto clean_up;
+  }
   if (!lpfnMiniDumpWriteDump)
     {
       ret = GetLastError();
+      z_log(NULL, CORE_ERROR, 0, _T("Failed to get process address of MiniDumpWriteDump: error='%08x'"), ret);
       goto clean_up;
     }
-  process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GetCurrentProcessId());
+//  process = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GetCurrentProcessId());
+  process = GetCurrentProcess();
   if (process==NULL)
     {
       ret = GetLastError();
+      z_log(NULL, CORE_ERROR, 0, _T("Failed to open process self: error='%08x'"), ret);
       goto clean_up;
     }
   file = CreateFile(dump_file_name, GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
   if (file==NULL) 
     {
       ret = GetLastError();
+      z_log(NULL, CORE_ERROR, 0, _T("Failed to create file for minidump: error='%08x'"), ret);
       goto clean_up;
     }
   if (!lpfnMiniDumpWriteDump(process, GetCurrentProcessId(), file, MiniDumpWithFullMemory, &exp_param, NULL, NULL)) 
     {
       ret = GetLastError();
+      z_log(NULL, CORE_ERROR, 0, _T("Failed to call MiniDumpWrite dump: error='%08x'"), ret);
       goto clean_up;
     }
+  z_log(NULL, CORE_ERROR, 0, _T("Minidump creation succeeded! filename='%s'"), dump_file_name);
  clean_up:
   if(file != NULL)
     CloseHandle(file);

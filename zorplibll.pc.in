@@ -7,5 +7,5 @@ Name: Zorpll
 Description: Low level Zorp Library
 Requires: glib-2.0 gthread-2.0 gobject-2.0
 Version: @ZORPLIBLL_VERSION@
-Libs: -L${libdir} -lzorpll
+Libs: -L${libdir} -lzorpll @OPENSSL_LIBS@
 Cflags: -D_GNU_SOURCE -I${includedir} @OPENSSL_CPPFLAGS@
