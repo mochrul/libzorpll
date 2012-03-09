@@ -1,15 +1,14 @@
 From: SZALAY Attila <sasa@debian.org>
 Date: Fri, 20 Jan 2012 13:29:40 +0100
-Subject: compile_problems2
+Subject: [PATCH] compile_problems2
 
 ===================================================================
 ---
  src/io.c          |    2 +-
  src/memtrace.c    |    2 +-
  src/socket.c      |    2 +-
- src/streamgzip.c  |    3 +--
  tests/test_blob.c |   10 +++++-----
- 5 files changed, 9 insertions(+), 10 deletions(-)
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/src/io.c b/src/io.c
 index dc461e7..9ec673f 100644
@@ -50,27 +49,6 @@ index 8f0bd4b..8613f59 100644
    GIOStatus rc;
    
    z_enter();
-diff --git a/src/streamgzip.c b/src/streamgzip.c
-index 2d1f999..2571cd7 100644
---- a/src/streamgzip.c
-+++ b/src/streamgzip.c
-@@ -685,7 +685,7 @@ z_stream_gzip_watch_prepare(ZStream *s, GSource *src G_GNUC_UNUSED, gint *timeou
- {
-   ZStreamGzip *self = Z_CAST(s, ZStreamGzip);
-   gboolean ret = FALSE;
--  gboolean child_readable, child_writeable, child_enable;
-+  gboolean child_readable, child_enable;
- 
-   z_enter();
-   
-@@ -714,7 +714,6 @@ z_stream_gzip_watch_prepare(ZStream *s, GSource *src G_GNUC_UNUSED, gint *timeou
- 
-   if (s->want_write)
-     {
--      child_writeable = !!(self->child_cond & G_IO_OUT);
-       if (self->encode.avail_out == self->buffer_length)
-         ret = TRUE;
-     }
 diff --git a/tests/test_blob.c b/tests/test_blob.c
 index 1141b4d..2891969 100644
 --- a/tests/test_blob.c

@@ -1,6 +1,6 @@
 From: SZALAY Attila <sasa@debian.org>
 Date: Fri, 20 Jan 2012 13:29:40 +0100
-Subject: compile_problems3
+Subject: [PATCH] compile_problems3
 
 ---
  src/zorp/io.h |    6 +++---
