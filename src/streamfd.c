@@ -232,7 +232,7 @@ z_stream_fd_watch_dispatch(ZStream *s, GSource *src)
         rc = (*mystream->super.write_cb)(&mystream->super, poll_cond, mystream->super.user_data_write);
 
       else if (mystream->super.want_pri)
-        rc = (*mystream->super.pir_cb)(&mystream->super, poll_cond, mystream->super.user_data_pri);
+        rc = (*mystream->super.pri_cb)(&mystream->super, poll_cond, mystream->super.user_data_pri);
 
       else if (!mystream->shutdown)
         {
