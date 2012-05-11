@@ -247,6 +247,23 @@ z_pktbuf_unref(ZPktBuf *self)
 }
 
 /**
+ * Construct a new ZPktBuf and initialize it with the contents of a GString.
+ *
+ * @param[in] str GString instance containing the data to initialize the packet with.
+ *
+ **/
+ZPktBuf *
+z_pktbuf_new_from_gstring(const GString * const str)
+{
+  ZPktBuf *pkt = z_pktbuf_new();
+
+  z_pktbuf_put_u8s(pkt, str->len, str->str);
+
+  return pkt;
+}
+
+
+/**
  * Moves the current position in the buffer
  *
  * @param[in] self this

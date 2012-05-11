@@ -63,6 +63,9 @@ void z_pktbuf_unref(ZPktBuf *self);
 ZPktBuf *z_pktbuf_part(ZPktBuf *self, gsize pos, gsize len);
 void z_pktbuf_dump(const gchar *session_id, const gchar *class_, int level, ZPktBuf *self, const gchar *title);
 
+/* Fancy constructors */
+ZPktBuf *z_pktbuf_new_from_gstring(const GString * const str);
+
 static inline void
 z_pktbuf_data_dump(const gchar *session_id, const gchar *class_, int level, ZPktBuf *self)
 {
