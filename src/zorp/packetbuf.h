@@ -158,6 +158,8 @@ static inline gboolean z_pktbuf_put_s16s(ZPktBuf *self, gint e, gsize n, const g
 static inline gboolean z_pktbuf_put_s32s(ZPktBuf *self, gint e, gsize n, const gint32 *d) { return z_pktbuf_put_u32s(self, e, n, (const guint32*)d); }
 static inline gboolean z_pktbuf_put_s64s(ZPktBuf *self, gint e, gsize n, const gint64 *d) { return z_pktbuf_put_u64s(self, e, n, (const guint64*)d); }
 
+gboolean z_pktbuf_put_string(ZPktBuf *self, const gchar *str);
+
 #ifdef __cplusplus
 }
 #endif

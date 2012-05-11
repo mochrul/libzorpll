@@ -257,7 +257,7 @@ z_pktbuf_new_from_gstring(const GString * const str)
 {
   ZPktBuf *pkt = z_pktbuf_new();
 
-  z_pktbuf_put_u8s(pkt, str->len, str->str);
+  z_pktbuf_put_u8s(pkt, str->len, (guint8 *) str->str);
 
   return pkt;
 }
@@ -802,4 +802,17 @@ z_pktbuf_get_boolean16(ZPktBuf *self, gboolean *res)
     res[0] = !!(*(guint16*)(self->data + self->pos));
   self->pos += 2;
   return TRUE;
+}
+
+/**
+ * @brief Append a string to the buffer, properly updating the position.
+ *
+ * @param[in] self ZPktBuf instance
+ * @param[in] str the string to append
+ * @return TRUE on success
+ */
+gboolean
+z_pktbuf_put_string(ZPktBuf *self, const gchar *str)
+{
+  return z_pktbuf_put_u8s(self, strlen(str), (guint8 *) str);
 }
