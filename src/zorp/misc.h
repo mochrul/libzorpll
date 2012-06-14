@@ -17,6 +17,7 @@
 #include <glib.h>
 #include <sys/types.h>
 #ifdef G_OS_WIN32
+#define _WINSOCKAPI_
 #include <windows.h>
 #include <time.h>
 #endif

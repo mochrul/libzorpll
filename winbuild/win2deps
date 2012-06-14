@@ -1,10 +1,9 @@
-libiconv1
-libiconv-dev
-libgettext1
+winiconv
+winiconv-dev
+gettext
 libgettext-dev
 libglib2.0-dev
 libglib2.0-0
 libssl0.9.8
 libssl-dev
-libregex-dev
 msvc-compat-dev

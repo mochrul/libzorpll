@@ -18,7 +18,6 @@ z_connector_start_block
 z_connector_start_in_context
 z_connector_cancel
 z_connector_set_timeout
-z_connector_set_destroy_notify
 z_connector_new
 z_errno_is                
 z_errno_get               
@@ -43,8 +42,6 @@ g_string_assign_len
 z_str_escape              
 z_str_compress            
 z_port_enabled            
-z_process_daemonize       
-z_zorplib_version_info    
 z_poll_new                
 z_poll_ref                
 z_poll_unref              
@@ -125,7 +122,6 @@ z_stream_search_stack
 z_stream_write_buf        
 z_stream_buf_new          
 z_stream_buf_space_avail
-z_stream_fd_watch_finalize
 z_stream_fd_write_pri_method
 z_stream_fd_new           
 z_stream_line_get         
@@ -139,12 +135,16 @@ z_thread_new
 z_thread_init             
 z_thread_destroy          
 z_object_free_method      
-z_object_ref              
 z_object_is_subclass      
 z_object_is_compatible    
 z_object_is_instance      
 z_object_new              
 z_object_new_compatible   
-z_object_unref            
 z_crypt
 z_stream_gzip_new
+ZConnector__class
+ZStreamConnector__class
+ZStream__class
+ZStreamLine__class
+ZClass__class
+ZObject__class

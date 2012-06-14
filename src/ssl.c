@@ -29,6 +29,7 @@
   #include <unistd.h>
 #endif
 #include <openssl/err.h>
+#undef X509_NAME
 #include <openssl/x509v3.h>
 #include <string.h>
 
