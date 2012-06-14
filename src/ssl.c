@@ -39,7 +39,11 @@ gchar *crypto_engine = NULL;
 
 static int ssl_initialized = 0;
 
+#if GLIB_MINOR_VERSION >=32
+static GMutex *ssl_mutexes;
+#else
 static GStaticMutex *ssl_mutexes;
+#endif
 static int mutexnum;
 
 /**
@@ -104,12 +108,20 @@ z_ssl_locking_callback(int mode, int n, const char *file G_GNUC_UNUSED, int line
   if (mode & CRYPTO_LOCK)
     {
       z_trace(NULL, "Mutex %d locked", n);
+      #if GLIB_MINOR_VERSION >=32
+      g_mutex_lock(&ssl_mutexes[n]);
+      #else
       g_static_mutex_lock(&ssl_mutexes[n]);
+      #endif
     }
   else
     {
       z_trace(NULL,  "Mutex %d unlocked", n);
+      #if GLIB_MINOR_VERSION >= 32
+      g_mutex_unlock(&ssl_mutexes[n]);
+      #else
       g_static_mutex_unlock(&ssl_mutexes[n]);
+      #endif
     }
   z_return();
 }
@@ -122,7 +134,11 @@ z_ssl_init_mutexes(void)
 {
   z_enter();
   mutexnum = CRYPTO_num_locks();
+  #if GLIB_MINOR_VERSION >=32
+  ssl_mutexes = g_new0(GMutex, mutexnum);
+  #else
   ssl_mutexes = g_new0(GStaticMutex, mutexnum);
+  #endif
   
   z_enter();
   CRYPTO_set_locking_callback(z_ssl_locking_callback);
@@ -527,14 +543,14 @@ z_ssl_set_trusted_ca_list(SSL_CTX *ctx, gchar *ca_path)
 {
   ZSSLCADirectory *ca_dir = NULL;
   static GHashTable *ca_dir_hash = NULL;
-  static GStaticMutex lock = G_STATIC_MUTEX_INIT;
+  G_LOCK_DEFINE_STATIC(lock);
   STACK_OF(X509_NAME) *ca_file = NULL;
   const gchar *direntname;
   struct stat ca_stat;
   GDir *dir;
    
   z_enter();
-  g_static_mutex_lock(&lock);
+  G_LOCK(lock);
   if (ca_dir_hash == NULL)
     {
       ca_dir_hash = g_hash_table_new(g_str_hash, g_str_equal);
@@ -551,7 +567,7 @@ z_ssl_set_trusted_ca_list(SSL_CTX *ctx, gchar *ca_path)
               ca_dir->modtime == ca_stat.st_mtime)
             {
               SSL_CTX_set_client_CA_list(ctx, z_ssl_dup_sk_x509_name(ca_dir->contents));
-              g_static_mutex_unlock(&lock);
+              G_UNLOCK(lock);
               z_return(TRUE);
             }
           g_hash_table_remove(ca_dir_hash, orig_key);
@@ -563,7 +579,7 @@ z_ssl_set_trusted_ca_list(SSL_CTX *ctx, gchar *ca_path)
         
   if (stat(ca_path, &ca_stat) < 0)
     {
-      g_static_mutex_unlock(&lock);
+      G_UNLOCK(lock);
       z_return(FALSE);
     }
   ca_dir = g_new0(ZSSLCADirectory, 1);
@@ -603,7 +619,7 @@ z_ssl_set_trusted_ca_list(SSL_CTX *ctx, gchar *ca_path)
   g_hash_table_insert(ca_dir_hash, g_strdup(ca_path), ca_dir);
   SSL_CTX_set_client_CA_list(ctx, z_ssl_dup_sk_x509_name(ca_dir->contents));
   g_dir_close(dir);
-  g_static_mutex_unlock(&lock);
+  G_UNLOCK(lock);
   z_return(TRUE);
 }
 

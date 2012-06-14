@@ -168,7 +168,7 @@ z_thread_func(gpointer st)
       if (!self)
         {
           num_threads--;
-          g_async_queue_unref_and_unlock(queue);
+          g_async_queue_unref(queue);
         }
       else
         g_async_queue_unlock(queue);
@@ -214,7 +214,7 @@ z_thread_new(gchar *name, GThreadFunc func, gpointer arg)
   else
     {
       num_threads++;
-      g_async_queue_ref_unlocked(queue);
+      g_async_queue_ref(queue);
       g_async_queue_unlock(queue);
       if (!g_thread_create_full(z_thread_func, self, max_stack_size, FALSE, TRUE, G_THREAD_PRIORITY_NORMAL, &error))
         {

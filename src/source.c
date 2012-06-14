@@ -200,7 +200,7 @@ z_timeout_source_prepare(GSource *s, gint *timeout)
   if (!z_timeout_source_enabled(self))
     return FALSE;
 
-  g_source_get_current_time(s, &now);
+  g_get_current_time(&now);
   if (g_time_val_compare(&self->timeout_target, &now) <= 0)
     return TRUE;
   else if (timeout)
@@ -223,7 +223,7 @@ z_timeout_source_check(GSource *s)
   if (!z_timeout_source_enabled(self))
     return FALSE;
 
-  g_source_get_current_time(s, &now);
+  g_get_current_time(&now);
   return g_time_val_compare(&self->timeout_target, &now) <= 0;
 }
 

@@ -403,7 +403,11 @@ z_blob_system_threadproc(ZBlobSystem *self)
 
   while (1)
     {
-      blob = g_async_queue_timed_pop(self->req_queue, &next_time);   /* blocks until there is a requesting blob in the queue */
+      #if GLIB_MINOR_VERSION >= 32
+        blob = g_async_queue_timeout_pop(self->req_queue, interval * 1000000);   /* blocks until there is a requesting blob in the queue */
+      #else
+        blob = g_async_queue_timed_pop(self->req_queue, &next_time);   /* blocks until there is a requesting blob in the queue */
+      #endif
       
       if (blob == NULL)
         {
