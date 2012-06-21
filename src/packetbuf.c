@@ -213,6 +213,27 @@ z_pktbuf_part(ZPktBuf *parent, gsize pos, gsize len)
 }
 
 /**
+ * Split a ZPktBuf object into two at a specified position.
+ *
+ * @param[in] self ZPktBuf object to split. Will contain the first part of the buffer after the split
+ * @param[in] at The position to split at
+ *
+ * @returns ZPktBuf* object with the second part of the buffer, starting with the character specified by the position
+ */
+ZPktBuf *
+z_pktbuf_split(ZPktBuf *self, gsize at)
+{
+  ZPktBuf *ret;
+
+  ret = z_pktbuf_new();
+
+  z_pktbuf_copy(ret, self->data+at, self->length-at);
+  z_pktbuf_resize(self, at);
+
+  return ret;
+}
+
+/**
  * Increment the reference counter for self.
  *
  * @param[in] self packet
