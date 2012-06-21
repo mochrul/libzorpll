@@ -52,7 +52,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -122,7 +122,6 @@
     <IncludeFiles Include="$(TopDir)\src\zorp\*.h" />
   </ItemGroup>
   <Target Name="ZbsInstall">
-    <Copy SourceFiles="$(Configuration)\libzorpll.dll" DestinationFolder="$(TopDir)\winbuild\staging\bin" />
     <Copy SourceFiles="$(Configuration)\libzorpll.lib" DestinationFolder="$(TopDir)\winbuild\staging\lib" />
     <Copy SourceFiles="@(IncludeFiles)" DestinationFolder="$(TopDir)\winbuild\staging\include\zorp" />
   </Target>
