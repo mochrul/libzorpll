@@ -24,3 +24,6 @@ semantic.cache
 *.orig
 /m4
 /INSTALL
+winbuild/win32/vs10/Debug/
+winbuild/win32/vs10/libzorpll.suo
+winbuild/win32/vs10/libzorpll.vcxproj.user
