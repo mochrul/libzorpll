@@ -16,6 +16,15 @@ fi
 
 cmd=$1
 
+CONFIGURATION=
+if [ `echo "$TGZ_BUILD_OPTS" | grep -ow debug` == "debug" ]; then
+  CONFIGURATION="Debug"
+  echo " === Debug build with configuration: '$CONFIGURATION' === "
+else
+  CONFIGURATION="Release"
+  echo " === Release build with configuration: '$CONFIGURATION' === "
+fi
+
 shift
 case "$cmd" in
   get-version)
@@ -33,7 +42,8 @@ case "$cmd" in
     ;;
   make)
     if [ -z "$1" ]; then
-      cmd.exe /c msbuild winbuild\\win32\\vs10\\libzorpll.vcxproj
+      cmd.exe /c msbuild winbuild\\win32\\vs10\\libzorpll.vcxproj /p:Configuration="$CONFIGURATION"
+
     else
       case $1 in
         clean)
@@ -41,7 +51,8 @@ case "$cmd" in
         distclean)
           ;;
         install)
-          cmd.exe /c msbuild winbuild\\win32\\vs10\\libzorpll.vcxproj /t:ZbsInstall
+          cmd.exe /c msbuild winbuild\\win32\\vs10\\libzorpll.vcxproj /t:ZbsInstall /p:Configuration="$CONFIGURATION"
+
           ;;
       esac
     fi

@@ -5,7 +5,9 @@
     <TopDir>..\..\..</TopDir>
     <DepDir>$(TopDir)\..\..\dep</DepDir>
   </PropertyGroup>
-  <PropertyGroup />
+  <PropertyGroup>
+    <IntDir>$(Configuration)\Objs</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(TopDir);$(TopDir)\src;$(DepDir)\include\libxml2;$(DepDir)\include\atk-1.0;$(DepDir)\include\pango-1.0;$(DepDir)\include\cairo;$(DepDir)\include\gtk-2.0;$(DepDir)\lib\gtk-2.0\include;$(DepDir)\include\glib-2.0;$(DepDir)\lib\glib-2.0\include;$(DepDir)\include\gdk-pixbuf-2.0;$(DepDir)\include\;$(DepDir)\include\openssl;</AdditionalIncludeDirectories>
