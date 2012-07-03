@@ -169,6 +169,7 @@ z_thread_func(gpointer st)
         {
           num_threads--;
           g_async_queue_unref(queue);
+          g_async_queue_unlock(queue);
         }
       else
         g_async_queue_unlock(queue);
