@@ -212,6 +212,7 @@ gint z_log_get_verbose_level(void);
 gboolean z_log_get_use_syslog(void);
 const gchar * z_log_get_log_spec(void);
 gboolean z_log_get_log_tags(void);
+gint z_log_get_tag_level(const gchar *tag, gsize tag_len);
 
 #ifdef __cplusplus
 }

@@ -776,6 +776,12 @@ z_log_enable_tag_map_cache(ZLogMapTagFunc map_tags, gint max_tag)
 gboolean
 z_log_enabled_len(const gchar *tag, gsize tag_len, gint level)
 {
+  return level <= z_log_get_tag_level(tag ,tag_len);
+}
+
+gint
+z_log_get_tag_level(const gchar *tag, gsize tag_len)
+{
   gint verbose;
   ZLogTagCache *lc;
   GHashTable *tag_hash;
@@ -783,7 +789,7 @@ z_log_enabled_len(const gchar *tag, gsize tag_len, gint level)
   if (G_LIKELY(!log_spec.items))
     {
       /* fastpath, no logspec, decision is simple */
-      return level <= log_spec.verbose_level;
+      return log_spec.verbose_level;
     }
   if (G_LIKELY(log_map_tag))
     {
@@ -802,14 +808,14 @@ z_log_enabled_len(const gchar *tag, gsize tag_len, gint level)
               log_mapped_tags_verb[tag_ndx] = (guchar) (verbose & 0xFF) + 1;
               G_UNLOCK(log_spec_lock);
             }
-          return level <= verbose;
+          return verbose;
         }
     }
   /* check slow ghashtable based cache */
   lc = ((ZLogTagCache *) g_static_private_get(&current_logtag_cache));
   if (!lc)
     {
-      return level <= log_spec.verbose_level;
+      return log_spec.verbose_level;
     }
   if (lc->empty_hash)
     {
@@ -830,7 +836,7 @@ z_log_enabled_len(const gchar *tag, gsize tag_len, gint level)
   else
     verbose--;
   
-  return (level <= verbose);
+  return verbose;
 }
 
 /* Main entry points for logging */
