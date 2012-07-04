@@ -776,11 +776,11 @@ z_log_enable_tag_map_cache(ZLogMapTagFunc map_tags, gint max_tag)
 gboolean
 z_log_enabled_len(const gchar *tag, gsize tag_len, gint level)
 {
-  return level <= z_log_get_tag_level(tag ,tag_len);
+  return level <= z_log_get_tag_loglevel(tag ,tag_len);
 }
 
 gint
-z_log_get_tag_level(const gchar *tag, gsize tag_len)
+z_log_get_tag_loglevel(const gchar *tag, gsize tag_len)
 {
   gint verbose;
   ZLogTagCache *lc;
