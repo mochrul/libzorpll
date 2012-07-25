@@ -880,7 +880,7 @@ z_log_session_id(const gchar *session_id)
  * whether the message really needs to be written.
  **/
 void
-z_logv(const gchar *class, int level, gchar *format, va_list ap)
+z_logv(const gchar *class, int level, const gchar *format, va_list ap)
 {
   int saved_errno = errno;
   
@@ -914,7 +914,7 @@ z_logv(const gchar *class, int level, gchar *format, va_list ap)
  * @see z_log() in log.h
  **/
 void
-z_llog(const gchar *class, int level, gchar *format, ...)
+z_llog(const gchar *class, int level, const gchar *format, ...)
 {
   va_list l;
 
@@ -940,7 +940,7 @@ z_llog(const gchar *class, int level, gchar *format, ...)
  * @see z_log() in log.h
  **/
 void 
-z_log(const gchar *session_id, const gchar *class, int level, gchar *format, ...)
+z_log(const gchar *session_id, const gchar *class, int level, const gchar *format, ...)
 {
   va_list l;
   gchar msgbuf[2048];

@@ -60,12 +60,12 @@ void z_log_enable_stderr_redirect(gboolean threaded);
 void z_log_enable_tag_map_cache(ZLogMapTagFunc map_tags, gint max_tag);
 
 
-void z_logv(const gchar *class_, int level, gchar *format, va_list ap);
+void z_logv(const gchar *class_, int level, const gchar *format, va_list ap);
 
 #ifndef G_OS_WIN32
-  void z_llog(const gchar *class_, int level, gchar *format, ...) __attribute__ ((format(printf, 3, 4)));
+  void z_llog(const gchar *class_, int level, const gchar *format, ...) __attribute__ ((format(printf, 3, 4)));
 #else
-  void z_llog(const gchar *class_, int level, gchar *format, ...);
+  void z_llog(const gchar *class_, int level, const gchar *format, ...);
 #endif
 
 gboolean z_log_enabled_len(const gchar *class_, gsize class_len, int level);

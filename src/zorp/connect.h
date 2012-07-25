@@ -69,7 +69,7 @@ LIBZORPLL_EXTERN ZClass ZConnector__class;
 LIBZORPLL_EXTERN ZClass ZStreamConnector__class;
 
 ZConnector *
-z_connector_new(ZClass *class,
+z_connector_new(ZClass *_class,
                 const gchar *session_id,
                 gint socket_type,
                 ZSockAddr *local, 
