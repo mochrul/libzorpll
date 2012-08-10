@@ -23,12 +23,42 @@ test_pktbuf_split(void)
   z_pktbuf_unref(newbuf);
 }
 
+static void
+test_pktbuf_append_pktbuf(void)
+{
+  ZPktBuf *buf, *other;
+
+  buf = z_pktbuf_new();
+
+  other = z_pktbuf_new();
+  z_pktbuf_put_string(other, "qwerty");
+
+  z_pktbuf_append_pktbuf(buf, other);
+
+  g_assert(z_pktbuf_length(buf) == 6);
+  g_assert(memcmp(buf->data, "qwerty", z_pktbuf_length(buf)) == 0);
+
+  other = z_pktbuf_new();
+  z_pktbuf_append_pktbuf(buf, other);
+
+  g_assert(z_pktbuf_length(buf) == 6);
+  g_assert(memcmp(buf->data, "qwerty", z_pktbuf_length(buf)) == 0);
+
+  other = z_pktbuf_new();
+  z_pktbuf_put_string(other, "qwerty");
+
+  z_pktbuf_append_pktbuf(buf, other);
+
+  g_assert(z_pktbuf_length(buf) == 12);
+  g_assert(memcmp(buf->data, "qwertyqwerty", z_pktbuf_length(buf)) == 0);
+}
 
 int
 main(int argc, char *argv[])
 {
   g_test_init(&argc, &argv, NULL);
   g_test_add_func("/pktbuf/split", test_pktbuf_split);
+  g_test_add_func("/pktbuf/append_pktbuf", test_pktbuf_append_pktbuf);
   g_test_run();
   return 0;
 }

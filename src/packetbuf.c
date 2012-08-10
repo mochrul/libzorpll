@@ -837,3 +837,17 @@ z_pktbuf_put_string(ZPktBuf *self, const gchar *str)
 {
   return z_pktbuf_put_u8s(self, strlen(str), (guint8 *) str);
 }
+
+/**
+ * @brief Append a pktbuf while consuming it
+ * @param[in] self ZPktBuf instance
+ * @param[in] other ZPktBuf to append, will be consumed
+ * @return self
+ */
+ZPktBuf *
+z_pktbuf_append_pktbuf(ZPktBuf *self, ZPktBuf *other)
+{
+  z_pktbuf_append(self, other->data, other->length);
+  z_pktbuf_unref(other);
+  return self;
+}

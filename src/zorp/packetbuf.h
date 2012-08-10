@@ -161,6 +161,7 @@ static inline gboolean z_pktbuf_put_s64s(ZPktBuf *self, gint e, gsize n, const g
 gboolean z_pktbuf_put_string(ZPktBuf *self, const gchar *str);
 
 ZPktBuf* z_pktbuf_split(ZPktBuf *self, gsize at);
+ZPktBuf* z_pktbuf_append_pktbuf(ZPktBuf *self, ZPktBuf *other);
 
 #ifdef __cplusplus
 }
