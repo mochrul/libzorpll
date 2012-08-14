@@ -18,7 +18,6 @@ $(STAMPDIR)/stamp-setup:
 
 configure: $(STAMPDIR)/stamp-configure
 $(STAMPDIR)/stamp-configure: $(STAMPDIR)/stamp-setup
-	$(BUILDCMD) bootstrap --prefix=$(ZBS_PREFIX)
 	$(BUILDCMD) configure --prefix=$(ZBS_PREFIX)
 	touch $@
 
