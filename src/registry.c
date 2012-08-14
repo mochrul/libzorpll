@@ -216,7 +216,7 @@ z_reg_key_write_dword(HKEY root, gchar *key, gchar *name, DWORD value)
 {
   HKEY hKey;
 
-  if(RegCreateKeyEx(root, (LPCSTR)key, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL) != ERROR_SUCCESS)
+  if(RegCreateKeyEx(root, (LPCSTR)key, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL, &hKey, NULL) != ERROR_SUCCESS)
     {
       return FALSE;
     }
@@ -246,7 +246,7 @@ z_reg_key_write_string(HKEY root, gchar *key, gchar *name, gchar *value)
 {
   HKEY hKey;
 
-  if(RegCreateKeyEx(root, (LPCSTR)key, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL) != ERROR_SUCCESS)
+  if(RegCreateKeyEx(root, (LPCSTR)key, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL, &hKey, NULL) != ERROR_SUCCESS)
     return FALSE;
 
   if(RegSetValueEx(hKey, (LPCSTR)name, 0, REG_SZ, (LPBYTE)value, strlen(value)+1) == ERROR_SUCCESS)
@@ -273,7 +273,7 @@ z_reg_key_delete(HKEY root, gchar *key, gchar *name)
 {
   HKEY hKey;
 
-  if(RegOpenKeyEx(root,(LPCSTR)key, 0, KEY_WRITE, &hKey) != ERROR_SUCCESS)
+  if(RegOpenKeyEx(root,(LPCSTR)key, 0, KEY_SET_VALUE, &hKey) != ERROR_SUCCESS)
     return FALSE;
 
   if(RegDeleteValue(hKey, (LPCSTR)name) != ERROR_SUCCESS)
@@ -303,7 +303,7 @@ z_reg_key_read_dword(HKEY root, gchar *key, gchar *name, DWORD *value)
   DWORD t = sizeof(DWORD);
   DWORD type = REG_DWORD;
 
-  if(RegOpenKeyEx(root,(LPCSTR)key, 0, KEY_READ, &hKey) != ERROR_SUCCESS)
+  if(RegOpenKeyEx(root,(LPCSTR)key, 0, KEY_QUERY_VALUE, &hKey) != ERROR_SUCCESS)
     return FALSE;
 
   if(RegQueryValueEx(hKey, (LPCSTR)name, 0, &type, (LPBYTE)value, &t) == ERROR_SUCCESS)
@@ -332,7 +332,7 @@ z_reg_key_read_string(HKEY root, gchar *key, gchar *name, gchar **value)
   DWORD t = 2000;
   DWORD type = REG_SZ;
 
-  if(RegOpenKeyEx(root,(LPCSTR)key, 0, KEY_READ, &hKey) != ERROR_SUCCESS)
+  if(RegOpenKeyEx(root,(LPCSTR)key, 0, KEY_QUERY_VALUE, &hKey) != ERROR_SUCCESS)
     return FALSE;
 
   if(RegQueryValueEx(hKey, (LPCSTR)name, 0, &type, (LPBYTE)&temp, &t) == ERROR_SUCCESS)
