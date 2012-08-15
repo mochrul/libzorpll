@@ -201,9 +201,11 @@ void
 z_fd_set_our_tos(gint fd, guint8 tos)
 {
   socklen_t len;
+#if ZORPLIB_ENABLE_CAPS
   cap_t saved_caps;
-  
+
   saved_caps = cap_save();
+#endif
   len = sizeof(tos);
   cap_enable(CAP_NET_ADMIN);
   if (setsockopt(fd, SOL_IP, IP_TOS, &tos, len) < 0)

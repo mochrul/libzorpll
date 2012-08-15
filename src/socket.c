@@ -37,14 +37,18 @@
 GIOStatus
 z_bind(gint fd, ZSockAddr *addr, guint32 sock_flags)
 {
+#if ZORPLIB_ENABLE_CAPS
   cap_t saved_caps;
+#endif
   GIOStatus rc;
-  
+
   z_enter();
+#if ZORPLIB_ENABLE_CAPS
   saved_caps = cap_save();
+#endif
   cap_enable(CAP_NET_BIND_SERVICE); /* for binding low numbered ports */
   cap_enable(CAP_NET_ADMIN); /* for binding non-local interfaces, transparent proxying */
-  
+
   if (addr->sa_funcs && addr->sa_funcs->sa_bind_prepare)
     addr->sa_funcs->sa_bind_prepare(fd, addr, sock_flags);
 
@@ -84,10 +88,10 @@ z_accept(gint fd, gint *newfd, ZSockAddr **addr, guint32 sock_flags)
   char sabuf[1024];
   socklen_t salen = sizeof(sabuf);
   struct sockaddr *sa = (struct sockaddr *) sabuf;
-  
+
   /* NOTE: workaround a Linux 2.4.20 kernel problem */
   sa->sa_family = MAGIC_FAMILY_NUMBER;
-  
+
   do
     {
       *newfd = z_ll_accept(fd, (struct sockaddr *) sabuf, &salen, sock_flags);
@@ -223,13 +227,13 @@ z_listen(gint fd, gint backlog, guint32 sock_flags)
  * @param[in]  sock_flags socket flags
  *
  * @returns GIOStatus instance
- **/ 
+ **/
 GIOStatus
 z_getsockname(gint fd, ZSockAddr **local_addr, guint32 sock_flags)
 {
   char sabuf[1500];
   socklen_t salen = sizeof(sabuf);
-  
+
   if (z_ll_getsockname(fd, (struct sockaddr *) sabuf, &salen, sock_flags) == -1)
     {
       /*LOG
@@ -250,13 +254,13 @@ z_getsockname(gint fd, ZSockAddr **local_addr, guint32 sock_flags)
  * @param[out] peer_addr the address of the peer is returned here
  *
  * @returns GIOStatus instance
- **/ 
+ **/
 GIOStatus
 z_getpeername(gint fd, ZSockAddr **peer_addr, guint32 sock_flags)
 {
   char sabuf[1500];
   socklen_t salen = sizeof(sabuf);
-  
+
   if (z_ll_getpeername(fd, (struct sockaddr *) sabuf, &salen, sock_flags) == -1)
     {
       return G_IO_STATUS_ERROR;
@@ -273,13 +277,13 @@ z_getpeername(gint fd, ZSockAddr **peer_addr, guint32 sock_flags)
  * @param[in]  sock_flags socket flags
  *
  * @returns GIOStatus instance
- **/ 
+ **/
 GIOStatus
 z_getdestname(gint fd, ZSockAddr **dest_addr, guint32 sock_flags)
 {
   char sabuf[1500];
   socklen_t salen = sizeof(sabuf);
-  
+
   if (z_ll_getdestname(fd, (struct sockaddr *) sabuf, &salen, sock_flags) == -1)
     {
       return G_IO_STATUS_ERROR;
@@ -318,11 +322,11 @@ z_do_ll_bind(int fd, struct sockaddr *sa, socklen_t salen, guint32 sock_flags)
   else
     {
       gint rc = -1;
-      
+
       /* the port is sa is only a hint, the only requirement is that the
        * allocated port is in the same group, but we need to disable REUSE
        * address for this to work properly */
-      
+
       if ((sock_flags & ZSF_RANDOM_BIND) == 0)  /* in the non-random case, try to bind to the given port */
         rc = bind(fd, sa, salen);
 
@@ -336,7 +340,7 @@ z_do_ll_bind(int fd, struct sockaddr *sa, socklen_t salen, guint32 sock_flags)
           guint16 port_min, port_max;
           guint16 port;
           guint16 port_mask;    /* for random number bounding */
-          
+
           port = ntohs(((struct sockaddr_in *) sa)->sin_port);
           if (port < 512)
             {
@@ -420,13 +424,13 @@ z_do_ll_accept(int fd, struct sockaddr *sa, socklen_t *salen, guint32 sock_flags
   return accept(fd, sa, salen);
 }
 
-gint 
+gint
 z_do_ll_connect(int fd, struct sockaddr *sa, socklen_t salen, guint32 sock_flags G_GNUC_UNUSED)
 {
   return connect(fd, sa, salen);
 }
 
-gint 
+gint
 z_do_ll_listen(int fd, gint backlog, guint32 sock_flags G_GNUC_UNUSED)
 {
   return listen(fd, backlog);
@@ -438,7 +442,7 @@ z_do_ll_getsockname(int fd, struct sockaddr *sa, socklen_t *salen, guint32 sock_
   return getsockname(fd, sa, salen);
 }
 
-gint 
+gint
 z_do_ll_getpeername(int fd, struct sockaddr *sa, socklen_t *salen, guint32 sock_flags G_GNUC_UNUSED)
 {
   return getpeername(fd, sa, salen);
@@ -447,7 +451,7 @@ z_do_ll_getpeername(int fd, struct sockaddr *sa, socklen_t *salen, guint32 sock_
 /**
  * Table of socket-related functions.
  **/
-ZSocketFuncs z_socket_funcs = 
+ZSocketFuncs z_socket_funcs =
 {
   z_do_ll_bind,
   z_do_ll_accept,
