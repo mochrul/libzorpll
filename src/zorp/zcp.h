@@ -11,6 +11,10 @@
 
 #define ZCP_LINE_LENGTH 4096
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef ZHeader ZCPHeader;
 
 typedef struct _ZCPCommand
@@ -62,5 +66,10 @@ GIOStatus z_cp_context_write(ZCPContext *self, guint session_id, ZCPCommand *cmd
 
 ZCPContext *z_cp_context_new(ZStream *stream);
 void z_cp_context_destroy(ZCPContext *self, gboolean close_stream);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

@@ -8,6 +8,10 @@
 
 #include <glib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct _ZHeader
 {
   GString *key;
@@ -37,5 +41,9 @@ z_header_set_get_count(ZHeaderSet *self)
 {
   return self->headers_count;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

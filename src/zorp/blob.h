@@ -13,6 +13,10 @@
 #include <zorp/stream.h>
 #include <time.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct ZBlob;
 
 /**
@@ -134,5 +138,10 @@ void z_blob_storage_lock(ZBlob *self, gboolean st);
 /* locking functions - needed by ZStreamBlob */
 gboolean z_blob_lock(ZBlob *self, gint timeout);
 void z_blob_unlock(ZBlob *self);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 
