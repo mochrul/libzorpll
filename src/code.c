@@ -94,7 +94,7 @@ z_code_get_result(ZCode *self, void *to, gsize tolen)
       z_log_data_dump(NULL, CORE_DEBUG, 8, self->buf, res);
       g_memmove(to, self->buf, res);
       self->buf_used -= res;
-      g_memmove(self->buf, self->buf + res, self->buf_used);
+      g_memmove(self->buf, self->buf + res, self->buf_used + 1);
       z_log(NULL, CORE_DUMP, 8, "Remaining ZCode data; len='%" G_GSIZE_FORMAT "', used='%" G_GSIZE_FORMAT "', partial='0x%02x'",
             res, self->buf_used, self->buf[self->buf_used]);
     }
