@@ -17,7 +17,7 @@ test_pktbuf_split(void)
   g_assert(memcmp(buf->data, "first", z_pktbuf_length(buf)) == 0);
 
   g_assert_cmpint(z_pktbuf_length(newbuf), ==, 6); /* ".last", with terminating 0 */
-  g_assert_cmpstr(newbuf->data, ==, ".last");
+  g_assert(memcmp(newbuf->data, ".last", z_pktbuf_length(newbuf)) == 0);
 
   z_pktbuf_unref(buf);
   z_pktbuf_unref(newbuf);
