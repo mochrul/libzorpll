@@ -277,7 +277,7 @@ z_ssl_verify_crl(int ok,
                  X509 *xs,
                  X509_STORE_CTX *ctx,
                  X509_STORE *crl_store, 
-                 gchar *session_id)
+                 const gchar *session_id)
 {
   X509_OBJECT obj;
   X509_NAME *subject, *issuer;
@@ -636,7 +636,7 @@ z_ssl_password(char *buf G_GNUC_UNUSED, int size G_GNUC_UNUSED, int rwflag G_GNU
 }
 
 static SSL_CTX *
-z_ssl_create_ctx(char *session_id, int mode)
+z_ssl_create_ctx(const char *session_id, int mode)
 {
   SSL_CTX *ctx;
   char buf[128];
@@ -663,7 +663,7 @@ z_ssl_create_ctx(char *session_id, int mode)
 }
 
 static gboolean
-z_ssl_load_privkey_and_cert(char *session_id, SSL_CTX *ctx, gchar *key_file, gchar *cert_file)
+z_ssl_load_privkey_and_cert(const char *session_id, SSL_CTX *ctx, gchar *key_file, gchar *cert_file)
 {
   char buf[128];
 
@@ -709,7 +709,7 @@ z_ssl_load_privkey_and_cert(char *session_id, SSL_CTX *ctx, gchar *key_file, gch
 }
 
 static gboolean
-z_ssl_set_privkey_and_cert(char *session_id, SSL_CTX *ctx, GString *key_pem, GString *cert_pem)
+z_ssl_set_privkey_and_cert(const char *session_id, SSL_CTX *ctx, GString *key_pem, GString *cert_pem)
 {
   char buf[128];
 
@@ -792,7 +792,7 @@ z_ssl_set_privkey_and_cert(char *session_id, SSL_CTX *ctx, GString *key_pem, GSt
 }
 
 static gboolean
-z_ssl_load_ca_list(char *session_id, SSL_CTX *ctx, int mode, gchar *ca_dir, gchar *crl_dir, X509_STORE **crl_store)
+z_ssl_load_ca_list(const char *session_id, SSL_CTX *ctx, int mode, gchar *ca_dir, gchar *crl_dir, X509_STORE **crl_store)
 {
   z_enter();
   if (ca_dir && ca_dir[0])
@@ -847,7 +847,7 @@ z_ssl_load_ca_list(char *session_id, SSL_CTX *ctx, int mode, gchar *ca_dir, gcha
 }
 
 static ZSSLSession *
-z_ssl_session_new_from_context(char *session_id, SSL_CTX *ctx, int verify_depth, int verify_type, X509_STORE *crl_store)
+z_ssl_session_new_from_context(const char *session_id, SSL_CTX *ctx, int verify_depth, int verify_type, X509_STORE *crl_store)
 {
   ZSSLSession *self = NULL;
   SSL *session;
@@ -890,7 +890,7 @@ z_ssl_session_new_from_context(char *session_id, SSL_CTX *ctx, int verify_depth,
 }
 
 ZSSLSession *
-z_ssl_session_new_inline(char *session_id, 
+z_ssl_session_new_inline(const char *session_id, 
                          int mode,
                          GString *key_pem, 
                          GString *cert_pem, 
@@ -920,7 +920,7 @@ z_ssl_session_new_inline(char *session_id,
 }
 
 ZSSLSession *
-z_ssl_session_new(char *session_id, 
+z_ssl_session_new(const char *session_id, 
                   int mode,
                   gchar *key_file, 
                   gchar *cert_file, 
@@ -951,7 +951,7 @@ z_ssl_session_new(char *session_id,
 #else
 
 ZSSLSession *
-z_ssl_session_new(char *session_id, 
+z_ssl_session_new(const char *session_id, 
                   int mode,
                   X509_STORE *store, 
                   int verify_depth,
