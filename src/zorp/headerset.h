@@ -25,7 +25,7 @@ typedef struct _ZHeaderSet
 } ZHeaderSet;
 
 GList *z_header_set_get_all_headers(ZHeaderSet *self);
-ZHeader *z_header_set_iterate(ZHeaderSet *self, gchar *key, gpointer *opaque);
+ZHeader *z_header_set_iterate(ZHeaderSet *self, const gchar *key, gpointer *opaque);
 gboolean z_header_set_add(ZHeaderSet *self, GString *key, GString *value, gboolean multiple);
 void z_header_set_init(ZHeaderSet *self);
 void z_header_set_destroy(ZHeaderSet *self);

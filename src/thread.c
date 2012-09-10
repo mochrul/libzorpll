@@ -190,7 +190,7 @@ z_thread_func(gpointer st)
  * @returns TRUE to indicate success
  **/
 gboolean
-z_thread_new(gchar *name, GThreadFunc func, gpointer arg)
+z_thread_new(const gchar *name, GThreadFunc func, gpointer arg)
 {
   ZThread *self = g_new0(ZThread, 1);
   GError *error = NULL;
