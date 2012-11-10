@@ -120,7 +120,8 @@ z_blob_swap_out(ZBlob *self)
       self->stat.swap_count++;
       self->stat.last_accessed = time(NULL);
       self->system->mem_used -= self->alloc_size;
-      self->system->disk_used += self->alloc_size;
+      self->system->disk_used += self->size;
+      self->alloc_size = self->size;
     }
   z_return();
 }
