@@ -50,7 +50,6 @@ case "$cmd" in
     VERSION=`get_version`
     ./configure
     make dist
-    #sed_file winbuild/build.bat
     ;;
   dist-exclude-list|build-exclude-list)
     echo "out obj *.aqt *.ncb *.suo *.vcproj.*.user config.h"

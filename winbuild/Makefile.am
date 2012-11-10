@@ -1,1 +1,1 @@
-EXTRA_DIST = build.bat libzorpll.la
+EXTRA_DIST = libzorpll.la
