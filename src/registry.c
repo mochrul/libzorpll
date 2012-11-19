@@ -66,6 +66,12 @@ z_registry_destroy(void)
     g_hash_table_destroy(registry[i]);
 }
 
+static gboolean
+z_registry_is_type_valid(gint type)
+{
+  return (type >= 0 && type < MAX_REGISTRY_TYPE);
+}
+
 /**
  * Add an entry to the registry with the given name and type.
  *
@@ -78,7 +84,7 @@ z_registry_add(const gchar *name, gint type, gpointer value)
 {
   ZRegistryEntry *ze = g_new0(ZRegistryEntry, 1);
   
-  if (type < 0 || type > MAX_REGISTRY_TYPE)
+  if (!z_registry_is_type_valid(type))
     {
       /*LOG
         This message indicates that an internal error occurred,
@@ -104,7 +110,7 @@ z_registry_add(const gchar *name, gint type, gpointer value)
  *
  * @returns NULL if the entry was not found, the associated pointer otherwise
  **/
-ZRegistryEntry *
+static ZRegistryEntry *
 z_registry_get_one(const gchar *name, gint type)
 {
   ZRegistryEntry *ze = NULL;
@@ -132,9 +138,9 @@ z_registry_get(const gchar *name, gint *type)
 {
   int i;
   ZRegistryEntry *ze = NULL;
-  
+
   z_enter();
-  if (type && (*type > MAX_REGISTRY_TYPE || *type < 0))
+  if (type && !z_registry_is_type_valid(*type))
     z_return(NULL);
 
   if (type == NULL || *type == 0)
@@ -186,18 +192,40 @@ z_registry_has_key(const gchar *name)
     }
 }
 
+typedef struct _ZRegistryForeachCallbackData
+{
+  ZRFunc user_func;
+  gpointer user_data;
+} ZRegistryForeachCallbackData;
+
+static void
+z_registry_foreach_invoke_callback(gpointer key, gpointer value, gpointer user_data)
+{
+  ZRegistryForeachCallbackData *callback_data = (ZRegistryForeachCallbackData *)user_data;
+  ZRegistryEntry *ze = (ZRegistryEntry *) value;
+
+  if (ze)
+    (*(callback_data->user_func))(ze->name, ze->type, ze->value, callback_data->user_data);
+}
+
 /**
  * This function iterates over the set of registry entries having the
  * type type.
  *
  * @param[in] type type of entries to iterate over
- * @param[in] func function to call for elements
- * @param[in] user_data pointer to be passed to func
+ * @param[in] func a ZRFunc function to call for elements
  **/
 void
-z_registry_foreach(gint type, GHFunc func, gpointer user_data)
+z_registry_foreach(gint type, ZRFunc func, gpointer user_data)
 {
-  g_hash_table_foreach(registry[type], func, user_data); 
+  g_assert(z_registry_is_type_valid(type));
+
+  ZRegistryForeachCallbackData helper_data =
+    {
+      .user_func = func,
+      .user_data = user_data,
+    };
+  g_hash_table_foreach(registry[type], z_registry_foreach_invoke_callback, &helper_data);
 }
 
 #ifdef G_OS_WIN32
