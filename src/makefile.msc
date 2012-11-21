@@ -48,6 +48,7 @@ OBJECTS =			\
 	streamline.obj 		\
 	streamssl.obj 		\
 	thread.obj 		\
+	win32_reg.obj		\
 	zobject.obj 
 
 DLLOBJECTS = libzorpll.res

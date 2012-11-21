@@ -49,27 +49,4 @@ void z_registry_foreach(gint type, ZRFunc func, gpointer user_data);
 }
 #endif
 
-#ifdef G_OS_WIN32
-
-#include <windows.h>
-#include <winreg.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-gboolean z_reg_key_write_dword(HKEY root, gchar *key, gchar *name, DWORD value);
-gboolean z_reg_key_write_string(HKEY root, gchar *key, gchar *name, gchar *value);
-
-gboolean z_reg_key_read_dword(HKEY root, gchar *key, gchar *name, DWORD *value);
-gboolean z_reg_key_read_string(HKEY root, gchar *key, gchar *name, gchar **value);
-gboolean z_reg_key_delete(HKEY root, gchar *key, gchar *name);
-gboolean z_sid_to_text( PSID ps, char *buf, int bufSize );
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
-
 #endif
