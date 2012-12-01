@@ -57,7 +57,7 @@ if test -z "$libexecdir" || test "x${libexecdir}" = "xNONE"; then
 fi
 
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
-m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES])
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 ZORPLIBLL_VERSION=$VERSION
 
 AM_CONFIG_HEADER(src/zorp/zorplibconfig.h)
