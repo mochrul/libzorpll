@@ -108,7 +108,7 @@ case "$cmd" in
       CONFOPTS="$CONFOPTS --enable-mem-trace"
     fi
 
-    ./configure --prefix $TARGET --disable-dmalloc $CONFOPTS
+    ./configure --prefix $TARGET $CONFOPTS
     ;;
   make)
     case $1 in
