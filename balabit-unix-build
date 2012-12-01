@@ -48,6 +48,8 @@ case "$cmd" in
     ;;
   prepare-dist)
     VERSION=`get_version`
+    ./configure
+    make dist
     #sed_file winbuild/build.bat
     ;;
   dist-exclude-list|build-exclude-list)
@@ -58,9 +60,6 @@ case "$cmd" in
       unset SNAPSHOT_VERSION
     fi
     ./autogen.sh
-    ./configure
-    make dist
-    rm -rf *.tar.gz autom4te.cache
     ;;
   configure)
 
