@@ -86,7 +86,7 @@ typedef enum
 } ZProcessKind;
 
 #define Z_PROCESS_FD_LIMIT_RESERVE 64
-#define Z_PROCESS_FAILURE_NOTIFICATION ZORPLIB_LIBEXECDIR "/failure_notify" ZORPLIB_COMPAT_BRANCH ZORPLIB_BINARY_BRANCH
+#define Z_PROCESS_FAILURE_NOTIFICATION ZORPLIB_LIBEXECDIR "/failure_notify" ZORPLIB_COMPAT_BRANCH
 
 /** pipe used to deliver the initialization result to the calling process */
 static gint startup_result_pipe[2] = { -1, -1 };

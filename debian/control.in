@@ -5,7 +5,7 @@ Maintainer: BalaBit Development Team <devel@balabit.hu>
 Standards-Version: 3.8.4
 Build-Depends: libssl-dev, libglib2.0-dev, debhelper (>= 6.0.7~), libcap-dev [!kfreebsd-i386 !kfreebsd-amd64 !hurd-i386], zlib1g-dev, binutils (>= 2.14.90.0.7)
 
-Package: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@
+Package: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@
 Section: libs
 Architecture: any
 Provides: virtual-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@
@@ -20,10 +20,10 @@ Description: Low level library functions for Zorp
  This package contains low level library functions needed by Zorp and
  associated programs.
 
-Package: libzorpll@BINARY_BRANCH@-dev
+Package: libzorpll-dev
 Section: libdevel
 Architecture: any
-Depends: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@ (>= ${binary:Version}), ${misc:Depends}, libglib2.0-dev, libcap-dev [linux-any], libssl-dev
+Depends: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@ (>= ${binary:Version}), ${misc:Depends}, libglib2.0-dev, libcap-dev [linux-any], libssl-dev
 Description: Low level library functions for Zorp, development files
  Zorp is a new generation firewall. It is essentially a transparent proxy
  firewall, with strict protocol analyzing proxies, a modular architecture,
@@ -33,11 +33,11 @@ Description: Low level library functions for Zorp, development files
  This package contains the development files necessary to create programs
  based on libzorpll.
 
-Package: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@-dbg
+Package: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@-dbg
 Section: debug
 Architecture: any
 Priority: extra
-Depends: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@ (= ${binary:Version}), ${misc:Depends}
+Depends: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@ (= ${binary:Version}), ${misc:Depends}
 Description: Low level library functions for Zorp, debug version
  Zorp is a new generation firewall. It is essentially a transparent proxy
  firewall, with strict protocol analyzing proxies, a modular architecture,
@@ -46,11 +46,11 @@ Description: Low level library functions for Zorp, debug version
  .
  This package contains the debugging symbols for libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.
 
-Package: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@-memtrace
+Package: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@-memtrace
 Section: debug
 Architecture: any
 Priority: extra
-Depends: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@@BINARY_BRANCH@ (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Depends: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@ (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Low level library functions for Zorp, debug version
  Zorp is a new generation firewall. It is essentially a transparent proxy
  firewall, with strict protocol analyzing proxies, a modular architecture,
