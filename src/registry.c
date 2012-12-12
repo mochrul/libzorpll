@@ -213,12 +213,12 @@ z_registry_foreach_invoke_callback(gpointer key G_GNUC_UNUSED, gpointer value, g
 void
 z_registry_foreach(gint type, ZRFunc func, gpointer user_data)
 {
+  ZRegistryForeachCallbackData helper_data;
+
   g_assert(z_registry_is_type_valid(type));
 
-  ZRegistryForeachCallbackData helper_data =
-    {
-      .user_func = func,
-      .user_data = user_data,
-    };
+  helper_data.user_func = func;
+  helper_data.user_data = user_data;
+
   g_hash_table_foreach(registry[type], z_registry_foreach_invoke_callback, &helper_data);
 }
