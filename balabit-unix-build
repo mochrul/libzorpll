@@ -48,16 +48,16 @@ case "$cmd" in
     ;;
   prepare-dist)
     VERSION=`get_version`
-    ./configure
+    if [ -n "$SNAPSHOT_VERSION" ]; then
+      unset SNAPSHOT_VERSION
+    fi
+     ./configure
     make dist
     ;;
   dist-exclude-list|build-exclude-list)
     echo "out obj *.aqt *.ncb *.suo *.vcproj.*.user config.h"
     ;;
   bootstrap)
-    if [ -n "$SNAPSHOT_VERSION" ]; then
-      unset SNAPSHOT_VERSION
-    fi
     ./autogen.sh
     ;;
   configure)
