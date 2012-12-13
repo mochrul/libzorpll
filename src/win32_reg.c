@@ -14,10 +14,10 @@
  *
  ***************************************************************************/
 
+#include <glib.h>
 #ifdef G_OS_WIN32
 
 #include <zorp/win32_reg.h>
-#include <glib.h>
 #include <string.h>
 
 #include <windows.h>
