@@ -117,7 +117,7 @@ const gchar *z_log_session_id(const gchar *session_id);
  *
  * @see z_format_data_dump()
  **/
-static inline void 
+static inline void
 z_log_data_dump(const gchar *session_id, const gchar *class_, gint level, const void *buf, guint len)
 {
   if (z_log_enabled(class_, level))
@@ -138,7 +138,7 @@ z_log_data_dump(const gchar *session_id, const gchar *class_, gint level, const 
  *
  * @see z_format_text_dump()
  **/
-static inline void 
+static inline void
 z_log_text_dump(const gchar *session_id, const gchar *class_, gint level, const char *buf, guint len)
 {
   if (z_log_enabled(class_, level))
@@ -197,7 +197,7 @@ z_log_trace_indent(gint dir);
   #define z_session_cp(s)
 
 #endif
-  
+
 #ifdef G_OS_WIN32
   /* disable C4003: not enough actual parameters for macro 'z_return' */
 #pragma warning(disable: 4003)
