@@ -1,4 +1,4 @@
-EXTRA_DIST = libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@-dbg.files
-
-libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@-dbg.files: libzorpll-dbg.files.in
-	cp $< $@
+EXTRA_DIST = libzorpll-dbg.files \
+	     libzorpll-dev.files \
+	     libzorpll.files \
+	     win2deps
