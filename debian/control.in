@@ -46,6 +46,19 @@ Description: Low level library functions for Zorp, debug version
  .
  This package contains the debugging symbols for libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@.
 
+Package: libzorpll-dbg
+Section: debug
+Architecture: any
+Priority: extra
+Depends: libzorpll
+Description: Low level library functions for Zorp, debug version for Windows
+ Zorp is a new generation firewall. It is essentially a transparent proxy
+ firewall, with strict protocol analyzing proxies, a modular architecture,
+ and fine-grained control over the mediated traffic. Configuration decisions
+ are scriptable with the Python based configuration language.
+ .
+ This package contains the debugging symbols for libzorpll.
+
 Package: libzorpll@LIBZORPLL_LT_COMPAT_BRANCH@-memtrace
 Section: debug
 Architecture: any
