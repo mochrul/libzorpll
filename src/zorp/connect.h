@@ -51,7 +51,6 @@ typedef struct _ZConnector
   GStaticRecMutex lock;
   GMainContext *context;
   gboolean blocking;
-  gint tos;
   gint socket_type;
   guint32 sock_flags;
   gchar *session_id;
