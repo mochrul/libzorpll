@@ -403,6 +403,13 @@ z_connector_set_tos(ZConnector *self, gint tos)
     z_fd_set_our_tos(self->fd, tos);
 }
 
+void
+z_connector_set_mark(ZConnector *self, int mark)
+{
+  if ((self->fd != -1) && mark > 0)
+    z_fd_set_our_mark(self->fd, mark);
+}
+
 /**
  * This function opens a new socket and returns the newly created fd.
  *

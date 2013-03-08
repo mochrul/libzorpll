@@ -83,6 +83,7 @@ gboolean z_connector_start(ZConnector *self, ZSockAddr **local);
 gboolean z_connector_start_in_context(ZConnector *self, GMainContext *context, ZSockAddr **local);
 void z_connector_set_timeout(ZConnector *self, gint timeout);
 void z_connector_set_tos(ZConnector *self, gint tos);
+void z_connector_set_mark(ZConnector *self, int mark);
 void z_connector_cancel(ZConnector *self);
 
 /**
