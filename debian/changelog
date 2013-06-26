@@ -1,3 +1,12 @@
+libzorpll (3.9.1.3-2) unstable; urgency=low
+
+  * Added Japanese translation (Closes: #692843)
+  * Added Italian translation (Closes: #714013)
+  * Added hardening options
+  * Changed scripts to expicitly use set -e
+
+ -- SZALAY Attila <sasa@debian.org>  Thu, 27 Jun 2013 00:35:29 +0200
+
 libzorpll (3.9.1.3-1) unstable; urgency=low
 
   * New upstream version.
