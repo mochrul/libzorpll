@@ -3,7 +3,8 @@ Section: libs
 Priority: optional
 Maintainer: SZALAY Attila <sasa@debian.org>
 Standards-Version: 3.9.2
-Build-Depends: libssl-dev, libglib2.0-dev, debhelper (>= 7), libcap-dev [linux-any], zlib1g-dev, binutils (>= 2.14.90.0.7), po-debconf, autoconf, automake, libtool
+Build-Depends: libssl-dev, libglib2.0-dev, debhelper (>= 7), libcap-dev [linux-any], zlib1g-dev, binutils (>= 2.14.90.0.7),
+    po-debconf, autoconf, automake, libtool, dpkg-dev (>= 1.16.1~)
 
 Package: libzorpll3.9-1
 Section: libs
