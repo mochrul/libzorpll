@@ -3,6 +3,8 @@
 
 #include <zorp/code.h>
 
+#include <string.h>
+
 /**
  * @file
  *
@@ -159,7 +161,7 @@ z_code_flush_result(ZCode *self, gsize flush_length)
     }
   else if (self->buf_used >= flush_length)
     {
-      memmove(self->buf, self->buf + flush_length, self->buf_used - flush_length);
+      g_memmove(self->buf, self->buf + flush_length, self->buf_used - flush_length);
       self->buf_used -= flush_length;
     }
 }

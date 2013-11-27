@@ -220,6 +220,34 @@ test_fetch_in_lock(ZBlobSystem *blobsys)
   z_blob_unref(blob[2]); 
 }
 
+/**
+ * test_swap_out_and_then_released:
+ * @blobsys: this
+ *
+ * This function test the scenario when the blob swapped out and then
+ * scanned, and after that released.
+ * The size of the blob should not change after this scenario.
+ */
+void
+test_swap_out_and_then_released(ZBlobSystem *blobsys)
+{
+  ZBlob *blob;
+  char p;
+  int i;
+
+  blob = z_blob_new(blobsys, 0);  /* will be allocated in mem - 500 bytes remaining*/
+
+  p = '\xd0'; /* why not */
+  for (i = 0; i < 5500; i++)
+    {
+      z_blob_add_copy(blob, i, &p, 1, -1);
+    }
+  test_and_log(blob->size==5500, TRUE, "-- blob->size (before): %ld", blob->size);
+  test_and_log(blob->is_in_file, TRUE, "-- blob[2]->is_in_file: %s", blob->is_in_file ? "yes" : "no");
+  z_blob_lock(blob, -1);
+  z_blob_release_file(blob);
+  test_and_log(blob->size==5500, TRUE, "-- blob->size (after): %ld", blob->size);
+}
 
 
 /***********************************************************************
@@ -250,6 +278,7 @@ main(void)
   test_fetch_in(blobsys);
   test_fetch_in_lock(blobsys);
   test_deferred_alloc(blobsys);
+  test_swap_out_and_then_released(blobsys);
  
   /* Deinitialie custom blob system */
   z_blob_system_unref(blobsys);

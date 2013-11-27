@@ -31,38 +31,22 @@ extern "C" {
 #define ZR_MODULE    6
 #define MAX_REGISTRY_TYPE 16
 
+/**
+ * Specifies the type of the function passed to z_registry_foreach().
+ * It is called for each entry, with the name, type and the value stored,
+ * and the user_data passed to z_registry_foreach.
+ **/
+typedef void (*ZRFunc)(const gchar *name, gint type, gpointer value, gpointer user_data);
+
 void z_registry_init(void);
 void z_registry_destroy(void);
 void z_registry_add(const gchar *name, gint type, gpointer value);
 gpointer z_registry_get(const gchar *name, gint *type);
 guint z_registry_has_key(const gchar *name);
-void z_registry_foreach(gint type, GHFunc func, gpointer user_data);
+void z_registry_foreach(gint type, ZRFunc func, gpointer user_data);
 
 #ifdef __cplusplus
 }
-#endif
-
-#ifdef G_OS_WIN32
-
-#include <windows.h>
-#include <winreg.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-gboolean z_reg_key_write_dword(HKEY root, gchar *key, gchar *name, DWORD value);
-gboolean z_reg_key_write_string(HKEY root, gchar *key, gchar *name, gchar *value);
-
-gboolean z_reg_key_read_dword(HKEY root, gchar *key, gchar *name, DWORD *value);
-gboolean z_reg_key_read_string(HKEY root, gchar *key, gchar *name, gchar **value);
-gboolean z_reg_key_delete(HKEY root, gchar *key, gchar *name);
-gboolean z_sid_to_text( PSID ps, char *buf, int bufSize );
-
-#ifdef __cplusplus
-}
-#endif
-
 #endif
 
 #endif

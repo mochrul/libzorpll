@@ -44,8 +44,8 @@
 #  include <sys/un.h>
 #endif
 
-#ifdef G_OS_WIN32  
-//Windows exception handler needs this 
+#ifdef G_OS_WIN32
+//Windows exception handler needs this
 LONG WINAPI z_unhandled_exception_filter(PEXCEPTION_POINTERS);
 typedef LONG WINAPI z_unhandled_exception_filter_function(PEXCEPTION_POINTERS);
 z_unhandled_exception_filter_function *z_setup_unhandled_exception_filter = &z_unhandled_exception_filter;
@@ -136,7 +136,7 @@ static GMainContext *log_context = NULL;
  */
 
 #if HAVE_BUGGY_SYSLOG_IN_LIBC
- 
+
 #define SYSLOG_SOCKET "/dev/log"
 
 const gchar *syslog_tag = NULL;
@@ -144,7 +144,7 @@ int syslog_fd = -1;
 
 
 /**
- * Analogous to openlog(), open the syslog() connection to local syslogd. 
+ * Analogous to openlog(), open the syslog() connection to local syslogd.
  *
  * @param[in] tag program name used in log messages
  *
@@ -154,15 +154,15 @@ gboolean
 z_open_syslog(const gchar *tag)
 {
   struct sockaddr_un s_un;
-  
+
   syslog_tag = tag;
   syslog_fd = socket(PF_UNIX, SOCK_STREAM, 0);
-  
+
   if (syslog_fd == -1)
     {
       return FALSE;
     }
-  
+
   s_un.sun_family = AF_UNIX;
   g_strlcpy(s_un.sun_path, SYSLOG_SOCKET, sizeof(s_un.sun_path));
   if (connect(syslog_fd, (struct sockaddr *) &s_un, sizeof(s_un)) == -1)
@@ -186,7 +186,7 @@ z_open_syslog(const gchar *tag)
  *
  * The syslog connection is specified by the fd argument to avoid races when reopening
  * connections.
- * 
+ *
  * @returns whether the operation was successful
  **/
 gboolean
@@ -214,7 +214,7 @@ z_close_syslog(void)
 /**
  * Send the specified message to syslog.
  *
- * @param[in] pri syslog priority 
+ * @param[in] pri syslog priority
  * @param[in] msg syslog message
  **/
 gboolean
@@ -233,12 +233,12 @@ z_send_syslog(gint pri, const gchar *msg)
   gint rc = 0;
   int sfd = syslog_fd;
   G_LOCK_DEFINE_STATIC(lock);
-  
+
   now = time(NULL);
   localtime_r(&now, &t);
-  
+
   strftime(timestamp, sizeof(timestamp), "%h %e %H:%M:%S", &t);
-  
+
   g_snprintf(buf, sizeof(buf), "<%d>%s %s[%d]: ", pri, timestamp, syslog_tag, (int) getpid());
   if (log_escape_nonprintable_chars)
     {
@@ -276,11 +276,11 @@ z_send_syslog(gint pri, const gchar *msg)
               z_open_syslog(syslog_tag);
               z_close_syslog_internal(sfd);
             }
-            
+
           sfd = syslog_fd;
           G_UNLOCK(lock);
         }
-    }    
+    }
   while (rc == -1 && attempt <= 1);
   return TRUE;
 }
@@ -306,7 +306,7 @@ z_open_syslog(const gchar *tag)
 }
 
 /**
- * Close the connection to the local syslog process. 
+ * Close the connection to the local syslog process.
  *
  * @returns always TRUE.
  **/
@@ -320,7 +320,7 @@ z_close_syslog(void)
 /**
  * Send a message to syslogd. It uses the syslog() function in libc.
  *
- * @param[in] pri priority of the message 
+ * @param[in] pri priority of the message
  * @param[in] msg message itself
  *
  * @returns always TRUE.
@@ -339,7 +339,7 @@ z_send_syslog(gint pri, const gchar *msg)
 int syslog_fd = -1;
 
 /**
- * Analogous to openlog(), open the syslog() connection to local syslogd. 
+ * Analogous to openlog(), open the syslog() connection to local syslogd.
  *
  * @param[in] tag program name used in log messages
  *
@@ -349,12 +349,12 @@ int syslog_fd = -1;
  **/
 gboolean
 z_open_syslog(const gchar *tag)
-{  
+{
   char fn[256];
 
   g_strlcpy(fn, getenv("windir"), sizeof(fn));
   g_strlcat(fn, "\\debug\\", sizeof(fn));
-  g_strlcat(fn, tag, sizeof(fn)); 
+  g_strlcat(fn, tag, sizeof(fn));
 
   if((syslog_fd = open(fn, _O_APPEND | _O_RDWR | _O_CREAT, _S_IREAD | _S_IWRITE  )) == -1)
     {
@@ -366,7 +366,7 @@ z_open_syslog(const gchar *tag)
 }
 
 /**
- * Close the connection to the local syslog process. 
+ * Close the connection to the local syslog process.
  **/
 gboolean
 z_close_syslog(void)
@@ -405,7 +405,7 @@ z_log_spec_glob_match(const gchar *glob, const gchar *tag)
       if (((len1 != 1) || (memcmp(glob, "*", 1) != 0)) &&
           ((len1 != len2) || memcmp(glob, tag, len1) != 0))
         return FALSE;
-        
+
       glob = p1 + 1;
       tag = p2 + 1;
 
@@ -444,7 +444,7 @@ z_log_spec_eval(ZLogSpec *self, const gchar *tag)
 {
   GSList *l;
   ZLogSpecItem *lsi;
-  
+
   l = self->items;
   while (l)
     {
@@ -470,13 +470,13 @@ z_log_spec_destroy(ZLogSpec *self)
 {
   GSList *l, *l_next;
   ZLogSpecItem *lsi;
-  
+
   l = self->items;
   while (l)
     {
       l_next = g_slist_next(l);
       lsi = (ZLogSpecItem *) l->data;
-      
+
       g_free(lsi->pattern);
       g_free(lsi);
       g_slist_free_1(l);
@@ -504,7 +504,7 @@ z_log_spec_init(ZLogSpec *self, const gchar *logspec_str, gint default_verbosity
   src = tmp;
   self->items = NULL;
   self->verbose_level = default_verbosity;
-  
+
   while (*src)
     {
       const gchar *glob, *num;
@@ -527,12 +527,12 @@ z_log_spec_init(ZLogSpec *self, const gchar *logspec_str, gint default_verbosity
       num = src;
 
       new_level = strtoul(num, &end, 10);
-      
+
       item = g_new(ZLogSpecItem, 1);
       item->pattern = g_strdup(glob);
       item->verbose_level = new_level;
       self->items = g_slist_prepend(self->items, item);
-      
+
       src = end;
       while (*src && *src != ',')
         src++;
@@ -540,7 +540,7 @@ z_log_spec_init(ZLogSpec *self, const gchar *logspec_str, gint default_verbosity
   self->items = g_slist_reverse(self->items);
   g_free(tmp);
   return TRUE;
-  
+
  invalid_logspec:
   z_log_spec_destroy(self);
   g_free(tmp);
@@ -548,7 +548,7 @@ z_log_spec_init(ZLogSpec *self, const gchar *logspec_str, gint default_verbosity
 }
 
 
-/* log tag cache 
+/* log tag cache
  *
  * Each thread has its own dedicated logtag cache to avoid locking. Caches are shared
  * which means that once a thread terminates it releases its cache which can be reused
@@ -563,12 +563,12 @@ void
 z_log_clear_caches(void)
 {
   guint i;
-  
+
   G_LOCK(logtag_cache_lock);
   for (i = 0; i < logtag_caches->len; i++)
     {
       ZLogTagCache *lc = g_ptr_array_index(logtag_caches, i);
-      
+
       lc->empty_hash = TRUE;
     }
   G_UNLOCK(logtag_cache_lock);
@@ -586,19 +586,19 @@ z_log_grab_cache(void)
 {
   guint i;
   ZLogTagCache *lc = NULL;
-  
+
   G_LOCK(logtag_cache_lock);
-  
+
   for (i = 0; i < logtag_caches->len; i++)
     {
       lc = g_ptr_array_index(logtag_caches, i);
-      
+
       if (!lc->used)
         break;
       else
         lc = NULL;
     }
-  
+
   if (!lc)
     {
       lc = g_new0(ZLogTagCache, 1);
@@ -607,7 +607,7 @@ z_log_grab_cache(void)
     }
   lc->used = 1;
   g_static_private_set(&current_logtag_cache, lc, NULL);
-  
+
   G_UNLOCK(logtag_cache_lock);
 }
 
@@ -618,13 +618,13 @@ void
 z_log_release_cache(void)
 {
   ZLogTagCache *lc;
-  
+
   G_LOCK(logtag_cache_lock);
-  
+
   lc = g_static_private_get(&current_logtag_cache);
   if (lc)
     lc->used = 0;
-  
+
   G_UNLOCK(logtag_cache_lock);
 }
 
@@ -668,7 +668,7 @@ gboolean
 z_log_change_verbose_level(gint direction, gint value, gint *new_value)
 {
   gint old_verbose_level = log_spec.verbose_level;
-  
+
   G_LOCK(log_spec_lock);
   if (direction < 0)
     log_spec.verbose_level -= value;
@@ -681,9 +681,9 @@ z_log_change_verbose_level(gint direction, gint value, gint *new_value)
   if (log_spec.verbose_level > 10)
     log_spec.verbose_level = 10;
   G_UNLOCK(log_spec_lock);
-  
+
   if (old_verbose_level != log_spec.verbose_level)
-    {  
+    {
       z_log_clear_caches();
       /*LOG
         This message reports that Zorp changed its verbosity level.
@@ -709,16 +709,16 @@ z_log_change_logspec(const gchar *new_log_spec_str, const gchar **new_value)
   if (new_log_spec_str)
     {
       ZLogSpec new_spec;
-      
+
       if (z_log_spec_init(&new_spec, new_log_spec_str, log_spec.verbose_level))
         {
           G_LOCK(log_spec_lock);
           z_log_spec_destroy(&log_spec);
           log_spec = new_spec;
-          
+
           if (log_spec_str)
             g_free(log_spec_str);
-            
+
           log_spec_str = g_strdup(new_log_spec_str);
           G_UNLOCK(log_spec_lock);
           z_log_clear_caches();
@@ -733,7 +733,7 @@ z_log_change_logspec(const gchar *new_log_spec_str, const gchar **new_value)
           return FALSE;
         }
     }
-    
+
   if (new_value)
     *new_value = log_spec_str;
   return TRUE;
@@ -741,7 +741,7 @@ z_log_change_logspec(const gchar *new_log_spec_str, const gchar **new_value)
 
 /**
  * This function enables the "tag_map cache" which makes tag caching very
- * efficient by using an array based lookup instead of GHashTable. 
+ * efficient by using an array based lookup instead of GHashTable.
  *
  * @param[in] map_tags function to map message tags to IDs
  * @param[in] max_tag maximum ID value assigned to tags
@@ -752,7 +752,7 @@ void
 z_log_enable_tag_map_cache(ZLogMapTagFunc map_tags, gint max_tag)
 {
   g_assert(!log_map_tag);
-  
+
   log_map_tag = map_tags;
   log_mapped_tags_count = max_tag;
   log_mapped_tags_verb = g_new0(guchar, max_tag);
@@ -768,7 +768,7 @@ z_log_enable_tag_map_cache(ZLogMapTagFunc map_tags, gint max_tag)
  *
  * It can be used prior to constructing complex log
  * messages to decide whether the messages need to be constucted at all.
- * All results are cached, thus the second invocation will not parse the 
+ * All results are cached, thus the second invocation will not parse the
  * log specifications again.
  *
  * @returns TRUE if the log would be written, FALSE otherwise
@@ -785,7 +785,7 @@ z_log_get_tag_loglevel(const gchar *tag, gsize tag_len)
   gint verbose;
   ZLogTagCache *lc;
   GHashTable *tag_hash;
-  
+
   if (G_LIKELY(!log_spec.items))
     {
       /* fastpath, no logspec, decision is simple */
@@ -835,7 +835,7 @@ z_log_get_tag_loglevel(const gchar *tag, gsize tag_len)
     }
   else
     verbose--;
-  
+
   return verbose;
 }
 
@@ -883,7 +883,7 @@ void
 z_logv(const gchar *class, int level, const gchar *format, va_list ap)
 {
   int saved_errno = errno;
-  
+
   if (log_tags)
     {
       gchar *msgbuf;
@@ -966,7 +966,7 @@ z_log(const gchar *session_id, const gchar *class, int level, const gchar *forma
  * @param     log_domain not used
  * @param     log_flags not used
  * @param[in] message message
- * @param     user_data not used 
+ * @param     user_data not used
  **/
 static void
 z_log_func_nosyslog(const gchar *log_domain G_GNUC_UNUSED,
@@ -993,7 +993,7 @@ z_log_func_nosyslog(const gchar *log_domain G_GNUC_UNUSED,
  * @param     log_domain GLIB log domain (unused)
  * @param[in] log_flags GLIB log flags
  * @param[in] message message
- * @param     user_data not used 
+ * @param     user_data not used
  *
  * Zorp itself does not use GLIB logging, it calls z_log() directly.
  **/
@@ -1059,7 +1059,7 @@ z_log_win32_syslogmsg(const gchar *log_domain,
   gchar tstamp[64];
   gchar buf[2048];
   int nchars;
- 
+
   G_LOCK(win32_log_handler_mutex);
 
   now = time(NULL);
@@ -1077,12 +1077,12 @@ z_log_win32_syslogmsg(const gchar *log_domain,
 
 /**
  * Fetch messages line-by-line and send them to log via z_log().
- * 
+ *
  * @param[in] channel the read end of the STDERR pipe
  * @param     condition the I/O condition triggering this callback (unused)
  * @param     arg not used
  *
- * This function is registered as a read callback of the STDERR pipe to 
+ * This function is registered as a read callback of the STDERR pipe to
  * fetch messages sent to stderr. It fetches messages line-by-line and
  * uses z_log() to send messages to log.
  *
@@ -1096,7 +1096,7 @@ z_fetch_stderr(GIOChannel *channel, GIOCondition condition G_GNUC_UNUSED, gpoint
   GError *err = NULL;
 
   status = g_io_channel_read_line(channel, &line, NULL, NULL, &err);
-  
+
   switch (status)
     {
     case G_IO_STATUS_NORMAL:
@@ -1133,7 +1133,7 @@ z_log_source_new(gint fd)
 {
   GIOChannel *channel;
   GSource *source;
-  
+
   channel = g_io_channel_unix_new(fd);
   g_io_channel_set_encoding(channel, NULL, NULL);
   g_io_channel_set_flags(channel, G_IO_FLAG_NONBLOCK, NULL);
@@ -1155,13 +1155,13 @@ z_log_run(gpointer user_data)
   GMainContext *c, *old_context;
   gint *fd = (gint *)user_data;
   GSource *source;
-  
+
   old_context = g_main_context_new();
   g_main_context_ref(old_context);
   log_context = old_context;
-  
+
   g_main_context_acquire(log_context);
-  
+
   source = z_log_source_new(*fd);
   g_source_attach(source, log_context);
   g_source_unref(source);
@@ -1172,9 +1172,9 @@ z_log_run(gpointer user_data)
        * running z_log_destroy() we still hold a reference through
        * old_context, therefore it is not a problem if we use a stale value
        * in log_context, at most we run another iteration */
-      
+
       c = log_context;
-  
+
       if (c)
         g_main_context_iteration(c, TRUE);
     }
@@ -1287,9 +1287,9 @@ z_log_init(const gchar *syslog_name, guint flags)
     }
   log_spec_str = z_log_get_log_spec() ? g_strdup(z_log_get_log_spec()) : NULL;
   log_tags = z_log_get_log_tags();
-    
+
   logtag_caches = g_ptr_array_new();
-  
+
   z_log_grab_cache();
   z_thread_register_start_callback((GFunc) z_log_thread_started, NULL);
   z_thread_register_stop_callback((GFunc) z_log_thread_stopped, NULL);
@@ -1311,7 +1311,7 @@ z_log_init(const gchar *syslog_name, guint flags)
           g_log_set_handler(G_LOG_DOMAIN, 0xff, z_log_win32_debugmsg, NULL);
         }
       else
-#endif  
+#endif
         {
           g_log_set_handler(G_LOG_DOMAIN, 0xff, z_log_func_nosyslog, NULL);
         }
@@ -1329,7 +1329,7 @@ void
 z_log_destroy(void)
 {
   GMainContext *c;
-#ifndef G_OS_WIN32  
+#ifndef G_OS_WIN32
   if (stderr_syslog)
     {
       close(1);
@@ -1337,7 +1337,7 @@ z_log_destroy(void)
     }
 #endif
   z_close_syslog();
-  
+
   /* NOTE: log_context is freed in the log thread */
   c = log_context;
   log_context = NULL;
@@ -1364,7 +1364,7 @@ z_log_trace_indent(gint dir)
   static const gchar *spaces128 =
     "                                                                "
     "                                                                ";
-    
+
   static GStaticPrivate current_indent_key = G_STATIC_PRIVATE_INIT;
   int *current_indent = g_static_private_get (&current_indent_key);
   const gchar *res;
@@ -1430,14 +1430,14 @@ void
 z_log_add_option_group(GOptionContext *ctx)
 {
   GOptionGroup *group;
-  
+
   /* initialise commandline arg variables to extremal values to be able to detect
    * whether they are changed or not */
   log_opts_cmdline.verbose_level = -1;
   log_opts_cmdline.use_syslog = Z_EXTREMAL_BOOLEAN;
   log_opts_cmdline.log_spec = NULL;
   log_opts_cmdline.log_tags = Z_EXTREMAL_BOOLEAN;
-  
+
   group = g_option_group_new("log", "Log options", "Log options", NULL, NULL);
   g_option_group_add_entries(group, z_log_option_entries);
   g_option_context_add_group(ctx, group);

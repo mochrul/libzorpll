@@ -120,7 +120,8 @@ z_blob_swap_out(ZBlob *self)
       self->stat.swap_count++;
       self->stat.last_accessed = time(NULL);
       self->system->mem_used -= self->alloc_size;
-      self->system->disk_used += self->alloc_size;
+      self->system->disk_used += self->size;
+      self->alloc_size = self->size;
     }
   z_return();
 }
@@ -844,6 +845,35 @@ z_blob_unlock(ZBlob *self)
   z_return();
 }
 
+static inline gint64
+z_blob_calculate_allocation_size(gint64 req_size, gint64 allocated, gboolean in_file)
+{
+  gint64 req_alloc_size;
+
+  /* determine the allocation size */
+  if ((allocated <= 0) || in_file)
+    {
+      req_alloc_size = req_size;
+    }
+  else
+    {
+      /* First run (if shrinking reqd): go just below the requested size */
+      req_alloc_size = allocated;
+      while (req_alloc_size > req_size)
+        {
+          req_alloc_size >>= 1;
+        }
+
+      /* Second run: find next available size */  
+      while (req_alloc_size < req_size)
+        {
+          req_alloc_size <<= 1;
+        }
+    }
+
+  return req_alloc_size;
+}
+
 /**
  * Allocate space for the blob (not necessarily in memory!)
  *
@@ -857,39 +887,18 @@ z_blob_alloc(ZBlob *self, gint64 req_size)
 {
   gchar         *newdata;
   gint          err;
-  gint64        req_alloc_size, alloc_req;
+  gint64        alloc_req;
   gboolean      alloc_granted;
 
   z_enter();
   g_assert(self);
   g_assert(req_size >= 0);
 
-  /* determine the allocation size */
-  if ((self->alloc_size <= 0) || self->is_in_file)
-    {
-      req_alloc_size = req_size;
-    }
-  else
-    {
-      /* First run (if shrinking reqd): go just below the requested size */
-      req_alloc_size = self->alloc_size;
-      while (req_alloc_size > req_size)
-        {
-          req_alloc_size >>= 1;
-        }
-
-      /* Second run: find next available size */  
-      while (req_alloc_size < req_size)
-        {
-          req_alloc_size <<= 1;
-        }
-    }
-
   /* just return if the allocation needn't change */
-  if (req_alloc_size == self->alloc_size)
+  if (z_blob_calculate_allocation_size(req_size, self->alloc_size, self->is_in_file) == self->alloc_size)
     z_return();
 
-  alloc_req = req_alloc_size - self->alloc_size;
+  alloc_req = z_blob_calculate_allocation_size(req_size, self->alloc_size, self->is_in_file) - self->alloc_size;
   g_mutex_lock(self->system->mtx_blobsys);
   self->alloc_req = alloc_req;
   alloc_granted = z_blob_check_alloc(self);
@@ -910,22 +919,27 @@ z_blob_alloc(ZBlob *self, gint64 req_size)
 
   if (self->is_in_file)
     {
-      err = ftruncate(self->fd, req_alloc_size);
+      err = ftruncate(self->fd, z_blob_calculate_allocation_size(req_size, self->alloc_size, self->is_in_file));
       if (err < 0)
         z_log(NULL, CORE_ERROR, 3, "Error truncating blob file, ftruncate() failed; file='%s', error='%s'", self->filename, g_strerror(errno));
     }
   else
     {
-      newdata = g_renew(gchar, self->data, req_alloc_size);
-      if (self->alloc_size < req_alloc_size && newdata)
-        memset(newdata + self->alloc_size, 0, req_alloc_size - self->alloc_size);
+      newdata = g_renew(gchar,
+                        self->data,
+                        z_blob_calculate_allocation_size(req_size, self->alloc_size, self->is_in_file));
+      if (self->alloc_size < z_blob_calculate_allocation_size(req_size, self->alloc_size, self->is_in_file)
+          && newdata)
+        memset(newdata + self->alloc_size,
+               0,
+               z_blob_calculate_allocation_size(req_size, self->alloc_size, self->is_in_file) - self->alloc_size);
       self->data = newdata;
     }
 
-  self->alloc_size = req_alloc_size;
+  self->alloc_size = z_blob_calculate_allocation_size(req_size, self->alloc_size, self->is_in_file);
 
-  if (self->size > req_alloc_size)
-    self->size = req_alloc_size;
+  if (self->size > z_blob_calculate_allocation_size(req_size, self->alloc_size, self->is_in_file))
+    self->size = z_blob_calculate_allocation_size(req_size, self->alloc_size, self->is_in_file);
 
   self->stat.alloc_count++;
   self->stat.last_accessed = time(NULL);

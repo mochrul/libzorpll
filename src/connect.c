@@ -115,7 +115,7 @@ z_connector_connected(gboolean timed_out, gpointer data)
   if (self->watch)
     {
       if (error_num)
-        g_set_error(&err, 0, error_num, "%s", error_num_str);
+        g_set_error(&err, G_IO_CHANNEL_ERROR, error_num, "%s", error_num_str);
       
       callback = self->callback;
       self->callback = NULL;

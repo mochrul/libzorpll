@@ -220,7 +220,7 @@ z_mem_trace_init(const gchar *tracefile_name)
 
   z_mem_trace_init_internal();
 
-  if (tracefile && mem_trace)
+  if (tracefile_name && mem_trace)
     {
       g_snprintf(mem_trace_filename, sizeof(mem_trace_filename), ZORPLIB_TEMP_DIR "/%s", tracefile_name);
       z_mem_trace_printf("MemTrace initialized; memtrace='%s', canaries='%s', keep_deleted='%s', full_log='%s'\n",
