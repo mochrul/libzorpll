@@ -116,8 +116,7 @@ struct _ZStreamSource
   GSource super;
   ZStream *stream;
 };
-
-static GStaticMutex detach_lock = G_STATIC_MUTEX_INIT;
+G_LOCK_DEFINE_STATIC(detach_lock);
 
 /**
  * Check whether user callbacks can be called at all.
@@ -148,7 +147,7 @@ z_stream_source_grab_ref(ZStreamSource *self, gboolean in_call, ZStream **top_st
   
   /* NOTE: no z_enter() on purpose, it would generate a _lot_ of logs */
   
-  g_static_mutex_lock(&detach_lock);
+  G_LOCK(detach_lock);
   for (p = self->stream; p; p = p->parent)
     {
       ZStreamSource *source = (ZStreamSource *) p->source;
@@ -156,7 +155,7 @@ z_stream_source_grab_ref(ZStreamSource *self, gboolean in_call, ZStream **top_st
       if (!source || (source->super.flags & ((in_call ? 0 : G_HOOK_FLAG_IN_CALL) + G_HOOK_FLAG_ACTIVE)) != G_HOOK_FLAG_ACTIVE)
         {
           /* one of the streams has a pending destruction, bail out and don't call user callbacks */
-          g_static_mutex_unlock(&detach_lock);
+          G_UNLOCK(detach_lock);
           return FALSE;
         }
       /* NOTE: in_call only needs to be consulted for the stream that we were called with */
@@ -165,7 +164,7 @@ z_stream_source_grab_ref(ZStreamSource *self, gboolean in_call, ZStream **top_st
     }
   z_stream_struct_ref(*top_stream);
   res = TRUE;
-  g_static_mutex_unlock(&detach_lock);
+  G_UNLOCK(detach_lock);
   return res;
 }
 
@@ -1040,7 +1039,7 @@ z_stream_detach_source_method(ZStream *self)
   gboolean detached = FALSE;
   z_enter();
 
-  g_static_mutex_lock(&detach_lock);
+  G_LOCK(detach_lock);
   if (self->source)
     {
       GSource *source = NULL;
@@ -1052,7 +1051,7 @@ z_stream_detach_source_method(ZStream *self)
       g_source_unref(source);
       detached = TRUE;
     }
-  g_static_mutex_unlock(&detach_lock);
+  G_UNLOCK(detach_lock);
 
   if (self->child)
     z_stream_detach_source(self->child);

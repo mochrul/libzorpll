@@ -108,12 +108,12 @@ ZLogOpts log_opts = {0, FALSE, FALSE, NULL};
 ZLogOpts log_opts_cmdline = {-1, Z_EXTREMAL_BOOLEAN, Z_EXTREMAL_BOOLEAN, NULL};
 
 /** Protects logtag_caches array when grabbing and releasing a thread specific log cache */
-static GStaticMutex logtag_cache_lock = G_STATIC_MUTEX_INIT;
+G_LOCK_DEFINE_STATIC(logtag_cache_lock);
 static GStaticPrivate current_logtag_cache = G_STATIC_PRIVATE_INIT;
 static GPtrArray *logtag_caches;
 
 /** Protects log_spec/log_spec_str */
-static GStaticMutex log_spec_lock = G_STATIC_MUTEX_INIT;
+G_LOCK_DEFINE_STATIC(log_spec_lock);
 static ZLogSpec log_spec;
 static gchar *log_spec_str;
 static gboolean log_escape_nonprintable_chars = FALSE;
@@ -232,7 +232,7 @@ z_send_syslog(gint pri, const gchar *msg)
   guint len, attempt = 0;
   gint rc = 0;
   int sfd = syslog_fd;
-  static GStaticMutex lock = G_STATIC_MUTEX_INIT;
+  G_LOCK_DEFINE_STATIC(lock);
   
   now = time(NULL);
   localtime_r(&now, &t);
@@ -270,7 +270,7 @@ z_send_syslog(gint pri, const gchar *msg)
         rc = write(sfd, buf, len);
       if (sfd == -1 || (rc == -1 && errno != EINTR && errno != EAGAIN))
         {
-          g_static_mutex_lock(&lock);
+          G_LOCK(lock);
           if (sfd == syslog_fd)
             {
               z_open_syslog(syslog_tag);
@@ -278,7 +278,7 @@ z_send_syslog(gint pri, const gchar *msg)
             }
             
           sfd = syslog_fd;
-          g_static_mutex_unlock(&lock);
+          G_UNLOCK(lock);
         }
     }    
   while (rc == -1 && attempt <= 1);
@@ -564,14 +564,14 @@ z_log_clear_caches(void)
 {
   guint i;
   
-  g_static_mutex_lock(&logtag_cache_lock);
+  G_LOCK(logtag_cache_lock);
   for (i = 0; i < logtag_caches->len; i++)
     {
       ZLogTagCache *lc = g_ptr_array_index(logtag_caches, i);
       
       lc->empty_hash = TRUE;
     }
-  g_static_mutex_unlock(&logtag_cache_lock);
+  G_UNLOCK(logtag_cache_lock);
   if (log_mapped_tags_verb)
     {
       memset(log_mapped_tags_verb, 0, log_mapped_tags_count * sizeof(log_mapped_tags_verb[0]));
@@ -587,7 +587,7 @@ z_log_grab_cache(void)
   guint i;
   ZLogTagCache *lc = NULL;
   
-  g_static_mutex_lock(&logtag_cache_lock);
+  G_LOCK(logtag_cache_lock);
   
   for (i = 0; i < logtag_caches->len; i++)
     {
@@ -608,7 +608,7 @@ z_log_grab_cache(void)
   lc->used = 1;
   g_static_private_set(&current_logtag_cache, lc, NULL);
   
-  g_static_mutex_unlock(&logtag_cache_lock);
+  G_UNLOCK(logtag_cache_lock);
 }
 
 /**
@@ -619,13 +619,13 @@ z_log_release_cache(void)
 {
   ZLogTagCache *lc;
   
-  g_static_mutex_lock(&logtag_cache_lock);
+  G_LOCK(logtag_cache_lock);
   
   lc = g_static_private_get(&current_logtag_cache);
   if (lc)
     lc->used = 0;
   
-  g_static_mutex_unlock(&logtag_cache_lock);
+  G_UNLOCK(logtag_cache_lock);
 }
 
 /**
@@ -669,7 +669,7 @@ z_log_change_verbose_level(gint direction, gint value, gint *new_value)
 {
   gint old_verbose_level = log_spec.verbose_level;
   
-  g_static_mutex_lock(&log_spec_lock);
+  G_LOCK(log_spec_lock);
   if (direction < 0)
     log_spec.verbose_level -= value;
   else if (direction == 0)
@@ -680,7 +680,7 @@ z_log_change_verbose_level(gint direction, gint value, gint *new_value)
     log_spec.verbose_level = 0;
   if (log_spec.verbose_level > 10)
     log_spec.verbose_level = 10;
-  g_static_mutex_unlock(&log_spec_lock);
+  G_UNLOCK(log_spec_lock);
   
   if (old_verbose_level != log_spec.verbose_level)
     {  
@@ -712,7 +712,7 @@ z_log_change_logspec(const gchar *new_log_spec_str, const gchar **new_value)
       
       if (z_log_spec_init(&new_spec, new_log_spec_str, log_spec.verbose_level))
         {
-          g_static_mutex_lock(&log_spec_lock);
+          G_LOCK(log_spec_lock);
           z_log_spec_destroy(&log_spec);
           log_spec = new_spec;
           
@@ -720,7 +720,7 @@ z_log_change_logspec(const gchar *new_log_spec_str, const gchar **new_value)
             g_free(log_spec_str);
             
           log_spec_str = g_strdup(new_log_spec_str);
-          g_static_mutex_unlock(&log_spec_lock);
+          G_UNLOCK(log_spec_lock);
           z_log_clear_caches();
           /*LOG
             This message reports that Zorp changed its logspec.
@@ -776,6 +776,12 @@ z_log_enable_tag_map_cache(ZLogMapTagFunc map_tags, gint max_tag)
 gboolean
 z_log_enabled_len(const gchar *tag, gsize tag_len, gint level)
 {
+  return level <= z_log_get_tag_loglevel(tag ,tag_len);
+}
+
+gint
+z_log_get_tag_loglevel(const gchar *tag, gsize tag_len)
+{
   gint verbose;
   ZLogTagCache *lc;
   GHashTable *tag_hash;
@@ -783,7 +789,7 @@ z_log_enabled_len(const gchar *tag, gsize tag_len, gint level)
   if (G_LIKELY(!log_spec.items))
     {
       /* fastpath, no logspec, decision is simple */
-      return level <= log_spec.verbose_level;
+      return log_spec.verbose_level;
     }
   if (G_LIKELY(log_map_tag))
     {
@@ -797,19 +803,19 @@ z_log_enabled_len(const gchar *tag, gsize tag_len, gint level)
             verbose--;
           else
             {
-              g_static_mutex_lock(&log_spec_lock);
+              G_LOCK(log_spec_lock);
               verbose = z_log_spec_eval(&log_spec, tag);
               log_mapped_tags_verb[tag_ndx] = (guchar) (verbose & 0xFF) + 1;
-              g_static_mutex_unlock(&log_spec_lock);
+              G_UNLOCK(log_spec_lock);
             }
-          return level <= verbose;
+          return verbose;
         }
     }
   /* check slow ghashtable based cache */
   lc = ((ZLogTagCache *) g_static_private_get(&current_logtag_cache));
   if (!lc)
     {
-      return level <= log_spec.verbose_level;
+      return log_spec.verbose_level;
     }
   if (lc->empty_hash)
     {
@@ -822,15 +828,15 @@ z_log_enabled_len(const gchar *tag, gsize tag_len, gint level)
   if (!verbose)
     {
       /* slooooww path, evaluate logspec */
-      g_static_mutex_lock(&log_spec_lock);
+      G_LOCK(log_spec_lock);
       verbose = z_log_spec_eval(&log_spec, tag);
-      g_static_mutex_unlock(&log_spec_lock);
+      G_UNLOCK(log_spec_lock);
       g_hash_table_insert(tag_hash, (gchar *) tag, GUINT_TO_POINTER(verbose + 1));
     }
   else
     verbose--;
   
-  return (level <= verbose);
+  return verbose;
 }
 
 /* Main entry points for logging */
@@ -874,7 +880,7 @@ z_log_session_id(const gchar *session_id)
  * whether the message really needs to be written.
  **/
 void
-z_logv(const gchar *class, int level, gchar *format, va_list ap)
+z_logv(const gchar *class, int level, const gchar *format, va_list ap)
 {
   int saved_errno = errno;
   
@@ -908,7 +914,7 @@ z_logv(const gchar *class, int level, gchar *format, va_list ap)
  * @see z_log() in log.h
  **/
 void
-z_llog(const gchar *class, int level, gchar *format, ...)
+z_llog(const gchar *class, int level, const gchar *format, ...)
 {
   va_list l;
 
@@ -934,7 +940,7 @@ z_llog(const gchar *class, int level, gchar *format, ...)
  * @see z_log() in log.h
  **/
 void 
-z_log(const gchar *session_id, const gchar *class, int level, gchar *format, ...)
+z_log(const gchar *session_id, const gchar *class, int level, const gchar *format, ...)
 {
   va_list l;
   gchar msgbuf[2048];
@@ -1010,7 +1016,7 @@ z_log_func(const gchar *log_domain G_GNUC_UNUSED,
 
 #else
 
-static GStaticMutex win32_log_handler_mutex = G_STATIC_MUTEX_INIT;
+G_LOCK_DEFINE_STATIC(win32_log_handler_mutex);
 
 /**
  * Log handler function to send Win32 debug message.
@@ -1026,12 +1032,12 @@ z_log_win32_debugmsg(const gchar *log_domain,
                     const gchar *message,
                        gpointer  user_data)
 {
-  g_static_mutex_lock(&win32_log_handler_mutex);
+  G_LOCK(win32_log_handler_mutex);
 
   OutputDebugString(message);
   OutputDebugString("\n");
 
-  g_static_mutex_unlock(&win32_log_handler_mutex);
+  G_UNLOCK(win32_log_handler_mutex);
 }
 
 /**
@@ -1054,13 +1060,13 @@ z_log_win32_syslogmsg(const gchar *log_domain,
   gchar buf[2048];
   int nchars;
  
-  g_static_mutex_lock(&win32_log_handler_mutex);
+  G_LOCK(win32_log_handler_mutex);
 
   now = time(NULL);
   t = localtime(&now);
   strftime(tstamp, sizeof(tstamp), "%Y %b %d %H:%M:%S", t);
 
-  g_static_mutex_unlock(&win32_log_handler_mutex);
+  G_UNLOCK(win32_log_handler_mutex);
 
   nchars = g_snprintf(buf, sizeof(buf), "%s %s\n", tstamp, message);
 

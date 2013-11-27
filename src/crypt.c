@@ -25,7 +25,7 @@
 
 #if HAVE_CRYPT
 /** mutex protecting crypt() invocation */
-static GStaticMutex crypt_lock = G_STATIC_MUTEX_INIT;
+G_LOCK_DEFINE_STATIC(crypt_lock);
 #else
 #include <openssl/des.h>
 #endif
@@ -190,9 +190,9 @@ md5_crypt(const char *pw, const char *salt, char *result, size_t result_len)
 void
 z_crypt(const char *key, const char *salt, char *result, size_t result_len)
 {
-  g_static_mutex_lock(&crypt_lock);
+  G_LOCK(crypt_lock);
   g_strlcpy(result, crypt(key, salt), result_len);
-  g_static_mutex_unlock(&crypt_lock);
+  G_UNLOCK(crypt_lock);
 }
 
 #elif HAVE_CRYPT
@@ -210,9 +210,9 @@ z_crypt(const char *key, const char *salt, char *result, size_t result_len)
   else
     {
       /* ok, call libc crypt */
-      g_static_mutex_lock(&crypt_lock);
+      G_LOCK(crypt_lock);
       g_strlcpy(result, crypt(key, salt), result_len);
-      g_static_mutex_unlock(&crypt_lock);
+      G_UNLOCK(crypt_lock);
     }
 }
 

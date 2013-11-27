@@ -59,7 +59,7 @@ z_cp_command_get_headers_count(ZCPCommand *self)
 }
 
 ZCPCommand *
-z_cp_command_new(gchar *cmd)
+z_cp_command_new(const gchar *cmd)
 {
   ZCPCommand *self = g_new0(ZCPCommand, 1);
 

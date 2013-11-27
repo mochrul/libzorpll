@@ -14,6 +14,13 @@
  *
  ***************************************************************************/
 
+#ifdef _MSC_VER
+#  include <winsock2.h>
+#else
+#  include <sys/socket.h>
+#  include <sys/poll.h>
+#endif
+
 #include <zorp/streambuf.h>
 #include <zorp/stream.h>
 #include <zorp/log.h>
@@ -24,13 +31,6 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <assert.h>
-
-#ifdef G_OS_WIN32
-#  include <winsock2.h>
-#else
-#  include <sys/socket.h>
-#  include <sys/poll.h>
-#endif
 
 /**
  * @file

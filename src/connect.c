@@ -471,7 +471,7 @@ z_connector_open_socket(ZConnector *self)
  * @returns The allocated instance.
  **/
 ZConnector *
-z_connector_new(ZClass *class,
+z_connector_new(ZClass *class_,
                 const gchar *session_id,
                 gint socket_type,
                 ZSockAddr *local, 
@@ -484,7 +484,7 @@ z_connector_new(ZClass *class,
   ZConnector *self;
   
   z_enter();
-  self = Z_NEW_COMPAT(class, ZConnector);
+  self = Z_NEW_COMPAT(class_, ZConnector);
   self->refcnt = 1;
   self->local = z_sockaddr_ref(local);
   self->remote = z_sockaddr_ref(remote);

@@ -215,14 +215,14 @@ z_mem_trace_init_internal(void)
  * @param[in] tracefile basename of the trace file.
  **/
 void
-z_mem_trace_init(gchar *tracefile)
+z_mem_trace_init(const gchar *tracefile_name)
 {
 
   z_mem_trace_init_internal();
 
   if (tracefile && mem_trace)
     {
-      g_snprintf(mem_trace_filename, sizeof(mem_trace_filename), ZORPLIB_TEMP_DIR "/%s", tracefile);
+      g_snprintf(mem_trace_filename, sizeof(mem_trace_filename), ZORPLIB_TEMP_DIR "/%s", tracefile_name);
       z_mem_trace_printf("MemTrace initialized; memtrace='%s', canaries='%s', keep_deleted='%s', full_log='%s'\n",
                 YES_NO_STR(mem_trace), YES_NO_STR(mem_trace_canaries), YES_NO_STR(mem_trace_hard), YES_NO_STR(really_trace_malloc));
     }
@@ -930,7 +930,7 @@ calloc(size_t nmemb, size_t size)
  * @param memtrace_file unused
  **/
 void 
-z_mem_trace_init(gchar *memtrace_file G_GNUC_UNUSED)
+z_mem_trace_init(const gchar *memtrace_file G_GNUC_UNUSED)
 {
 }
 

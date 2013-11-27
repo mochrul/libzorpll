@@ -25,10 +25,8 @@
 #endif
 #include <stdio.h>
 
-static gboolean use_threadpools = FALSE;
 gint max_threads = 100;
 static gint num_threads = 0;
-static gint idle_threads = -1;
 static gint max_stack_size = 512 * 1024;
 static GPrivate *current_thread;
 
@@ -170,7 +168,8 @@ z_thread_func(gpointer st)
       if (!self)
         {
           num_threads--;
-          g_async_queue_unref_and_unlock(queue);
+          g_async_queue_unref(queue);
+          g_async_queue_unlock(queue);
         }
       else
         g_async_queue_unlock(queue);
@@ -191,7 +190,7 @@ z_thread_func(gpointer st)
  * @returns TRUE to indicate success
  **/
 gboolean
-z_thread_new(gchar *name, GThreadFunc func, gpointer arg)
+z_thread_new(const gchar *name, GThreadFunc func, gpointer arg)
 {
   ZThread *self = g_new0(ZThread, 1);
   GError *error = NULL;
@@ -216,7 +215,7 @@ z_thread_new(gchar *name, GThreadFunc func, gpointer arg)
   else
     {
       num_threads++;
-      g_async_queue_ref_unlocked(queue);
+      g_async_queue_ref(queue);
       g_async_queue_unlock(queue);
       if (!g_thread_create_full(z_thread_func, self, max_stack_size, FALSE, TRUE, G_THREAD_PRIORITY_NORMAL, &error))
         {
@@ -233,20 +232,6 @@ z_thread_new(gchar *name, GThreadFunc func, gpointer arg)
     }
   
   return TRUE;
-}
-
-/**
- * This function should be called before calling z_thread_init() to specify
- * that threadpools should be used and to specify the maximum number of idle
- * threads.
- *
- * @param[in] idle maximum number of idle threads
- **/
-void
-z_thread_enable_threadpools(gint idle)
-{
-  use_threadpools = TRUE;
-  idle_threads = idle;
 }
 
 /**
@@ -345,9 +330,7 @@ z_thread_stack_size_arg(const gchar *option_name G_GNUC_UNUSED, const gchar *val
  **/
 static GOptionEntry z_thread_option_entries[] =
 {
-  { "threadpools",       'O', 0, G_OPTION_ARG_NONE,     &use_threadpools,        "Enable the use of threadpools", NULL },
   { "threads",           't', 0, G_OPTION_ARG_INT,      &max_threads,            "Set the maximum number of threads", "<thread limit>" },
-  { "idle-threads",      'I', 0, G_OPTION_ARG_INT,      &idle_threads,           "Set the maximum number of idle threads (applies to threadpools only)", "<idle-threads limit>" },
   { "stack-size",        'S', 0, G_OPTION_ARG_CALLBACK, z_thread_stack_size_arg, "Set the stack size in kBytes", "<stacksize>" },
   { NULL, 0, 0, 0, NULL, NULL, NULL },
 };

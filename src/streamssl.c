@@ -14,6 +14,13 @@
  *
  ***************************************************************************/
 
+#ifdef _MSC_VER
+#  include <winsock2.h>
+#else
+#  include <sys/socket.h>
+#  include <sys/poll.h>
+#endif
+
 #include <zorp/stream.h>
 #include <zorp/streamssl.h>
 #include <zorp/log.h>
@@ -21,18 +28,11 @@
 #include <zorp/zorplib.h>
 #include <zorp/error.h>
 
-#include <openssl/err.h>
-
 #include <string.h>
 #include <sys/types.h>
 #include <assert.h>
 
-#ifdef G_OS_WIN32
-#  include <winsock2.h>
-#else
-#  include <sys/socket.h>
-#  include <sys/poll.h>
-#endif
+#include <openssl/err.h>
 
 #define ERR_buflen 4096
 

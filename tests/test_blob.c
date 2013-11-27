@@ -233,8 +233,8 @@ main(void)
   ZBlobSystem *blobsys;
   ZBlob *blob;
   /*gchar *blobptr;*/
-  gsize blobptr_size;
-  const gchar *blobfile;
+  /*gsize blobptr_size;*/
+  /*const gchar *blobfile;*/
 
   z_thread_init();
   /*verbose_level=9;*/
@@ -262,9 +262,9 @@ main(void)
     }
   else
     {
-      blobptr_size = 10;
+      /*blobptr_size = 10;*/
       /*blobptr = z_blob_get_ptr(blob, 0, &blobptr_size, -1);*/
-      blobfile = z_blob_get_file(blob, NULL, NULL, 0644, -1);
+      /*blobfile =*/ z_blob_get_file(blob, NULL, NULL, 0644, -1);
       /* Leave it allocated and locked, let's see what happens when the blobsys is destroyed */
     }
   
