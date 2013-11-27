@@ -104,10 +104,6 @@ else
   CFLAGS="$CFLAGS -O2"
 fi
 
-if test "x$enable_werror" = "xyes"; then
-  CFLAGS="$CFLAGS -Werror"
-fi
-
 dnl Checks for programs.
 AC_PROG_CC
 AM_PROG_LIBTOOL
@@ -381,6 +377,10 @@ tos: $enable_tos
 EOF
 
 CFLAGS="$CFLAGS -D_GNU_SOURCE -Wall -Wshadow -W -Wstrict-prototypes -Werror-implicit-function-declaration -Wpointer-arith -g"
+
+if test "x$enable_werror" = "xyes"; then
+  CFLAGS="$CFLAGS -Werror"
+fi
 
 DEPS_CPPFLAGS="$CPPFLAGS $GLIB_CFLAGS $OPENSSL_CFLAGS"
 CPPFLAGS="-I$top_srcdir/lib -I$top_srcdir $DEPS_CPPFLAGS"

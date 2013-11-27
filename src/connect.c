@@ -399,10 +399,15 @@ z_connector_set_timeout(ZConnector *self, gint timeout)
 void
 z_connector_set_tos(ZConnector *self, gint tos)
 {
-  self->tos = tos;
-
   if ((self->fd != -1) && tos > 0)
     z_fd_set_our_tos(self->fd, tos);
+}
+
+void
+z_connector_set_mark(ZConnector *self, int mark)
+{
+  if ((self->fd != -1) && mark > 0)
+    z_fd_set_our_mark(self->fd, mark);
 }
 
 /**
@@ -494,7 +499,6 @@ z_connector_new(ZClass *class_,
   self->destroy_data = destroy_data;
   self->timeout = 30;
   self->sock_flags = sock_flags;
-  self->tos = -1;
   self->socket_type = socket_type;
   self->fd = z_connector_open_socket(self);
   if (self->fd < 0)
