@@ -1,4 +1,4 @@
-/* src/zorp/zorplibconfig.h.in.  Generated from configure.in by autoheader.  */
+/* src/zorp/zorplibconfig.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -26,6 +26,9 @@
 
 /* Define to 1 if you have the <crypt.h> header file. */
 #undef HAVE_CRYPT_H
+
+/* define if the compiler supports basic C++11 syntax */
+#undef HAVE_CXX11
 
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
@@ -207,9 +210,6 @@
 /* Zorp low level library version */
 #undef ZORPLIBLL_VERSION
 
-/* Binary branch */
-#undef ZORPLIB_BINARY_BRANCH
-
 /* Binary compatibility version */
 #undef ZORPLIB_COMPAT_BRANCH
 
@@ -221,9 +221,6 @@
 
 /* enable memtrace */
 #undef ZORPLIB_ENABLE_MEM_TRACE
-
-/* enable residual protection */
-#undef ZORPLIB_ENABLE_RESIDUAL_PROTECTION
 
 /* enable ssl engine */
 #undef ZORPLIB_ENABLE_SSL_ENGINE
@@ -245,6 +242,11 @@
 
 /* default temporary directory */
 #undef ZORPLIB_TEMP_DIR
+
+/* Enable large inode numbers on Mac OS X 10.5.  */
+#ifndef _DARWIN_USE_64_BIT_INODE
+# define _DARWIN_USE_64_BIT_INODE 1
+#endif
 
 /* Number of bits in a file offset, on hosts where this is settable. */
 #undef _FILE_OFFSET_BITS

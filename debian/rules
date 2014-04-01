@@ -27,14 +27,15 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 
+	./autogen.sh
 	./configure --prefix=/usr \
 		--mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info \
 		--sysconfdir=/etc \
 		--libexecdir=\$${libdir}/libzorpll \
 		--localstatedir=/var \
-		$(DDEBUG) \
-		--disable-dmalloc
+		$(DDEBUG)
+
 	$(MAKE) $(MAKEFLAGS)
 
 	touch build-stamp
@@ -74,15 +75,14 @@ install: build
 		--infodir=\$${prefix}/share/info \
 		--sysconfdir=/etc \
 		--libexecdir=\$${libdir}/libzorpll \
-		--enable-mem-trace \
-		--disable-dmalloc
+		--enable-mem-trace
 	$(MAKE) $(MAKEFLAGS)
 
 	$(MAKE) install DESTDIR=`pwd`/debian/tmp/
 
-	mkdir -p debian/libzorpll3.9-1-memtrace/usr/lib/debug
+	mkdir -p debian/libzorpll5.0-0-memtrace/usr/lib/debug
 	for l in `find debian/tmp/usr/lib -name '*.so*'`; do \
-		cp -vdf $$l debian/libzorpll3.9-1-memtrace/usr/lib/debug/; \
+		cp -vdf $$l debian/libzorpll5.0-0-memtrace/usr/lib/debug/; \
 	done
 
 # Build architecture-independent files here.
@@ -95,10 +95,10 @@ binary-arch: build install
 	dh_installdocs -a
 	dh_installchangelogs -a
 	dh_link -a
-	dh_strip -a --dbg-package=libzorpll3.9-1
+	dh_strip -a --dbg-package=libzorpll5.0-0-dbg
 	dh_compress -a
 	dh_fixperms -a
-	dh_makeshlibs -a --no-package=libzorpll3.9-1-memtrace
+	dh_makeshlibs -a --no-package=libzorpll5.0-0-memtrace
 	dh_installdeb -a
 	dh_lintian -a
 	dh_shlibdeps -a

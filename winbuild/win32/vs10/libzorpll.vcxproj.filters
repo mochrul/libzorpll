@@ -15,109 +15,109 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\cap.c">
+    <ClCompile Include="..\..\..\src\cap.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\code.c">
+    <ClCompile Include="..\..\..\src\code.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\code_base64.c">
+    <ClCompile Include="..\..\..\src\code_base64.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\code_cipher.c">
+    <ClCompile Include="..\..\..\src\code_cipher.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\code_gzip.c">
+    <ClCompile Include="..\..\..\src\code_gzip.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\connect.c">
+    <ClCompile Include="..\..\..\src\connect.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\crypt.c">
+    <ClCompile Include="..\..\..\src\crypt.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\error.c">
+    <ClCompile Include="..\..\..\src\error.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\headerset.c">
+    <ClCompile Include="..\..\..\src\headerset.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\io.c">
+    <ClCompile Include="..\..\..\src\io.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\listen.c">
+    <ClCompile Include="..\..\..\src\listen.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\log.c">
+    <ClCompile Include="..\..\..\src\log.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\memtrace.c">
+    <ClCompile Include="..\..\..\src\memtrace.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\misc.c">
+    <ClCompile Include="..\..\..\src\misc.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\packetbuf.c">
+    <ClCompile Include="..\..\..\src\packetbuf.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\poll.c">
+    <ClCompile Include="..\..\..\src\poll.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\process.c">
+    <ClCompile Include="..\..\..\src\process.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\random.c">
+    <ClCompile Include="..\..\..\src\random.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\registry.c">
+    <ClCompile Include="..\..\..\src\registry.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\sockaddr.c">
+    <ClCompile Include="..\..\..\src\sockaddr.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\socket.c">
+    <ClCompile Include="..\..\..\src\socket.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\socketsource.c">
+    <ClCompile Include="..\..\..\src\socketsource.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\source.c">
+    <ClCompile Include="..\..\..\src\source.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\ssl.c">
+    <ClCompile Include="..\..\..\src\ssl.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\stackdump.c">
+    <ClCompile Include="..\..\..\src\stackdump.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\stream.c">
+    <ClCompile Include="..\..\..\src\stream.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\streambuf.c">
+    <ClCompile Include="..\..\..\src\streambuf.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\streamfd.c">
+    <ClCompile Include="..\..\..\src\streamfd.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\streamgzip.c">
+    <ClCompile Include="..\..\..\src\streamgzip.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\streamline.c">
+    <ClCompile Include="..\..\..\src\streamline.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\streamssl.c">
+    <ClCompile Include="..\..\..\src\streamssl.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\thread.c">
+    <ClCompile Include="..\..\..\src\thread.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\zcp.c">
+    <ClCompile Include="..\..\..\src\zcp.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\zobject.c">
+    <ClCompile Include="..\..\..\src\zobject.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\zurlparse.c">
+    <ClCompile Include="..\..\..\src\zurlparse.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

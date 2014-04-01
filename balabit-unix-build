@@ -51,7 +51,7 @@ case "$cmd" in
     if [ -n "$SNAPSHOT_VERSION" ]; then
       unset SNAPSHOT_VERSION
     fi
-     ./configure
+    ./configure
     make dist
     ;;
   dist-exclude-list|build-exclude-list)

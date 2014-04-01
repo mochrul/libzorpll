@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-ZStream *z_stream_blob_new(ZBlob *blob, gchar *name);
+ZStream *z_stream_blob_new(ZBlob *blob, const gchar *name);
 
 #ifdef __cplusplus
 }
