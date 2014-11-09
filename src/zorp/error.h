@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: error.h,v 1.4 2004/05/21 13:58:32 abi Exp $
- *
  ***************************************************************************/
 
 #ifndef _ZORP_ERROR_H_INCLUDED

@@ -1,13 +1,9 @@
 /***************************************************************************
  *
- * COPYRIGHTHERE
- *
- * $Id: streamblob.c,v 1.00 2004/11/29 13:58:32 fules Exp $
- *
- * Author  : fules
- * Auditor :
- * Last audited version:
- * Notes:
+ * This file is covered by a dual licence. You can choose whether you
+ * want to use it according to the terms of the GNU GPL version 2, or
+ * under the terms of Zorp Professional Firewall System EULA located
+ * on the Zorp installation CD.
  *
  ***************************************************************************/
 

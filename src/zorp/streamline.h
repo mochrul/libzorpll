@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: streamline.h,v 1.16 2004/07/01 16:53:24 bazsi Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_READLINE_H_INCLUDED

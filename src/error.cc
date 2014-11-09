@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: error.c,v 1.2 2003/04/08 13:32:28 sasa Exp $
- *
- * Author  : void
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <glib.h>

@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: memtrace.c,v 1.38 2004/08/18 12:06:40 sasa Exp $
- *
- * Author  : Bazsi
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/misc.h>
@@ -93,7 +86,7 @@ typedef struct _ZMemTraceEntry
 typedef struct _ZMemTraceHead
 {
   guint32 list;
-  GStaticMutex lock;
+  GMutex lock;
   gulong size;
 } ZMemTraceHead;
 
@@ -202,7 +195,7 @@ z_mem_trace_init_internal(void)
           for (i = 0; i < MEMTRACE_HASH_SIZE; i++) 
             {
               mem_trace_hash[i].list = MEMTRACE_EOL;
-              g_static_mutex_init(&mem_trace_hash[i].lock);
+              g_mutex_init(&mem_trace_hash[i].lock);
             }
         }
     }
@@ -419,7 +412,7 @@ z_mem_trace_dump()
           ZMemTraceEntry *entry;
           guint32 cur;
           
-          g_static_mutex_lock(&head->lock);
+          g_mutex_lock(&head->lock);
           cur = head->list;
           while (cur != MEMTRACE_EOL)
             {
@@ -446,7 +439,7 @@ z_mem_trace_dump()
                 }
               cur = entry->next;
             }
-          g_static_mutex_unlock(&head->lock);
+          g_mutex_unlock(&head->lock);
         }
     }
 }
@@ -561,12 +554,12 @@ z_mem_trace_add(gpointer ptr, gint size, gpointer backt[])
   memmove(new_entry->backtrace, backt, sizeof(new_entry->backtrace));
   head = &mem_trace_hash[hash];
   
-  g_static_mutex_lock(&head->lock);
+  g_mutex_lock(&head->lock);
   
   new_entry->next = head->list;
   head->list = new_ndx;
   
-  g_static_mutex_unlock(&head->lock);
+  g_mutex_unlock(&head->lock);
 
   if (really_trace_malloc)
     {
@@ -588,7 +581,7 @@ z_mem_trace_del(gpointer ptr, gpointer bt[])
   hash = z_mem_trace_hash(ptr);
   head = &mem_trace_hash[hash];
   
-  g_static_mutex_lock(&head->lock);
+  g_mutex_lock(&head->lock);
   
   prev = &head->list;
   cur = head->list;
@@ -600,14 +593,14 @@ z_mem_trace_del(gpointer ptr, gpointer bt[])
   
   if (cur == MEMTRACE_EOL)
     {
-      g_static_mutex_unlock(&head->lock);
+      g_mutex_unlock(&head->lock);
       
       return FALSE;
     }
     
   if (!mem_trace_hard)
     *prev = mem_trace_heap[cur].next;
-  g_static_mutex_unlock(&head->lock);
+  g_mutex_unlock(&head->lock);
   
   G_LOCK(mem_trace_lock);
   
@@ -661,18 +654,18 @@ z_mem_trace_getsize(gpointer ptr)
   hash = z_mem_trace_hash(ptr);
   head = &mem_trace_hash[hash];
   
-  g_static_mutex_lock(&head->lock);
+  g_mutex_lock(&head->lock);
   cur = z_mem_trace_lookup_chain(ptr, head);
   
   if (cur != MEMTRACE_EOL)
     {
       size = mem_trace_heap[cur].size;
-      g_static_mutex_unlock(&head->lock);
+      g_mutex_unlock(&head->lock);
   
       return size;
     }
   
-  g_static_mutex_unlock(&head->lock);
+  g_mutex_unlock(&head->lock);
   
   return -1;
 }

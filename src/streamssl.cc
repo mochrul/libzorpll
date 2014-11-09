@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: streamssl.c,v 1.45 2003/09/10 11:46:58 bazsi Exp $
- *
- * Author  : SaSa
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #ifdef _MSC_VER
@@ -22,9 +15,7 @@
 #endif
 
 #include <zorp/stream.h>
-#include <zorp/streamssl.h>
 #include <zorp/log.h>
-#include <zorp/ssl.h>
 #include <zorp/zorplib.h>
 #include <zorp/error.h>
 
@@ -34,11 +25,17 @@
 
 #include <openssl/err.h>
 
+#include <zorp/ssl.h>
+#include <zorp/streamssl.h>
+
+#include <openssl/err.h>
 #define ERR_buflen 4096
 
 #define DO_AS_USUAL          0
 #define CALL_READ_WHEN_WRITE 1
 #define CALL_WRITE_WHEN_READ 2
+
+extern ZClass ZStreamSsl__class;
 
 /**
  * ZStream-derived class to handle connections over SSL.

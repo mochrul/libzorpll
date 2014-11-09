@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: sockaddr.c,v 1.32 2004/08/18 11:46:46 bazsi Exp $
- *
- * Author  : Bazsi
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/sockaddr.h>
@@ -106,7 +99,7 @@ z_sockaddr_new(struct sockaddr *sa, gsize salen)
       
 #endif
     case AF_INET:
-      if (salen == sizeof(struct sockaddr_in))
+      if (salen >= sizeof(struct sockaddr_in))
         z_return(z_sockaddr_inet_new2((struct sockaddr_in *) sa));
       break;
       

@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: streamgzip.c,v 1.5 2004/04/27 15:12:47 bazsi Exp $
- *
- * Author  : SaSa
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/streamgzip.h>

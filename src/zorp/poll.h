@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: poll.h,v 1.7 2003/04/08 13:32:29 sasa Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_POLL_H_INCLUDED

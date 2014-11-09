@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: socket.h,v 1.9 2003/11/26 12:01:22 bazsi Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_SOCKET_H_INCLUDED

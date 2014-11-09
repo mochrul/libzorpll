@@ -1,13 +1,9 @@
 /***************************************************************************
  *
- * COPYRIGHTHERE
- *
- * $Id$
- *
- * Author  : Fules
- * Auditor : bazsi
- * Last audited version: 
- * Notes:
+ * This file is covered by a dual licence. You can choose whether you
+ * want to use it according to the terms of the GNU GPL version 2, or
+ * under the terms of Zorp Professional Firewall System EULA located
+ * on the Zorp installation CD.
  *
  ***************************************************************************/
 
@@ -134,10 +130,10 @@ z_blob_swap_out(ZBlob *self)
 static void
 z_blob_signal_ready(ZBlob *self)
 {
-  g_mutex_lock(self->mtx_reply);
-  g_cond_signal(self->cond_reply);
+  g_mutex_lock(&self->mtx_reply);
+  g_cond_signal(&self->cond_reply);
   self->replied = TRUE;
-  g_mutex_unlock(self->mtx_reply);
+  g_mutex_unlock(&self->mtx_reply);
 }
 
 /**
@@ -395,9 +391,9 @@ z_blob_system_threadproc(ZBlobSystem *self)
 
   z_enter();
   g_assert(self);
-  g_mutex_lock(self->mtx_blobsys);
-  g_cond_signal(self->cond_thread_started);
-  g_mutex_unlock(self->mtx_blobsys);
+  g_mutex_lock(&self->mtx_blobsys);
+  g_cond_signal(&self->cond_thread_started);
+  g_mutex_unlock(&self->mtx_blobsys);
 
   g_get_current_time(&next_time);
   next_time.tv_sec += interval;
@@ -428,7 +424,7 @@ z_blob_system_threadproc(ZBlobSystem *self)
       if (blob == (ZBlob*)Z_BLOB_THREAD_KILL)
         break;
 
-      g_mutex_lock(self->mtx_blobsys);
+      g_mutex_lock(&self->mtx_blobsys);
       if (blob == (ZBlob*)Z_BLOB_MEM_FREED)
         {
           /* check the waiting queue - it is enough to check on successful negative alloc requests,
@@ -467,7 +463,7 @@ z_blob_system_threadproc(ZBlobSystem *self)
               z_blob_signal_ready(blob);
             }
         }
-      g_mutex_unlock(self->mtx_blobsys);
+      g_mutex_unlock(&self->mtx_blobsys);
     }
   z_leave();
   g_thread_exit(self);
@@ -538,16 +534,16 @@ z_blob_system_new(const char *dir, gint64 dmax, gsize mmax, gsize low, gsize hiw
   self->hiwat = hiw;
   self->noswap_max = nosw;
   self->blobs = NULL;
-  self->mtx_blobsys = g_mutex_new();
-  self->cond_thread_started = g_cond_new();
+  g_mutex_init(&self->mtx_blobsys);
+  g_cond_init(&self->cond_thread_started);
   self->req_queue = g_async_queue_new();
   self->waiting_list = NULL;
 
-  g_mutex_lock(self->mtx_blobsys);
-  self->thr_management = g_thread_create((GThreadFunc)z_blob_system_threadproc,
-                              (gpointer)self, TRUE, &self->thread_error);
-  g_cond_wait(self->cond_thread_started, self->mtx_blobsys);
-  g_mutex_unlock(self->mtx_blobsys);
+  g_mutex_lock(&self->mtx_blobsys);
+  self->thr_management = g_thread_new(NULL, (GThreadFunc)z_blob_system_threadproc,
+                              (gpointer)self);
+  g_cond_wait(&self->cond_thread_started, &self->mtx_blobsys);
+  g_mutex_unlock(&self->mtx_blobsys);
   self->active = TRUE;
   z_return(self);
 }
@@ -617,16 +613,16 @@ z_blob_system_unref(ZBlobSystem *self)
 
       if (self->dir)
         g_free(self->dir);
-      if (g_mutex_trylock(self->mtx_blobsys))
+      if (g_mutex_trylock(&self->mtx_blobsys))
         {
-          g_mutex_unlock(self->mtx_blobsys);
-          g_mutex_free(self->mtx_blobsys);
+          g_mutex_unlock(&self->mtx_blobsys);
+          g_mutex_clear(&self->mtx_blobsys);
         }
       else
         {
           /* Some blob operations are in progress: z_blob_new, _unref, _alloc, _get_file */
         }
-      g_cond_free(self->cond_thread_started);
+      g_cond_clear(&self->cond_thread_started);
       g_async_queue_unref(self->req_queue);
       g_list_free(self->waiting_list);
       g_free(self);
@@ -699,18 +695,18 @@ z_blob_new(ZBlobSystem *sys, gsize initial_size)
   self->alloc_size = 0;
   self->data = NULL;
   self->is_in_file = FALSE;
-  self->mtx_reply = g_mutex_new();
-  self->cond_reply = g_cond_new();
+  g_mutex_init(&self->mtx_reply);
+  g_cond_init(&self->cond_reply);
   self->mapped_ptr = NULL;
   self->mapped_length = 0;
   self->storage_locked = FALSE;
 
   z_blob_statistic_init(&self->stat);
-  self->mtx_lock = g_mutex_new();
+  g_mutex_init(&self->mtx_lock);
 
-  g_mutex_lock(self->system->mtx_blobsys);
+  g_mutex_lock(&self->system->mtx_blobsys);
   self->system->blobs = g_list_append(self->system->blobs, self);
-  g_mutex_unlock(self->system->mtx_blobsys);
+  g_mutex_unlock(&self->system->mtx_blobsys);
 
   if (initial_size > 0)
     z_blob_alloc(self, initial_size);
@@ -743,11 +739,11 @@ z_blob_unref(ZBlob *self)
   z_enter();
   if (self && z_refcount_dec(&self->ref_cnt))
     {
-      g_mutex_lock(self->system->mtx_blobsys);
+      g_mutex_lock(&self->system->mtx_blobsys);
       self->alloc_req = -self->alloc_size;
       self->system->blobs = g_list_remove(self->system->blobs, self);
       z_blob_check_alloc(self);
-      g_mutex_unlock(self->system->mtx_blobsys);
+      g_mutex_unlock(&self->system->mtx_blobsys);
 
       if (self->data)
         g_free(self->data);
@@ -763,12 +759,12 @@ z_blob_unref(ZBlob *self)
           self->filename = NULL;
         }
 
-      g_mutex_free(self->mtx_reply);
-      g_cond_free(self->cond_reply);
-      if (g_mutex_trylock(self->mtx_lock))
+      g_mutex_clear(&self->mtx_reply);
+      g_cond_clear(&self->cond_reply);
+      if (g_mutex_trylock(&self->mtx_lock))
         {
-          g_mutex_unlock(self->mtx_lock);
-          g_mutex_free(self->mtx_lock);
+          g_mutex_unlock(&self->mtx_lock);
+          g_mutex_clear(&self->mtx_lock);
         }
       else
         {
@@ -799,12 +795,12 @@ z_blob_lock(ZBlob *self, gint timeout)
 
   if (timeout < 0)        /* infinite timeout -> blocking mode */
     {
-      g_mutex_lock(self->mtx_lock);
+      g_mutex_lock(&self->mtx_lock);
       res = TRUE;
     }
   else if (timeout == 0)  /* zero timeout -> nonblocking mode */
     {
-      res = g_mutex_trylock(self->mtx_lock);
+      res = g_mutex_trylock(&self->mtx_lock);
     }
   else                    /* positive timeout */
     {
@@ -817,7 +813,7 @@ z_blob_lock(ZBlob *self, gint timeout)
       do
         {
           res = FALSE;
-          if (g_mutex_trylock(self->mtx_lock))
+          if (g_mutex_trylock(&self->mtx_lock))
             {
               res = TRUE;
               break;
@@ -841,7 +837,7 @@ z_blob_unlock(ZBlob *self)
 {
   z_enter();
   g_assert(self);
-  g_mutex_unlock(self->mtx_lock);
+  g_mutex_unlock(&self->mtx_lock);
   z_return();
 }
 
@@ -899,19 +895,19 @@ z_blob_alloc(ZBlob *self, gint64 req_size)
     z_return();
 
   alloc_req = z_blob_calculate_allocation_size(req_size, self->alloc_size, self->is_in_file) - self->alloc_size;
-  g_mutex_lock(self->system->mtx_blobsys);
+  g_mutex_lock(&self->system->mtx_blobsys);
   self->alloc_req = alloc_req;
   alloc_granted = z_blob_check_alloc(self);
-  g_mutex_unlock(self->system->mtx_blobsys);
+  g_mutex_unlock(&self->system->mtx_blobsys);
   if (!alloc_granted)
     {
       self->approved = FALSE;
       self->replied = FALSE;
-      g_mutex_lock(self->mtx_reply);
+      g_mutex_lock(&self->mtx_reply);
       g_async_queue_push(self->system->req_queue, self);
       while (!self->replied)
-        g_cond_wait(self->cond_reply, self->mtx_reply);
-      g_mutex_unlock(self->mtx_reply);
+        g_cond_wait(&self->cond_reply, &self->mtx_reply);
+      g_mutex_unlock(&self->mtx_reply);
       alloc_granted = self->approved;
     }
 
@@ -1141,10 +1137,10 @@ z_blob_get_file(ZBlob *self, const gchar *user, const gchar *group, gint mode, g
           if (self->storage_locked)
             goto exit;
 
-          g_mutex_lock(self->system->mtx_blobsys); /* swap_out() accesses the blob systems data
+          g_mutex_lock(&self->system->mtx_blobsys); /* swap_out() accesses the blob systems data
                                                       directly, so it needs to be locked */
           z_blob_swap_out(self);
-          g_mutex_unlock(self->system->mtx_blobsys);
+          g_mutex_unlock(&self->system->mtx_blobsys);
         }
       if (group || user)
         {

@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: streamssl.h,v 1.4 2003/04/08 13:32:29 sasa Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_STREAMSSL_H_INCLUDED
@@ -20,6 +18,8 @@ extern "C" {
 
 #define ZST_CTRL_SSL_SET_SESSION     (0x01) | ZST_CTRL_SSL_OFS
 #define ZST_CTRL_SSL_ADD_HANDSHAKE   (0x02) | ZST_CTRL_SSL_OFS
+
+LIBZORPLL_EXTERN ZClass ZStreamSsl__class;
 
 ZStream * z_stream_ssl_new(ZStream *stream, ZSSLSession *ssl);
 

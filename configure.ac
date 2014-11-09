@@ -19,8 +19,8 @@ VERSION=`cat $srcdir/VERSION`
 dnl ***************************************************************************
 dnl Dependencies
 
-LIBGLIB_MIN_VERSION=2.2.3
-OPENSSL_MIN_VERSION=0.9.8
+LIBGLIB_MIN_VERSION=2.32.0
+OPENSSL_MIN_VERSION=1.0.1
 
 dnl ***************************************************************************
 dnl Initial setup
@@ -233,7 +233,7 @@ if test "x$ac_cv_header_crypt_h" = "xyes"; then
 	AC_CHECK_LIB(crypt, crypt)
 fi
 AC_CHECK_LIB(z, gzread)
-AC_CHECK_FUNCS(socket strtol strtoul strlcpy backtrace prctl setrlimit)
+AC_CHECK_FUNCS(socket strtol strtoul strlcpy backtrace prctl)
 AC_CHECK_FUNCS(inet_aton inet_addr localtime_r)
 if test "x$ac_cv_header_crypt_h" = "xyes"; then
 	AC_CHECK_FUNCS(crypt)
@@ -289,7 +289,10 @@ if test "x$enable_stackdump" = "xauto"; then
         fi
 fi
 
+save_LIBS="$LIBS"
+LIBS="$LIBS $OPENSSL_LIBS"
 if test "x$enable_ssl_engine" = "xauto"; then
+	AC_CHECK_FUNC(ENGINE_by_id)
 	AC_MSG_CHECKING(whether to enable SSL crypto engine support)
 	if test "x$ac_cv_func_ENGINE_by_id" = "xyes"; then
 		AC_MSG_RESULT(yes)
@@ -299,6 +302,7 @@ if test "x$enable_ssl_engine" = "xauto"; then
 		enable_ssl_engine=no
 	fi
 fi
+LIBS=$save_LIBS
 
 if test "x$enable_tos" = "xauto"; then
 	AC_MSG_CHECKING(whether to enable ToS manipulation support)

@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: stackdump.c,v 1.11 2004/05/22 14:04:17 bazsi Exp $
- *
- * Author  : bazsi
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 
@@ -36,6 +29,8 @@
 #ifdef G_OS_WIN32
 #define _WIN32_WINNT _WIN32_WINNT_WINXP
 #endif
+
+
 /**
  * Log parts of the current stack in hexadecimal form.
  *
@@ -237,6 +232,10 @@ z_stackdump_log(ZSignalContext *p G_GNUC_UNUSED)
 #include <Dbghelp.h>
 #include <iphlpapi.h>
 #include <psapi.h>
+#include <stdio.h>
+#include <Userenv.h>
+
+#include <string>
 
 /* Visual Studio intelli sense needs this */
 #if defined (_M_X64)
@@ -245,7 +244,8 @@ z_stackdump_log(ZSignalContext *p G_GNUC_UNUSED)
 
 BOOL z_get_logical_address(VOID *addr, PTSTR module_name, DWORD len, DWORD *section, DWORD *offset);
 LPTOP_LEVEL_EXCEPTION_FILTER previous_filter;
-static TCHAR dump_file_name[MAX_PATH];
+static std::string dump_file_name;
+static std::string program_version;
 static BOOL write_dump_file = FALSE;
 
 /** 
@@ -253,9 +253,11 @@ static BOOL write_dump_file = FALSE;
  * write the memory dump into a file.
  **/
 void
-z_enable_write_dump_file(void)
+z_enable_write_dump_file(const gchar *prog_version)
 {
   write_dump_file = TRUE;
+
+  program_version = prog_version;
 }
 
 
@@ -313,7 +315,7 @@ z_write_minidump(EXCEPTION_POINTERS* exception_pointers)
       z_log(NULL, CORE_ERROR, 0, _T("Failed to open process self: error='%08x'"), ret);
       goto clean_up;
     }
-  file = CreateFile(dump_file_name, GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+  file = CreateFile(dump_file_name.c_str(), GENERIC_WRITE, FILE_SHARE_READ, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
   if (file==NULL) 
     {
       ret = GetLastError();
@@ -326,7 +328,7 @@ z_write_minidump(EXCEPTION_POINTERS* exception_pointers)
       z_log(NULL, CORE_ERROR, 0, _T("Failed to call MiniDumpWrite dump: error='%08x'"), ret);
       goto clean_up;
     }
-  z_log(NULL, CORE_ERROR, 0, _T("Minidump creation succeeded! filename='%s'"), dump_file_name);
+  z_log(NULL, CORE_ERROR, 0, _T("Minidump creation succeeded! filename='%s'"), dump_file_name.c_str());
  clean_up:
   if(file != NULL)
     CloseHandle(file);
@@ -667,7 +669,24 @@ z_unhandled_exception_filter (PEXCEPTION_POINTERS exception_info_ptr)
 {
   if (write_dump_file)
   {
-    DWORD ret = z_write_minidump(exception_info_ptr);
+    SYSTEMTIME stLocalTime;
+    DWORD ret;
+
+    /* Cut off the extension .dmp */
+    dump_file_name.resize(dump_file_name.length() - 4);
+
+    GetLocalTime( &stLocalTime );
+    char file_name[MAX_PATH];
+
+    _snprintf( file_name, MAX_PATH, "%s-%s-%04d%02d%02d-%02d%02d%02d-%ld-%ld.dmp",
+                    dump_file_name.c_str(), program_version.c_str(),
+                    stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay,
+                    stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond,
+                    GetCurrentProcessId(), GetCurrentThreadId());
+
+    dump_file_name = file_name;
+
+    ret = z_write_minidump(exception_info_ptr);
     if (ret != ERROR_SUCCESS)
       z_log(NULL, CORE_ERROR, 0, _T("Failed to write minidump file: %08x"), ret);
   }
@@ -690,9 +709,11 @@ z_set_unhandled_exception_filter(void)
 {
   PTCHAR dot = NULL;
   previous_filter = SetUnhandledExceptionFilter(z_unhandled_exception_filter);
-  GetModuleFileName(NULL, dump_file_name, MAX_PATH);
+
+  TCHAR file_name[MAX_PATH];
+  GetModuleFileName(NULL, file_name, MAX_PATH);
   /* Replace the extension with "dmp" */
-  dot = _tcsrchr(dump_file_name, _T('.'));
+  dot = _tcsrchr(file_name, _T('.'));
   if (dot)
     {
       dot++;     /* Advance past the '.' */
@@ -701,6 +722,7 @@ z_set_unhandled_exception_filter(void)
           _tcscpy(dot, _T("dmp"));
         }
     }
+  dump_file_name = file_name;
 #ifndef _SYSCRT
   return 0; 
 #else

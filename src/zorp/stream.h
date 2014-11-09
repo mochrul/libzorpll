@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: stream.h,v 1.44 2004/02/09 11:25:49 sasa Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_STREAM_H_INCLUDED

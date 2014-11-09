@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: listen.c,v 1.41 2004/10/05 14:06:37 chaoron Exp $
- *
- * Author  : Bazsi
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/listen.h>
@@ -19,7 +12,6 @@
 #include <zorp/log.h>
 #include <zorp/socketsource.h>
 #include <zorp/streamfd.h>
-#include <zorp/misc.h>
 
 #include <sys/types.h>
 #ifdef HAVE_UNISTD_H
@@ -34,6 +26,8 @@
 #  include <netinet/tcp.h>
 #  include <netinet/in.h>
 #endif
+
+#include <zorp/misc.h>
 
 #define MAX_ACCEPTS_AT_A_TIME 50
 
@@ -67,10 +61,10 @@ z_listener_accept(gboolean timed_out G_GNUC_UNUSED, gpointer data)
   /* NOTE: self->lock protects cancellation, _cancel grabs self->lock thus
    * we either execute first and accept all fds, or self->watch will be
    * NULL and we return */
-  g_static_rec_mutex_lock(&self->lock);
+  g_rec_mutex_lock(&self->lock);
   if (!self->watch)
     {
-      g_static_rec_mutex_unlock(&self->lock);
+      g_rec_mutex_unlock(&self->lock);
       z_return(TRUE);
     }
     
@@ -105,7 +99,7 @@ z_listener_accept(gboolean timed_out G_GNUC_UNUSED, gpointer data)
         break;
     }
   z_listener_unref((ZListener *) self);
-  g_static_rec_mutex_unlock(&self->lock);
+  g_rec_mutex_unlock(&self->lock);
   
   /*LOG
     This message reports the number of accepted connections
@@ -263,10 +257,10 @@ z_listener_cancel(ZListener *self)
        * pending fds, or we NULL out self->watch and our accepted callback
        * won't call any user callbacks. It is therefore guaranteed that no
        * user callbacks will be called after cancellation */
-      g_static_rec_mutex_lock(&self->lock);
+      g_rec_mutex_lock(&self->lock);
       watch = self->watch;
       self->watch = NULL;
-      g_static_rec_mutex_unlock(&self->lock);
+      g_rec_mutex_unlock(&self->lock);
 
       g_source_destroy(watch);
       g_source_unref(watch);
@@ -306,6 +300,7 @@ z_listener_new(ZClass *klass,
   self->sock_flags = sock_flags;
   self->bind_addr = z_sockaddr_ref(bind_addr);
   self->fd = -1;
+  g_rec_mutex_init(&self->lock);
   z_return(self);
 }
 
@@ -325,6 +320,7 @@ z_listener_free(ZObject *s)
 
   z_enter();
   self->callback = NULL;
+  g_rec_mutex_clear(&self->lock);
   if (self->fd != -1)
     {
 #ifdef G_OS_WIN32

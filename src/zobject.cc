@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: zobject.c,v 1.14 2004/06/21 14:10:47 sasa Exp $
- *
  ***************************************************************************/
 
 #include <zorp/zobject.h>
