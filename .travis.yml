@@ -1,0 +1,44 @@
+language: cpp
+
+compiler:
+  - gcc
+  - clang
+
+before_install:
+  - source ci/obs_common.sh
+  - source ci/obs_before_install.sh
+
+before_script:
+  - sudo apt-get install -qq devscripts equivs
+  - sudo mk-build-deps -i
+
+script:
+  - ./autogen.sh
+  - ./configure --prefix=$HOME
+  - make
+  - make check
+  - source ci/obs_common.sh
+  - source ci/obs_prepare.sh
+
+after_success:
+  - source ci/obs_common.sh
+  - source ci/obs_commit.sh
+
+env:
+  global:
+    - secure: "lvVaWeVS34BGosuG4V9T4Yih1ASvzZbpZKkR5QxG5YlDJf5UL8fbdhWNgRnQt87BtCDiFVeU6kPSQi9b7DgNINO29J5k6C1HeBiFwkQtx44Kpmkv07P0jP70WVJMFye1ARuUyTpDKPx+dLoD6x08pzCz8+kEeEBeiwjU7WzGlOI="
+    - OBS_HOME=security
+    - OBS_PROJECT=Zorp
+    - OBS_SUBPROJECT=5.0
+    - OBS_PACKAGE=libzorpll
+    - secure: "dDT9rtWPh8iYO56qWqatuKRE+gk3xEKKZa/sKSAbb/PyHSsJLkDp9vA4e0+JQNStC4YA+X0L6m4bpt275TKee1ucQg47to/monHmr3FG1LAx6zm8Gq7/4PlFnOo1oxfjFZEUnwF/WNZxjf6Y99n65onKl8fUGknGFnAKf0dYxWo="
+
+addons:
+  coverity_scan:
+    project:
+      name: "balabit/libzorpll"
+      description: "Build submitted via Travis CI"
+    notification_email: coroner@pfeifferszilard.hu
+    build_command_prepend: "./configure; make clean"
+    build_command:   "make -j4"
+    branch_pattern: 5.0.0
