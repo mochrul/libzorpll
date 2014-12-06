@@ -1,0 +1,3 @@
+version=3
+opts=filenamemangle=s/.+\/v?(\d\S*)\.tar\.gz/libzorpll-$1\.tar\.gz/ \
+  https://github.com/balabit/libzorpll/tags .*/v?(\d\S*)\.tar\.gz
