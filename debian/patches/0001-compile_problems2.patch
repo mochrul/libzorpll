@@ -1,30 +1,14 @@
 From: SZALAY Attila <sasa@debian.org>
 Date: Fri, 20 Jan 2012 13:29:40 +0100
-Subject: [PATCH] compile_problems2
+Subject: compile_problems2
 
 ===================================================================
 ---
- src/io.c          |    2 +-
- src/memtrace.c    |    2 +-
- src/socket.c      |    2 +-
- tests/test_blob.c |   10 +++++-----
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ src/memtrace.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/src/io.c b/src/io.c
-index dc461e7..9ec673f 100644
---- a/src/io.c
-+++ b/src/io.c
-@@ -201,7 +201,7 @@ void
- z_fd_set_our_tos(gint fd, guint8 tos)
- {
-   socklen_t len;
--  cap_t saved_caps;
-+  G_GNUC_UNUSED cap_t saved_caps;
-   
-   saved_caps = cap_save();
-   len = sizeof(tos);
 diff --git a/src/memtrace.c b/src/memtrace.c
-index 811dcf7..2206b96 100644
+index eda45de..3ee4ef7 100644
 --- a/src/memtrace.c
 +++ b/src/memtrace.c
 @@ -693,7 +693,7 @@ z_malloc(size_t size, gpointer backt[])
@@ -36,45 +20,3 @@ index 811dcf7..2206b96 100644
          }
      }
    else
-diff --git a/src/socket.c b/src/socket.c
-index 8f0bd4b..8613f59 100644
---- a/src/socket.c
-+++ b/src/socket.c
-@@ -37,7 +37,7 @@
- GIOStatus
- z_bind(gint fd, ZSockAddr *addr, guint32 sock_flags)
- {
--  cap_t saved_caps;
-+  G_GNUC_UNUSED cap_t saved_caps;
-   GIOStatus rc;
-   
-   z_enter();
-diff --git a/tests/test_blob.c b/tests/test_blob.c
-index 1141b4d..2891969 100644
---- a/tests/test_blob.c
-+++ b/tests/test_blob.c
-@@ -232,9 +232,9 @@ main(void)
- {
-   ZBlobSystem *blobsys;
-   ZBlob *blob;
--  /*gchar *blobptr;*/
--  gsize blobptr_size;
--  const gchar *blobfile;
-+  /*gchar *blobptr;
-+  gsize blobptr_size; */
-+  G_GNUC_UNUSED const gchar *blobfile;
- 
-   z_thread_init();
-   /*verbose_level=9;*/
-@@ -262,8 +262,8 @@ main(void)
-     }
-   else
-     {
--      blobptr_size = 10;
--      /*blobptr = z_blob_get_ptr(blob, 0, &blobptr_size, -1);*/
-+      /*blobptr_size = 10;
-+      blobptr = z_blob_get_ptr(blob, 0, &blobptr_size, -1);*/
-       blobfile = z_blob_get_file(blob, NULL, NULL, 0644, -1);
-       /* Leave it allocated and locked, let's see what happens when the blobsys is destroyed */
-     }
--- 
