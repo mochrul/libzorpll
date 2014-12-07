@@ -60,12 +60,12 @@ void z_log_enable_stderr_redirect(gboolean threaded);
 void z_log_enable_tag_map_cache(ZLogMapTagFunc map_tags, gint max_tag);
 
 
-void z_logv(const gchar *class_, int level, gchar *format, va_list ap);
+void z_logv(const gchar *class_, int level, const gchar *format, va_list ap);
 
 #ifndef G_OS_WIN32
-  void z_llog(const gchar *class_, int level, gchar *format, ...) __attribute__ ((format(printf, 3, 4)));
+  void z_llog(const gchar *class_, int level, const gchar *format, ...) __attribute__ ((format(printf, 3, 4)));
 #else
-  void z_llog(const gchar *class_, int level, gchar *format, ...);
+  void z_llog(const gchar *class_, int level, const gchar *format, ...);
 #endif
 
 gboolean z_log_enabled_len(const gchar *class_, gsize class_len, int level);
@@ -117,7 +117,7 @@ const gchar *z_log_session_id(const gchar *session_id);
  *
  * @see z_format_data_dump()
  **/
-static inline void 
+static inline void
 z_log_data_dump(const gchar *session_id, const gchar *class_, gint level, const void *buf, guint len)
 {
   if (z_log_enabled(class_, level))
@@ -138,7 +138,7 @@ z_log_data_dump(const gchar *session_id, const gchar *class_, gint level, const 
  *
  * @see z_format_text_dump()
  **/
-static inline void 
+static inline void
 z_log_text_dump(const gchar *session_id, const gchar *class_, gint level, const char *buf, guint len)
 {
   if (z_log_enabled(class_, level))
@@ -197,7 +197,7 @@ z_log_trace_indent(gint dir);
   #define z_session_cp(s)
 
 #endif
-  
+
 #ifdef G_OS_WIN32
   /* disable C4003: not enough actual parameters for macro 'z_return' */
 #pragma warning(disable: 4003)
@@ -212,6 +212,7 @@ gint z_log_get_verbose_level(void);
 gboolean z_log_get_use_syslog(void);
 const gchar * z_log_get_log_spec(void);
 gboolean z_log_get_log_tags(void);
+gint z_log_get_tag_loglevel(const gchar *tag, gsize tag_len);
 
 #ifdef __cplusplus
 }

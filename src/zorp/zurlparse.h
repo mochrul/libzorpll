@@ -5,6 +5,11 @@
 
 #define ZURL_ERROR z_url_error_quark()
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 GQuark z_url_error_quark(void);
 
 enum ZURLError
@@ -26,5 +31,10 @@ typedef struct _ZURL
 gboolean z_url_parse(ZURL *self, const gchar *url_str, GError **error);
 void z_url_init(ZURL *self);
 void z_url_free(ZURL *self);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

@@ -29,6 +29,7 @@
   #include <unistd.h>
 #endif
 #include <openssl/err.h>
+#undef X509_NAME
 #include <openssl/x509v3.h>
 #include <string.h>
 
@@ -39,7 +40,11 @@ gchar *crypto_engine = NULL;
 
 static int ssl_initialized = 0;
 
+#if GLIB_MINOR_VERSION >=32
+static GMutex *ssl_mutexes;
+#else
 static GStaticMutex *ssl_mutexes;
+#endif
 static int mutexnum;
 
 /**
@@ -104,12 +109,20 @@ z_ssl_locking_callback(int mode, int n, const char *file G_GNUC_UNUSED, int line
   if (mode & CRYPTO_LOCK)
     {
       z_trace(NULL, "Mutex %d locked", n);
+      #if GLIB_MINOR_VERSION >=32
+      g_mutex_lock(&ssl_mutexes[n]);
+      #else
       g_static_mutex_lock(&ssl_mutexes[n]);
+      #endif
     }
   else
     {
       z_trace(NULL,  "Mutex %d unlocked", n);
+      #if GLIB_MINOR_VERSION >= 32
+      g_mutex_unlock(&ssl_mutexes[n]);
+      #else
       g_static_mutex_unlock(&ssl_mutexes[n]);
+      #endif
     }
   z_return();
 }
@@ -122,7 +135,11 @@ z_ssl_init_mutexes(void)
 {
   z_enter();
   mutexnum = CRYPTO_num_locks();
+  #if GLIB_MINOR_VERSION >=32
+  ssl_mutexes = g_new0(GMutex, mutexnum);
+  #else
   ssl_mutexes = g_new0(GStaticMutex, mutexnum);
+  #endif
   
   z_enter();
   CRYPTO_set_locking_callback(z_ssl_locking_callback);
@@ -260,7 +277,7 @@ z_ssl_verify_crl(int ok,
                  X509 *xs,
                  X509_STORE_CTX *ctx,
                  X509_STORE *crl_store, 
-                 gchar *session_id)
+                 const gchar *session_id)
 {
   X509_OBJECT obj;
   X509_NAME *subject, *issuer;
@@ -527,14 +544,14 @@ z_ssl_set_trusted_ca_list(SSL_CTX *ctx, gchar *ca_path)
 {
   ZSSLCADirectory *ca_dir = NULL;
   static GHashTable *ca_dir_hash = NULL;
-  static GStaticMutex lock = G_STATIC_MUTEX_INIT;
+  G_LOCK_DEFINE_STATIC(lock);
   STACK_OF(X509_NAME) *ca_file = NULL;
   const gchar *direntname;
   struct stat ca_stat;
   GDir *dir;
    
   z_enter();
-  g_static_mutex_lock(&lock);
+  G_LOCK(lock);
   if (ca_dir_hash == NULL)
     {
       ca_dir_hash = g_hash_table_new(g_str_hash, g_str_equal);
@@ -551,7 +568,7 @@ z_ssl_set_trusted_ca_list(SSL_CTX *ctx, gchar *ca_path)
               ca_dir->modtime == ca_stat.st_mtime)
             {
               SSL_CTX_set_client_CA_list(ctx, z_ssl_dup_sk_x509_name(ca_dir->contents));
-              g_static_mutex_unlock(&lock);
+              G_UNLOCK(lock);
               z_return(TRUE);
             }
           g_hash_table_remove(ca_dir_hash, orig_key);
@@ -563,7 +580,7 @@ z_ssl_set_trusted_ca_list(SSL_CTX *ctx, gchar *ca_path)
         
   if (stat(ca_path, &ca_stat) < 0)
     {
-      g_static_mutex_unlock(&lock);
+      G_UNLOCK(lock);
       z_return(FALSE);
     }
   ca_dir = g_new0(ZSSLCADirectory, 1);
@@ -603,7 +620,7 @@ z_ssl_set_trusted_ca_list(SSL_CTX *ctx, gchar *ca_path)
   g_hash_table_insert(ca_dir_hash, g_strdup(ca_path), ca_dir);
   SSL_CTX_set_client_CA_list(ctx, z_ssl_dup_sk_x509_name(ca_dir->contents));
   g_dir_close(dir);
-  g_static_mutex_unlock(&lock);
+  G_UNLOCK(lock);
   z_return(TRUE);
 }
 
@@ -619,7 +636,7 @@ z_ssl_password(char *buf G_GNUC_UNUSED, int size G_GNUC_UNUSED, int rwflag G_GNU
 }
 
 static SSL_CTX *
-z_ssl_create_ctx(char *session_id, int mode)
+z_ssl_create_ctx(const char *session_id, int mode)
 {
   SSL_CTX *ctx;
   char buf[128];
@@ -646,7 +663,7 @@ z_ssl_create_ctx(char *session_id, int mode)
 }
 
 static gboolean
-z_ssl_load_privkey_and_cert(char *session_id, SSL_CTX *ctx, gchar *key_file, gchar *cert_file)
+z_ssl_load_privkey_and_cert(const char *session_id, SSL_CTX *ctx, gchar *key_file, gchar *cert_file)
 {
   char buf[128];
 
@@ -692,7 +709,7 @@ z_ssl_load_privkey_and_cert(char *session_id, SSL_CTX *ctx, gchar *key_file, gch
 }
 
 static gboolean
-z_ssl_set_privkey_and_cert(char *session_id, SSL_CTX *ctx, GString *key_pem, GString *cert_pem)
+z_ssl_set_privkey_and_cert(const char *session_id, SSL_CTX *ctx, GString *key_pem, GString *cert_pem)
 {
   char buf[128];
 
@@ -775,7 +792,7 @@ z_ssl_set_privkey_and_cert(char *session_id, SSL_CTX *ctx, GString *key_pem, GSt
 }
 
 static gboolean
-z_ssl_load_ca_list(char *session_id, SSL_CTX *ctx, int mode, gchar *ca_dir, gchar *crl_dir, X509_STORE **crl_store)
+z_ssl_load_ca_list(const char *session_id, SSL_CTX *ctx, int mode, gchar *ca_dir, gchar *crl_dir, X509_STORE **crl_store)
 {
   z_enter();
   if (ca_dir && ca_dir[0])
@@ -830,7 +847,7 @@ z_ssl_load_ca_list(char *session_id, SSL_CTX *ctx, int mode, gchar *ca_dir, gcha
 }
 
 static ZSSLSession *
-z_ssl_session_new_from_context(char *session_id, SSL_CTX *ctx, int verify_depth, int verify_type, X509_STORE *crl_store)
+z_ssl_session_new_from_context(const char *session_id, SSL_CTX *ctx, int verify_depth, int verify_type, X509_STORE *crl_store)
 {
   ZSSLSession *self = NULL;
   SSL *session;
@@ -873,7 +890,7 @@ z_ssl_session_new_from_context(char *session_id, SSL_CTX *ctx, int verify_depth,
 }
 
 ZSSLSession *
-z_ssl_session_new_inline(char *session_id, 
+z_ssl_session_new_inline(const char *session_id, 
                          int mode,
                          GString *key_pem, 
                          GString *cert_pem, 
@@ -903,7 +920,7 @@ z_ssl_session_new_inline(char *session_id,
 }
 
 ZSSLSession *
-z_ssl_session_new(char *session_id, 
+z_ssl_session_new(const char *session_id, 
                   int mode,
                   gchar *key_file, 
                   gchar *cert_file, 
@@ -934,7 +951,7 @@ z_ssl_session_new(char *session_id,
 #else
 
 ZSSLSession *
-z_ssl_session_new(char *session_id, 
+z_ssl_session_new(const char *session_id, 
                   int mode,
                   X509_STORE *store, 
                   int verify_depth,

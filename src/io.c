@@ -147,6 +147,38 @@ z_fd_set_oobinline(int fd, gboolean enable)
   return TRUE;
 }
 
+#ifndef SO_MARK
+/* In kernel 2.6.25 the SO_MARK has value 36 if architecture is x86/x86_64
+ */
+#define SO_MARK 36
+#endif
+
+void
+z_fd_set_our_mark(int fd, int mark)
+{
+  int res;
+  cap_t saved_caps;
+  static gboolean logged = FALSE;
+
+  saved_caps = cap_save();
+  cap_enable(CAP_NET_ADMIN);
+  res = setsockopt(fd, SOL_SOCKET, SO_MARK, &mark, sizeof(mark));
+  cap_restore(saved_caps);
+
+  if (res == -1 && !logged)
+    {
+      logged = TRUE;
+      /*LOG
+        This message indicates that an error occurred while Zorp attempted
+        to change the SO_MARK value of the specified fd. This message will
+        appear only once and is probably caused by missing kernel support.
+        Check your kernel whether it includes support for changing
+        MARKs from userspace.
+       */
+      z_log(NULL, CORE_ERROR, 3, "Error changing MARK; fd='%d', mark='%08x', error='%s'", fd, mark, g_strerror(errno));
+    }
+}
+
 #if ZORPLIB_ENABLE_TOS
 
 void
@@ -201,9 +233,11 @@ void
 z_fd_set_our_tos(gint fd, guint8 tos)
 {
   socklen_t len;
+#if ZORPLIB_ENABLE_CAPS
   cap_t saved_caps;
-  
+
   saved_caps = cap_save();
+#endif
   len = sizeof(tos);
   cap_enable(CAP_NET_ADMIN);
   if (setsockopt(fd, SOL_IP, IP_TOS, &tos, len) < 0)
@@ -232,5 +266,4 @@ z_fd_get_our_tos(gint fd, guint8 *tos)
       z_log(NULL, CORE_ERROR, 2, "Error in getsockopt(SOL_IP, IP_TOS); fd='%d', error='%s'", fd, g_strerror(errno));
     }
 }
-
 #endif

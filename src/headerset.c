@@ -69,7 +69,7 @@ z_header_set_get_all_headers(ZHeaderSet *self)
 }
 
 ZHeader *
-z_header_set_iterate(ZHeaderSet *self, gchar *key, gpointer *opaque)
+z_header_set_iterate(ZHeaderSet *self, const gchar *key, gpointer *opaque)
 {
   ZHeader *res;
   GList *value = opaque ? (GList *) *opaque : NULL;

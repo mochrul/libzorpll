@@ -61,7 +61,7 @@ typedef struct _ZListenerFuncs
 extern ZClass ZListener__class;
 
 ZListener *
-z_listener_new(ZClass *class,
+z_listener_new(ZClass *class_,
                const gchar *session_id,
                ZSockAddr *local,
                guint32 sock_flags,

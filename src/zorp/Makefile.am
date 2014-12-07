@@ -8,7 +8,7 @@ ZORP_H = \
 	random.h error.h streamfd.h stackdump.h zobject.h process.h \
 	streamgzip.h blob.h streamblob.h streamtee.h \
 	code_base64.h code_cipher.h code_gzip.h	code.h \
-	headerset.h zcp.h zurlparse.h
+	headerset.h zcp.h zurlparse.h compat.h
 
 pkgincludedir=@includedir@/zorp
 pkginclude_HEADERS = $(ZORP_H)

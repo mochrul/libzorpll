@@ -63,6 +63,9 @@ void z_pktbuf_unref(ZPktBuf *self);
 ZPktBuf *z_pktbuf_part(ZPktBuf *self, gsize pos, gsize len);
 void z_pktbuf_dump(const gchar *session_id, const gchar *class_, int level, ZPktBuf *self, const gchar *title);
 
+/* Fancy constructors */
+ZPktBuf *z_pktbuf_new_from_gstring(const GString * const str);
+
 static inline void
 z_pktbuf_data_dump(const gchar *session_id, const gchar *class_, int level, ZPktBuf *self)
 {
@@ -154,6 +157,11 @@ static inline gboolean z_pktbuf_put_c8s(ZPktBuf *self, gsize n, const gchar *d) 
 static inline gboolean z_pktbuf_put_s16s(ZPktBuf *self, gint e, gsize n, const gint16 *d) { return z_pktbuf_put_u16s(self, e, n, (const guint16*)d); }
 static inline gboolean z_pktbuf_put_s32s(ZPktBuf *self, gint e, gsize n, const gint32 *d) { return z_pktbuf_put_u32s(self, e, n, (const guint32*)d); }
 static inline gboolean z_pktbuf_put_s64s(ZPktBuf *self, gint e, gsize n, const gint64 *d) { return z_pktbuf_put_u64s(self, e, n, (const guint64*)d); }
+
+gboolean z_pktbuf_put_string(ZPktBuf *self, const gchar *str);
+
+ZPktBuf* z_pktbuf_split(ZPktBuf *self, gsize at);
+ZPktBuf* z_pktbuf_append_pktbuf(ZPktBuf *self, ZPktBuf *other);
 
 #ifdef __cplusplus
 }

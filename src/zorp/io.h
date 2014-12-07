@@ -25,6 +25,7 @@ extern GSourceFuncs z_io_watch_funcs;
 gboolean z_fd_set_nonblock(int fd, gboolean enable);
 gboolean z_fd_set_keepalive(int fd, gboolean enable);
 gboolean z_fd_set_oobinline(int fd, gboolean enable);
+void z_fd_set_our_mark(int fd, int mark);
 
 #if ZORPLIB_ENABLE_TOS
 

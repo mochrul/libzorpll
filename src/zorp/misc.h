@@ -17,6 +17,7 @@
 #include <glib.h>
 #include <sys/types.h>
 #ifdef G_OS_WIN32
+#define _WINSOCKAPI_
 #include <windows.h>
 #include <time.h>
 #endif
@@ -111,7 +112,6 @@ gboolean z_port_enabled(gchar *port_range, guint port);
 
 void z_crypt(const char *key, const char *salt, char *result, size_t result_len);
 
-gboolean z_casestr_equal(gconstpointer k1, gconstpointer k2);
 guint z_casestr_hash(gconstpointer key);
 
 /**

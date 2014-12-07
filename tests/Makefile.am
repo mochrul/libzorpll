@@ -1,6 +1,6 @@
 AM_CPPFLAGS=-I$(top_srcdir)/src -I../src
 
-check_PROGRAMS = zcrypt test_readline test_registry test_conns test_ssl test_streams test_random test_valid_chars test_sockaddr test_blob test_base64 test_codegzip test_codecipher portrandom
+check_PROGRAMS = zcrypt test_readline test_registry test_conns test_ssl test_streams test_random test_valid_chars test_sockaddr test_blob test_base64 test_codegzip test_codecipher portrandom test_pktbuf
 
 zcrypt_SOURCES = zcrypt.c
 zcrypt_LDADD = ../src/libzorpll.la
@@ -44,4 +44,7 @@ test_codecipher_LDADD = ../src/libzorpll.la
 portrandom_SOURCES = portrandom.c randtest.c randtest.h
 portrandom_LDADD = ../src/libzorpll.la -lm
 
-TESTS = test_registry test_readline zcrypt test_conns test_ssl test_random test_streams test_valid_chars test_sockaddr test_blob test_base64 test_codegzip test_codecipher portrandom
+test_pktbuf_SOURCES = test_pktbuf.c
+test_pktbuf_LDADD = ../src/libzorpll.la
+
+TESTS = test_registry test_readline zcrypt test_conns test_ssl test_random test_streams test_valid_chars test_sockaddr test_blob test_base64 test_codegzip test_codecipher portrandom test_pktbuf

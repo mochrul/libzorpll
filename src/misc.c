@@ -510,18 +510,6 @@ z_port_enabled(gchar *port_range, guint port)
 }
 
 /**
- * GLib hashtable equal function for case insensitive hashtables.
- *
- * @param[in] k1 key1 to compare
- * @param[in] k2 key2 to compare
- **/
-gboolean
-z_casestr_equal(gconstpointer k1, gconstpointer k2)
-{
-  return g_strcasecmp(k1, k2) == 0;
-}
-
-/**
  * GLib hashtable hash function for case insensitive hashtables.
  *
  * @param[in] key

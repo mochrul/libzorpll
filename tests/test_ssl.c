@@ -2,6 +2,7 @@
 #include <zorp/streamssl.h>
 #include <zorp/streamfd.h>
 #include <zorp/log.h>
+#include <zorp/misc.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>

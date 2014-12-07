@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-void z_mem_trace_init(gchar *memtrace_file);
+void z_mem_trace_init(const gchar *memtrace_file_name);
 void z_mem_trace_stats(void);
 void z_mem_trace_dump(void);
 
