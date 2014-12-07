@@ -1,3 +1,12 @@
+libzorpll (3.9.4.1-1) unstable; urgency=low
+
+  * [b1e83f0] Added watchfile
+  * [e80ffa2] Imported Upstream version 3.9.4.1
+  * [f72040f] Refreshed patches
+  * [b8f3ed3] Fixed the shlib file
+
+ -- SZALAY Attila <sasa@debian.org>  Sun, 07 Dec 2014 16:00:26 +0100
+
 libzorpll (3.9.1.3-2) unstable; urgency=low
 
   * Added Japanese translation (Closes: #692843)
