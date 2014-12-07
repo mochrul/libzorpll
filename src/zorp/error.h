@@ -16,12 +16,6 @@
 
 #ifdef G_OS_WIN32
 #  include <winsock2.h>
-#  define ETIMEDOUT WSAETIMEDOUT
-#  define EINPROGRESS WSAEINPROGRESS
-#  define ENOTCONN WSAENOTCONN 
-#  define ENETUNREACH WSAENETUNREACH
-#  define EADDRINUSE WSAEADDRINUSE
-#  define ENOTSOCK WSAENOTSOCK
 #endif
 
 #include <errno.h>

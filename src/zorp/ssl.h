@@ -28,7 +28,7 @@ typedef struct _ZSSLSession
 {
   guint ref_cnt;
   SSL *ssl;
-  gchar *session_id;
+  const gchar *session_id;
   gint verify_type;
   gint verify_depth;
   X509_STORE *crl_store;
@@ -53,7 +53,7 @@ extern gchar *crypto_engine;
 #endif
 
 ZSSLSession *
-z_ssl_session_new(char *session_id, 
+z_ssl_session_new(const char *session_id, 
                   int mode,
                   gchar *key_file, 
                   gchar *cert_file, 
@@ -63,7 +63,7 @@ z_ssl_session_new(char *session_id,
                   int verify_type);
 
 ZSSLSession *
-z_ssl_session_new_inline(char *session_id, 
+z_ssl_session_new_inline(const char *session_id, 
                          int mode,
                          GString *key_pem, 
                          GString *cert_pem, 
@@ -74,7 +74,7 @@ z_ssl_session_new_inline(char *session_id,
 #else // G_OS_WIN32
 
 ZSSLSession *
-z_ssl_session_new(char *session_id, 
+z_ssl_session_new(const char *session_id, 
                   int mode,
                   X509_STORE *store, 
                   int verify_depth,

@@ -53,7 +53,7 @@ struct _ZClass
   ZObject super;
   gboolean funcs_resolved; /**< indicates whether method inheritance was already performed */
   struct _ZClass *super_class;
-  gchar *name;
+  const gchar *name;
   gsize size;
   ZObjectFuncs *funcs; 
 };

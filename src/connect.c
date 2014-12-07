@@ -115,7 +115,7 @@ z_connector_connected(gboolean timed_out, gpointer data)
   if (self->watch)
     {
       if (error_num)
-        g_set_error(&err, 0, error_num, "%s", error_num_str);
+        g_set_error(&err, G_IO_CHANNEL_ERROR, error_num, "%s", error_num_str);
       
       callback = self->callback;
       self->callback = NULL;
@@ -399,10 +399,15 @@ z_connector_set_timeout(ZConnector *self, gint timeout)
 void
 z_connector_set_tos(ZConnector *self, gint tos)
 {
-  self->tos = tos;
-
   if ((self->fd != -1) && tos > 0)
     z_fd_set_our_tos(self->fd, tos);
+}
+
+void
+z_connector_set_mark(ZConnector *self, int mark)
+{
+  if ((self->fd != -1) && mark > 0)
+    z_fd_set_our_mark(self->fd, mark);
 }
 
 /**
@@ -471,7 +476,7 @@ z_connector_open_socket(ZConnector *self)
  * @returns The allocated instance.
  **/
 ZConnector *
-z_connector_new(ZClass *class,
+z_connector_new(ZClass *class_,
                 const gchar *session_id,
                 gint socket_type,
                 ZSockAddr *local, 
@@ -484,7 +489,7 @@ z_connector_new(ZClass *class,
   ZConnector *self;
   
   z_enter();
-  self = Z_NEW_COMPAT(class, ZConnector);
+  self = Z_NEW_COMPAT(class_, ZConnector);
   self->refcnt = 1;
   self->local = z_sockaddr_ref(local);
   self->remote = z_sockaddr_ref(remote);
@@ -494,7 +499,6 @@ z_connector_new(ZClass *class,
   self->destroy_data = destroy_data;
   self->timeout = 30;
   self->sock_flags = sock_flags;
-  self->tos = -1;
   self->socket_type = socket_type;
   self->fd = z_connector_open_socket(self);
   if (self->fd < 0)

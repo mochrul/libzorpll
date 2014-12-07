@@ -202,7 +202,7 @@ test_streamgzip_with_headers(void)
 
   z_stream_gzip_get_header_fields(stream, &ts, &origname, &comment, &extra_len, &extra);
 
-  if (extra_len != 5 || strcmp(extra, "extra") != 0)
+  if (extra_len != 5 || strncmp(extra, "extra", strlen("extra")) != 0)
     {
       fprintf(stderr, "extra mismatch %.*s\n", extra_len, extra);
       goto exit;

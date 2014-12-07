@@ -8,6 +8,10 @@
 /** default buffer size */
 #define ZCODE_BUFSIZE_DEFAULT       256
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct _ZCode ZCode;
 
 /**
@@ -92,5 +96,8 @@ z_code_finish(ZCode *self)
   return TRUE;
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

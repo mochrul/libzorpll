@@ -213,6 +213,27 @@ z_pktbuf_part(ZPktBuf *parent, gsize pos, gsize len)
 }
 
 /**
+ * Split a ZPktBuf object into two at a specified position.
+ *
+ * @param[in] self ZPktBuf object to split. Will contain the first part of the buffer after the split
+ * @param[in] at The position to split at
+ *
+ * @returns ZPktBuf* object with the second part of the buffer, starting with the character specified by the position
+ */
+ZPktBuf *
+z_pktbuf_split(ZPktBuf *self, gsize at)
+{
+  ZPktBuf *ret;
+
+  ret = z_pktbuf_new();
+
+  z_pktbuf_copy(ret, self->data+at, self->length-at);
+  z_pktbuf_resize(self, at);
+
+  return ret;
+}
+
+/**
  * Increment the reference counter for self.
  *
  * @param[in] self packet
@@ -245,6 +266,23 @@ z_pktbuf_unref(ZPktBuf *self)
     }
   z_return();
 }
+
+/**
+ * Construct a new ZPktBuf and initialize it with the contents of a GString.
+ *
+ * @param[in] str GString instance containing the data to initialize the packet with.
+ *
+ **/
+ZPktBuf *
+z_pktbuf_new_from_gstring(const GString * const str)
+{
+  ZPktBuf *pkt = z_pktbuf_new();
+
+  z_pktbuf_put_u8s(pkt, str->len, (guint8 *) str->str);
+
+  return pkt;
+}
+
 
 /**
  * Moves the current position in the buffer
@@ -785,4 +823,31 @@ z_pktbuf_get_boolean16(ZPktBuf *self, gboolean *res)
     res[0] = !!(*(guint16*)(self->data + self->pos));
   self->pos += 2;
   return TRUE;
+}
+
+/**
+ * @brief Append a string to the buffer, properly updating the position.
+ *
+ * @param[in] self ZPktBuf instance
+ * @param[in] str the string to append
+ * @return TRUE on success
+ */
+gboolean
+z_pktbuf_put_string(ZPktBuf *self, const gchar *str)
+{
+  return z_pktbuf_put_u8s(self, strlen(str), (guint8 *) str);
+}
+
+/**
+ * @brief Append a pktbuf while consuming it
+ * @param[in] self ZPktBuf instance
+ * @param[in] other ZPktBuf to append, will be consumed
+ * @return self
+ */
+ZPktBuf *
+z_pktbuf_append_pktbuf(ZPktBuf *self, ZPktBuf *other)
+{
+  z_pktbuf_append(self, other->data, other->length);
+  z_pktbuf_unref(other);
+  return self;
 }

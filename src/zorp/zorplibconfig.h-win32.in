@@ -1,7 +1,5 @@
 /* src/zorp/zorplibconfig.h-win32  */
 
-#define ZORPLIB_ENABLE_RESIDUAL_PROTECTION 0
-
 #define ZORPLIB_ENABLE_CAPS 0
 
 #define ZORPLIB_ENABLE_MEM_TRACE 0

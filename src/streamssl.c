@@ -14,6 +14,13 @@
  *
  ***************************************************************************/
 
+#ifdef _MSC_VER
+#  include <winsock2.h>
+#else
+#  include <sys/socket.h>
+#  include <sys/poll.h>
+#endif
+
 #include <zorp/stream.h>
 #include <zorp/streamssl.h>
 #include <zorp/log.h>
@@ -21,18 +28,11 @@
 #include <zorp/zorplib.h>
 #include <zorp/error.h>
 
-#include <openssl/err.h>
-
 #include <string.h>
 #include <sys/types.h>
 #include <assert.h>
 
-#ifdef G_OS_WIN32
-#  include <winsock2.h>
-#else
-#  include <sys/socket.h>
-#  include <sys/poll.h>
-#endif
+#include <openssl/err.h>
 
 #define ERR_buflen 4096
 
@@ -52,6 +52,20 @@ typedef struct _ZStreamSsl
 
   ZSSLSession *ssl;
   gchar error[ERR_buflen];
+
+  /* List of handshake objects. Unfortunately OpenSSL callbacks cannot be
+   * handed a destroy_notify callback so we generally cannot use
+   * refcounting to manage the lifetime of handshake objects.
+   *
+   * Instead, we do store all handshake objects in this linked list in
+   * the associated ZStreamSsl and make sure we delete these when we
+   * can guarantee that the handshake is no longer needed
+   * (referenced).
+   *
+   * Right now this means we delete handshake objects only when
+   * closing the stream.
+   */
+  GList *handshakes;
 } ZStreamSsl;
 
 /**
@@ -389,6 +403,19 @@ z_stream_ssl_ctrl_method(ZStream *s, guint function, gpointer value, guint vlen)
         }
       break;
 
+    case ZST_CTRL_SSL_ADD_HANDSHAKE:
+      if (vlen == sizeof(ZStreamSslHandshakeData))
+        {
+          ZStreamSslHandshakeData *data = (ZStreamSslHandshakeData *) value;
+          ZStreamSslHandshakeData *our_data = g_new0(ZStreamSslHandshakeData, 1);
+
+          our_data->handshake = data->handshake;
+          our_data->destroy_function = data->destroy_function;
+
+          self->handshakes = g_list_append(self->handshakes, our_data);
+        }
+      break;
+
     case ZST_CTRL_GET_BUFFERED_BYTES:
       /* we stop propagation here: this ctrl message queries the bytes
          buffered *above* the SSL layer. */
@@ -499,6 +526,28 @@ z_stream_ssl_set_child(ZStream *s, ZStream *new_child)
   z_stream_unref(s);
 }
 
+static GIOStatus
+z_stream_ssl_close_method(ZStream *s, GError **error)
+{
+  ZStreamSsl *self = Z_CAST(s, ZStreamSsl);
+  GList *p;
+
+  /* free associated handshakes */
+  for (p = self->handshakes; p; p = p->next)
+    {
+      ZStreamSslHandshakeData *data = (ZStreamSslHandshakeData *) p->data;
+
+      data->destroy_function(data->handshake);
+
+      g_free(data);
+    }
+
+  g_list_free(self->handshakes);
+  self->handshakes = NULL;
+
+  return Z_SUPER(s, ZStream)->close(s, error);
+}
+
 ZStream *
 z_stream_ssl_new(ZStream *child, ZSSLSession *ssl)
 {
@@ -542,7 +591,7 @@ ZStreamFuncs z_stream_ssl_funcs =
   NULL,
   z_stream_ssl_write_method,
   z_stream_ssl_shutdown_method,
-  NULL, /* close */
+  z_stream_ssl_close_method,
   z_stream_ssl_ctrl_method,
   NULL, /* attach_source */
   NULL, /* detach_source */

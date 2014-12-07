@@ -51,7 +51,6 @@ typedef struct _ZConnector
   GStaticRecMutex lock;
   GMainContext *context;
   gboolean blocking;
-  gint tos;
   gint socket_type;
   guint32 sock_flags;
   gchar *session_id;
@@ -69,7 +68,7 @@ LIBZORPLL_EXTERN ZClass ZConnector__class;
 LIBZORPLL_EXTERN ZClass ZStreamConnector__class;
 
 ZConnector *
-z_connector_new(ZClass *class,
+z_connector_new(ZClass *_class,
                 const gchar *session_id,
                 gint socket_type,
                 ZSockAddr *local, 
@@ -84,6 +83,7 @@ gboolean z_connector_start(ZConnector *self, ZSockAddr **local);
 gboolean z_connector_start_in_context(ZConnector *self, GMainContext *context, ZSockAddr **local);
 void z_connector_set_timeout(ZConnector *self, gint timeout);
 void z_connector_set_tos(ZConnector *self, gint tos);
+void z_connector_set_mark(ZConnector *self, int mark);
 void z_connector_cancel(ZConnector *self);
 
 /**

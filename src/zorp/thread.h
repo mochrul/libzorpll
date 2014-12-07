@@ -36,7 +36,7 @@ typedef struct _ZThread
 void z_thread_register_start_callback(GFunc func, gpointer user_data);
 void z_thread_register_stop_callback(GFunc func, gpointer user_data);
 
-gboolean z_thread_new(gchar *name, GThreadFunc func, gpointer arg);
+gboolean z_thread_new(const gchar *name, GThreadFunc func, gpointer arg);
 
 void z_thread_enable_threadpools(gint idle);
 void z_thread_set_max_threads(gint max);
