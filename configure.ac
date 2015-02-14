@@ -434,7 +434,6 @@ Makefile
 dist.conf
 debian/Makefile
 winbuild/Makefile
-tgz2build/Makefile
 src/libzorpll.rc
 src/Makefile
 src/zorp/Makefile
