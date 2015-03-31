@@ -77,6 +77,8 @@ enum
   ZST_CTRL_GET_KEEPALIVE        = 0x18,
   ZST_CTRL_SET_KEEPALIVE        = 0x19,
   ZST_CTRL_GET_BUFFERED_BYTES   = 0x20,
+  ZST_CTRL_GET_TCP_NODELAY      = 0x21,
+  ZST_CTRL_SET_TCP_NODELAY      = 0x22,
 };
 
 /* stream type */
@@ -99,10 +101,10 @@ GSource *z_stream_source_new(ZStream *stream);
  * stream is being handled by different parts of Zorp (ie.\ proxy and associated
  * transfer code)
  **/
-struct _ZStreamContext 
+struct _ZStreamContext
 {
   gboolean restored;
-  
+
   gboolean want_read;       /**< do we want read callbacks? */
   gpointer user_data_read;  /**< opaque pointer, can be used by read callback */
   GDestroyNotify user_data_read_notify;
@@ -117,10 +119,10 @@ struct _ZStreamContext
   gpointer user_data_write; /**< opaque pointer, can be used by write callback */
   GDestroyNotify user_data_write_notify;
   ZStreamCallback write_cb; /**< pointer to write callback */
-  
+
   gint timeout;
   gboolean nonblocking;
-  
+
   gpointer stream_extra;
 };
 
@@ -147,11 +149,11 @@ typedef struct _ZStreamFuncs
   gboolean (*watch_check)(ZStream *s, GSource *src);
   gboolean (*watch_dispatch)(ZStream *s, GSource *src);
   void (*watch_finalize)(ZStream *s, GSource *source);
-  
+
   gsize (*extra_get_size)(ZStream *s);
   gsize (*extra_save)(ZStream *s, gpointer context);
   gsize (*extra_restore)(ZStream *s, gpointer context);
-  
+
   void (*set_child)(ZStream *s, ZStream *new_child);
   gboolean (*unget_packet)(ZStream *s, ZPktBuf *packet, GError **error);
 } ZStreamFuncs;
@@ -166,7 +168,7 @@ LIBZORPLL_EXTERN ZClass ZStream__class;
  * Umbrella:
  *   Being an umbrella for read or write direction means that all streams
  *   below are completely hidden from the user of the stream. For example:
- * 
+ *
  * <pre>
  *    (top)      ZStreamBuf <-> ZStreamLine <-> ZStreamSsl <-> ZStreamLine <-> ZStreamFd
  *    (umbrella)    (w)              (r)           (rw)             (r)           (rw)
@@ -176,7 +178,7 @@ LIBZORPLL_EXTERN ZClass ZStream__class;
  *   ZStreamBuf while the umbrella in read direction is ZStreamLine. If an
  *   operation that applies to ZStreamLine instance is invoked on the top of
  *   the stream then the operation will succeed.
- * 
+ *
  *   On the other hand neither read nor write operations will succeed on
  *   ZStreamSsl as it is already hidden from the top in both read and write
  *   directions.
@@ -184,9 +186,9 @@ LIBZORPLL_EXTERN ZClass ZStream__class;
  *   Umbrellas are also used to determine whether the core routines will log
  *   the I/O dump and to implement z_stream_unget as it always stores ungot
  *   data at the read-side top.
- * 
+ *
  **/
-struct _ZStream 
+struct _ZStream
 {
   ZObject super;
   const gchar *name;  /* const */
@@ -208,7 +210,7 @@ struct _ZStream
 
   time_t time_open;
   guint64 bytes_recvd, bytes_sent;      /**< bytes received/sent counters for accounting info logging */
-  
+
   gpointer user_data_read;  /**< opaque pointer, can be used by read callback */
   GDestroyNotify user_data_read_notify;
   ZStreamCallback read_cb;  /**< pointer to read callback */
@@ -225,7 +227,6 @@ struct _ZStream
   gboolean want_write;      /**< do we want write callbacks */
 };
 
-
 ZStream *z_stream_new(ZClass *class_, const gchar *name, gint umbrella_flags);
 gboolean z_stream_save_context(ZStream *self, ZStreamContext *context);
 gboolean z_stream_restore_context(ZStream *self, ZStreamContext *context);
@@ -238,7 +239,6 @@ ZStream *z_stream_push(ZStream *self, ZStream *new_top);
 ZStream *z_stream_pop(ZStream *self);
 gboolean z_stream_unget(ZStream *self, const void *buf, gsize count, GError **error);
 void z_stream_destroy(ZStream *self);
-
 
 /* virtual methods for static references like calling the superclass's function in derived classes */
 
@@ -267,7 +267,7 @@ z_stream_ref(ZStream *self)
  *
  * Decrements the reference count of self.
  **/
-static inline void 
+static inline void
 z_stream_unref(ZStream *self)
 {
   z_object_unref(&self->super);
@@ -283,7 +283,7 @@ static inline void
 z_stream_set_name(ZStream *self, const gchar *new_name)
 {
   g_return_if_fail(new_name);
-  
+
   if (self->name)
     g_free((gpointer) self->name);
   if (new_name)
@@ -304,7 +304,7 @@ z_stream_data_dump(ZStream *self, gint direction, const void *data, gsize data_l
         z_log(self->name, CORE_DUMP, 7, "Reading stream; stream='%s', count='%zd'", self->super.isa->name, data_len);
       else
         z_log(self->name, CORE_DUMP, 7, "Writing stream; stream='%s', count='%zd'", self->super.isa->name, data_len);
-          
+
       z_log_data_dump(self->name, CORE_DUMP, 9, data, data_len);
     }
 
@@ -323,13 +323,12 @@ z_stream_ctrl(ZStream *self, guint function, gpointer value, guint vlen)
   return Z_FUNCS(self, ZStream)->ctrl(self, function, value, vlen);
 }
 
-
 /**
  * Call read_pri virtual method.
  *
  * Method is NULL by default.
  **/
-static inline GIOStatus 
+static inline GIOStatus
 z_stream_read_pri(ZStream *self, void *buf, gsize count, gsize *bytes_read, GError **err)
 {
   return Z_FUNCS(self, ZStream)->read_pri(self, buf, count, bytes_read, err);
@@ -340,7 +339,7 @@ z_stream_read_pri(ZStream *self, void *buf, gsize count, gsize *bytes_read, GErr
  *
  * Method is NULL by default.
  **/
-static inline GIOStatus 
+static inline GIOStatus
 z_stream_write_pri(ZStream *self, const void *buf, gsize count, gsize *bytes_written, GError **err)
 {
   return Z_FUNCS(self, ZStream)->write_pri(self, buf, count, bytes_written, err);
@@ -363,7 +362,7 @@ z_stream_write_pri(ZStream *self, const void *buf, gsize count, gsize *bytes_wri
  *
  * @returns GIOStatus value
  **/
-static inline GIOStatus 
+static inline GIOStatus
 z_stream_shutdown(ZStream *self, int how, GError **err)
 {
   if (Z_FUNCS(self, ZStream)->shutdown)
@@ -498,7 +497,7 @@ z_stream_set_child(ZStream *s, ZStream *new_child)
  *
  * @see Default definition: z_stream_unget_packet_method()
  **/
-static inline gboolean 
+static inline gboolean
 z_stream_unget_packet(ZStream *s, ZPktBuf *pack, GError **error)
 {
   return Z_FUNCS(s, ZStream)->unget_packet(s, pack, error);
@@ -579,7 +578,7 @@ static inline gboolean
 z_stream_get_nonblock(ZStream *self)
 {
   gboolean nonblock;
-  
+
   z_stream_ctrl(self, ZST_CTRL_GET_NONBLOCK, &nonblock, sizeof(nonblock));
   return nonblock;
 }
@@ -600,6 +599,15 @@ z_stream_get_keepalive(ZStream *self)
 
 void z_stream_set_keepalive(ZStream *self, gint keepalive);
 
+static inline gint
+z_stream_get_tcp_nodelay(ZStream* self)
+{
+  gint tcp_nodelay;
+  z_stream_ctrl(self, ZST_CTRL_GET_TCP_NODELAY, &tcp_nodelay, sizeof(tcp_nodelay));
+  return tcp_nodelay;
+}
+
+void z_stream_set_tcp_nodelay(ZStream *self, gint tcp_nodelay);
 
 static inline gsize
 z_stream_get_buffered_bytes(ZStream *self)
@@ -617,7 +625,6 @@ z_stream_search_stack(ZStream *top, gint direction, ZClass *class_);
 
 GIOStatus z_stream_read_chunk(ZStream *self, void *buf, gsize count, gsize *bytes_read, GError **err);
 GIOStatus z_stream_write_chunk(ZStream *self, const void *buf, gsize count, gsize *bytes_written, GError **err);
-
 
 #ifdef __cplusplus
 }

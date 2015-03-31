@@ -56,8 +56,8 @@ z_cp_command_add_header(ZCPCommand *self,
 }
 
 ZCPCommand *z_cp_command_new(const gchar *cmd);
-ZCPCommand *z_cp_command_new_accept(gchar *welcome, GSList *groups);
-ZCPCommand *z_cp_command_new_reject(gchar *reason);
+ZCPCommand *z_cp_command_new_accept(const gchar *welcome, GSList *groups);
+ZCPCommand *z_cp_command_new_reject(const gchar *reason);
 void z_cp_command_free(ZCPCommand *self);
 
 

@@ -1,4 +1,4 @@
-SUBDIRS = src tests scripts
+SUBDIRS = src winbuild tests scripts
 ACLOCAL_AMFLAGS= -I m4
 
 pkgconfigdir = $(libdir)/pkgconfig

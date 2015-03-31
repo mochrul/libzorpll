@@ -158,7 +158,7 @@ z_log_trace_indent(gint dir);
  * @see the Win32 implementation as z_log() in log.c.
  **/
 #ifdef G_OS_WIN32
-  void z_log(const gchar* session_id, const gchar* class_, int level, gchar* format, ...);
+  void z_log(const gchar* session_id, const gchar* class_, int level, const gchar* format, ...);
 #else
   #define z_log(session_id, class_, level, format, args...) \
     do \
