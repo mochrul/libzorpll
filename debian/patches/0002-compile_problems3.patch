@@ -3,7 +3,7 @@ Date: Fri, 20 Jan 2012 13:29:40 +0100
 Subject: compile_problems3
 
 ---
- src/zorp/io.h |    6 +++---
+ src/zorp/io.h | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/zorp/io.h b/src/zorp/io.h
