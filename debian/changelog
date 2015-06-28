@@ -1,3 +1,10 @@
+libzorpll (3.9.4.1-2) experimental; urgency=low
+
+  * [bb400d9] Removed Compile-date field because it prevent reliable rebuilding
+  * [edf971c] TMP: Forced to build with gcc-5
+
+ -- SZALAY Attila <sasa@debian.org>  Sun, 28 Jun 2015 23:39:59 +0200
+
 libzorpll (3.9.4.1-1) unstable; urgency=low
 
   * [b1e83f0] Added watchfile
