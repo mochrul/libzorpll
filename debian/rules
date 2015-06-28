@@ -25,7 +25,6 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
     MAKEFLAGS += -j$(NUMJOBS)
 endif
 
-
 build: build-arch build-indep
 build-arch: build-stamp
 build-indep: build-stamp
@@ -34,7 +33,7 @@ build-stamp:
 
 	[ ! -f configure ] && ./autogen.sh
 
-	./configure --prefix=/usr \
+	CC="gcc-5" ./configure --prefix=/usr \
 		--mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info \
 		--sysconfdir=/etc \
@@ -42,8 +41,8 @@ build-stamp:
 		$(DDEBUG) \
 		--localstatedir=/var \
 		--disable-werror
-	$(MAKE) $(MAKEFLAGS)
-	$(MAKE) check
+	CC="gcc-5" $(MAKE) V=2 $(MAKEFLAGS)
+	CC="gcc-5" $(MAKE) V=2 check
 
 	touch build-stamp
 
@@ -80,7 +79,7 @@ install: build
 
 	[ ! -f Makefile ] || $(MAKE) clean
 
-	./configure --enable-debug --enable-trace \
+	CC="gcc-5" ./configure --enable-debug --enable-trace \
 		--prefix=/usr \
 		--mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info \
@@ -88,7 +87,7 @@ install: build
 		--libexecdir=\$${libdir}/libzorpll \
 		--enable-mem-trace \
 		--disable-werror
-	$(MAKE) $(MAKEFLAGS)
+	CC="gcc-5" $(MAKE) V=2 $(MAKEFLAGS)
 
 	$(MAKE) install DESTDIR=`pwd`/debian/tmp/
 
