@@ -1,3 +1,9 @@
+libzorpll (3.9.4.1-3) unstable; urgency=medium
+
+  * Re-build in unstable to close the building issue (Closes: #777979)
+
+ -- SZALAY Attila <sasa@debian.org>  Mon, 29 Jun 2015 21:10:47 +0200
+
 libzorpll (3.9.4.1-2) experimental; urgency=low
 
   * [bb400d9] Removed Compile-date field because it prevent reliable rebuilding
