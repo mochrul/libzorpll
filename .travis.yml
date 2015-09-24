@@ -37,3 +37,15 @@ env:
     - OBS_MINOR_VERSION=0
     - OBS_MAINTENANCE_VERSION=6
     - OBS_PACKAGE=libzorpll
+    - secure: "akyxoJN+WUcJOzxGQrqS60MLqNieVBgWhYk3c99TrpvSeixpLkWTuYIm8/0mncP4Ul4Bg1cQeN5/GCVNo9tw1dixGZg60lmkRFVtSehnnnj18d/6DypW+0VSkuGEqjcHuIqIUSIraGkEt89uFGmBykSrp52vLySnXEpo/RQvmL0="
+
+addons:
+  coverity_scan:
+    project:
+      name: "balabit/libzorpll"
+      version: 6.0.6
+      description: "Build submitted via Travis CI"
+    notification_email: coroner@pfeifferszilard.hu
+    build_command_prepend: "./autogen.sh; ./configure"
+    build_command:   "make -j4"
+    branch_pattern: 6.0.6.0
