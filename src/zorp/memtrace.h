@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: memtrace.h,v 1.12 2003/04/08 13:32:29 sasa Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_MEMTRACE_H_INCLUDED

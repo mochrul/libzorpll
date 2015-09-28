@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: registry.c,v 1.11 2004/08/18 11:46:46 bazsi Exp $
- *
- * Author  : Bazsi
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/registry.h>

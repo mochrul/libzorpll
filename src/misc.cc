@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: misc.c,v 1.43 2004/06/01 09:14:24 abi Exp $
- *
- * Author  : Bazsi, SaSa, Chaoron
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/zorplib.h>

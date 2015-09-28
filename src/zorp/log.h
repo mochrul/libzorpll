@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: log.h,v 1.31 2004/05/18 15:33:40 abi Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_LOG_H_INCLUDED

@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: socketsource.c,v 1.13 2004/05/22 14:04:16 bazsi Exp $
- *
- * Author  : bazsi
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/socketsource.h>

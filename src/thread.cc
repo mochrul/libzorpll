@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: thread.c,v 1.20 2004/02/11 13:26:36 sasa Exp $
- *
- * Author  : Bazsi
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/thread.h>
@@ -27,8 +20,7 @@
 
 gint max_threads = 100;
 static gint num_threads = 0;
-static gint max_stack_size = 512 * 1024;
-static GPrivate *current_thread;
+static GPrivate current_thread;
 
 /**
  * Linked list of callback functions with a user data pointer for each.
@@ -60,7 +52,7 @@ z_thread_free(ZThread *self)
 ZThread *
 z_thread_self(void)
 {
-  return (ZThread *) g_private_get(current_thread);
+  return (ZThread *) g_private_get(&current_thread);
 }
 
 /**
@@ -124,7 +116,7 @@ z_thread_iterate_callbacks(ZThread *self, ZThreadCallback *p)
 static void
 z_thread_func_core(ZThread *self, gpointer user_data G_GNUC_UNUSED)
 {
-  g_private_set(current_thread, self);
+  g_private_set(&current_thread, self);
   self->thread = g_thread_self();
 
   z_thread_iterate_callbacks(self, start_callbacks);
@@ -213,7 +205,8 @@ z_thread_new(const gchar *name, GThreadFunc func, gpointer arg)
       num_threads++;
       g_async_queue_ref(queue);
       g_async_queue_unlock(queue);
-      if (!g_thread_create_full(z_thread_func, self, max_stack_size, FALSE, TRUE, G_THREAD_PRIORITY_NORMAL, &error))
+      GThread *thread = g_thread_try_new(NULL, z_thread_func, self, &error);
+      if (!thread)
         {
 	  /*LOG
 	    This message indicates that creating a new thread failed. It is likely that
@@ -225,6 +218,8 @@ z_thread_new(const gchar *name, GThreadFunc func, gpointer arg)
           g_async_queue_unlock(queue);
           return FALSE;
         }
+      /* do not need to join this thread */
+      g_thread_unref(thread);
     }
   
   return TRUE;
@@ -243,18 +238,6 @@ z_thread_set_max_threads(gint max)
 }
 
 /**
- * This function should be called before calling z_thread_init() to specify
- * the maximum size of thread stacks.
- *
- * @param[in] stack_size maximum size for thread stacks
- **/
-void
-z_thread_set_max_stack_size(gint stack_size)
-{
-  max_stack_size = stack_size;
-}
-
-/**
  * This function should be called after specifying various threading
  * parameters using z_thread_*() functions and _before_ creating any threads
  * using z_thread_new().
@@ -262,23 +245,7 @@ z_thread_set_max_stack_size(gint stack_size)
 void
 z_thread_init(void)
 {
-#if HAVE_SETRLIMIT
-  struct rlimit limit;
-
-  /* NOTE: in addition to specifying the stack size where possible, we set
-   * the stack limit, which sets per-thread stack limit for threadpools in
-   * which case we are unable to set the stack limit any other way */
-
-  memset(&limit, 0, sizeof(limit));
-  limit.rlim_cur = max_stack_size;
-  limit.rlim_max = max_stack_size;
-
-  setrlimit(RLIMIT_STACK, &limit);
-#endif
-
-  g_thread_init(NULL);
   queue = g_async_queue_new();
-  current_thread = g_private_new(NULL);
 }
 
 /**
@@ -292,42 +259,11 @@ z_thread_destroy(void)
 }
 
 /**
- * Set max_stack_size from command line argument.
- *
- * @param      option_name unused
- * @param[in]  value string value for stack size to set
- * @param      data unused
- * @param[out] error
- *
- * @returns TRUE if parsing of the stack-size argument was successful
- **/
-static gboolean
-z_thread_stack_size_arg(const gchar *option_name G_GNUC_UNUSED, const gchar *value, gpointer data G_GNUC_UNUSED, GError **error)
-{
-  gchar *end;
-  
-  max_stack_size = strtol(value, &end, 10) * 1024;
-  if (*end != '\0')
-    {
-      g_set_error(error, G_OPTION_ERROR, G_OPTION_ERROR_BAD_VALUE, "Error parsing stack-size argument");
-      return FALSE;
-    }
-
-  if (max_stack_size > 8192 * 1024)
-    {
-      fprintf(stderr, "Stack size limit exceeded, set default value 8MB;\n");
-      max_stack_size = 8192 * 1024;
-    }
-  return TRUE;
-}
-
-/**
  * Command line options for ZThread.
  **/
 static GOptionEntry z_thread_option_entries[] =
 {
   { "threads",           't', 0, G_OPTION_ARG_INT,      &max_threads,            "Set the maximum number of threads", "<thread limit>" },
-  { "stack-size",        'S', 0, G_OPTION_ARG_CALLBACK, reinterpret_cast<gpointer>(z_thread_stack_size_arg), "Set the stack size in kBytes", "<stacksize>" },
   { NULL, 0, 0, static_cast<GOptionArg>(0), NULL, NULL, NULL },
 };
 

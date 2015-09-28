@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: random.c,v 1.11 2003/05/30 14:13:13 sasa Exp $
- *
- * Author  : SaSa
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/random.h>

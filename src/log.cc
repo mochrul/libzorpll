@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: log.c,v 1.76 2004/09/28 17:14:48 bazsi Exp $
- *
- * Author  : Bazsi
- * Auditor : kisza
- * Last audited version: 1.7
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/log.h>
@@ -109,7 +102,7 @@ ZLogOpts log_opts_cmdline = {-1, Z_EXTREMAL_BOOLEAN, Z_EXTREMAL_BOOLEAN, NULL};
 
 /** Protects logtag_caches array when grabbing and releasing a thread specific log cache */
 G_LOCK_DEFINE_STATIC(logtag_cache_lock);
-static GStaticPrivate current_logtag_cache = G_STATIC_PRIVATE_INIT;
+static GPrivate current_logtag_cache;
 static GPtrArray *logtag_caches;
 
 /** Protects log_spec/log_spec_str */
@@ -606,7 +599,7 @@ z_log_grab_cache(void)
       g_ptr_array_add(logtag_caches, lc);
     }
   lc->used = 1;
-  g_static_private_set(&current_logtag_cache, lc, NULL);
+  g_private_set(&current_logtag_cache, lc);
 
   G_UNLOCK(logtag_cache_lock);
 }
@@ -621,7 +614,7 @@ z_log_release_cache(void)
 
   G_LOCK(logtag_cache_lock);
 
-  lc = static_cast<ZLogTagCache *>(g_static_private_get(&current_logtag_cache));
+  lc = static_cast<ZLogTagCache *>(g_private_get(&current_logtag_cache));
   if (lc)
     lc->used = 0;
 
@@ -812,7 +805,7 @@ z_log_get_tag_loglevel(const gchar *tag, gsize tag_len)
         }
     }
   /* check slow ghashtable based cache */
-  lc = ((ZLogTagCache *) g_static_private_get(&current_logtag_cache));
+  lc = ((ZLogTagCache *) g_private_get(&current_logtag_cache));
   if (!lc)
     {
       return log_spec.verbose_level;
@@ -1365,15 +1358,15 @@ z_log_trace_indent(gint dir)
     "                                                                "
     "                                                                ";
 
-  static GStaticPrivate current_indent_key = G_STATIC_PRIVATE_INIT;
-  int *current_indent = static_cast<int*>(g_static_private_get (&current_indent_key));
+  static GPrivate current_indent_key = G_PRIVATE_INIT(g_free);
+  int *current_indent = static_cast<int*>(g_private_get (&current_indent_key));
   const gchar *res;
 
   if (!current_indent)
     {
       current_indent = g_new (int,1);
       *current_indent = 0;
-      g_static_private_set (&current_indent_key, current_indent, g_free);
+      g_private_set (&current_indent_key, current_indent);
     }
 
   if (dir > 0)

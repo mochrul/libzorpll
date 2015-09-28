@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: misc.h,v 1.20 2004/06/21 14:10:47 sasa Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_MISC_H_INCLUDED

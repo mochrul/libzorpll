@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: cap.c,v 1.9 2003/09/10 11:46:58 bazsi Exp $
- *
- *
- * Author  : Bazsi
- * Auditor :
- * Last audited version:
- * Notes:
  *
  ***************************************************************************/
 

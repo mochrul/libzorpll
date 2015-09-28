@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: ssl.h,v 1.10 2004/01/20 16:58:54 bazsi Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_SSL_H_INCLUDED

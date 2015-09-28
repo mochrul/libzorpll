@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: sockaddr.h,v 1.19 2004/02/17 16:08:04 bazsi Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_SOCKADDR_H_INCLUDED

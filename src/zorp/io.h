@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: io.h,v 1.8 2003/04/08 13:32:29 sasa Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_IO_H_INCLUDED

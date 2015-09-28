@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: listen.h,v 1.11 2004/10/05 14:06:37 chaoron Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_LISTEN_H_INCLUDED
@@ -43,7 +41,7 @@ typedef struct _ZListener
   ZAcceptFunc callback;
   gpointer user_data;
   guint32 sock_flags;
-  GStaticRecMutex lock;
+  GRecMutex lock;
   GMainContext *context;
   gchar *session_id;
 } ZListener;

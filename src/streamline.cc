@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: streamline.c,v 1.87 2004/07/29 08:40:18 bazsi Exp $
- *
- * Author  : SaSa
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/stream.h>

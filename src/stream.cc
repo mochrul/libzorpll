@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: stream.c,v 1.67 2004/06/03 08:00:58 sasa Exp $
- *
- * Author  : Bazsi
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/stream.h>

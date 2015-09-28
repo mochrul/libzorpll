@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: process.h,v 1.4 2004/01/09 10:44:31 sasa Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_PROCESS_H_INCLUDED

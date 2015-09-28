@@ -5,13 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: process.c,v 1.7 2004/01/09 10:44:31 sasa Exp $
- *
- * Author  : Bazsi, SaSa, Chaoron
- * Auditor :
- * Last audited version:
- * Notes:
- *
  ***************************************************************************/
 
 #include <zorp/process.h>
@@ -565,27 +558,29 @@ z_process_detach_stdio(void)
 static void
 z_process_enable_core(void)
 {
-  struct rlimit limit;
+  if (!process_opts.core)
+    return;
 
-  if (process_opts.core)
-    {
+  int rc = -1;
 #if HAVE_PRCTL
-      if (!prctl(PR_GET_DUMPABLE, 0, 0, 0, 0))
-        {
-          gint rc;
-
-          rc = prctl(PR_SET_DUMPABLE, 1, 0, 0, 0);
-
-          if (rc < 0)
-            z_process_message("Cannot set process to be dumpable; error='%s'", g_strerror(errno));
-        }
+  /**
+   * return code <  0 means error
+   * return code == 1 means dumpable with user to the current working directory
+   * return code == 2 means dumpable, but dump
+   *                  can only dumped with fully qualified path
+   *                  can be disabled by suid_dumpable in proc
+   * return code != 1 means not proper working in our point of view
+  **/
+  if ((rc = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0)) != 1)
+      rc = prctl(PR_SET_DUMPABLE, 1, 0, 0, 0);
 #endif
+   if (rc < 0)
+     z_process_message("Cannot set process to be dumpable; error='%s'", g_strerror(errno));
 
-      limit.rlim_cur = limit.rlim_max = RLIM_INFINITY;
-      if (setrlimit(RLIMIT_CORE, &limit) < 0)
-        z_process_message("Error setting core limit to infinity; error='%s'", g_strerror(errno));
-      
-    }
+  struct rlimit limit;
+  limit.rlim_cur = limit.rlim_max = RLIM_INFINITY;
+  if (setrlimit(RLIMIT_CORE, &limit) < 0)
+    z_process_message("Error setting core limit to infinity; error='%s'", g_strerror(errno));
 }
 
 /**

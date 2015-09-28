@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: thread.h,v 1.8 2003/07/02 14:21:06 bazsi Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_THREAD_H_INCLUDED
@@ -40,7 +38,6 @@ gboolean z_thread_new(const gchar *name, GThreadFunc func, gpointer arg);
 
 void z_thread_enable_threadpools(gint idle);
 void z_thread_set_max_threads(gint max);
-void z_thread_set_max_stack_size(gint stack_size);
 
 void z_thread_init(void);
 void z_thread_destroy(void);

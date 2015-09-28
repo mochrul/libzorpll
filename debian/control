@@ -3,21 +3,12 @@ Section: libs
 Priority: optional
 Maintainer: BalaBit Development Team <devel@balabit.hu>
 Standards-Version: 3.8.4
-Build-Depends: debhelper (>= 6.0.7~),
-               libssl-dev, 
-               libglib2.0-dev,
-               libcap-dev [!kfreebsd-i386 !kfreebsd-amd64 !hurd-i386],
-               zlib1g-dev,
-               binutils (>= 2.14.90.0.7),
-               libboost-test-dev,
-               autoconf,
-               automake,
-               libtool
+Build-Depends: libssl-dev (>= 1.0.1), libglib2.0-dev, debhelper (>= 7), libcap-dev [!kfreebsd-i386 !kfreebsd-amd64 !hurd-i386], zlib1g-dev, binutils (>= 2.14.90.0.7), libboost-test-dev, autoconf, automake, libtool
 
-Package: libzorpll5.0-0
+Package: libzorpll6.0-6
 Section: libs
 Architecture: any
-Provides: virtual-libzorpll5.0-0
+Provides: virtual-libzorpll6.0-6
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: libzorpll
 Description: Low level library functions for Zorp
@@ -32,10 +23,7 @@ Description: Low level library functions for Zorp
 Package: libzorpll-dev
 Section: libdevel
 Architecture: any
-Depends: libzorpll5.0-0 (>= ${binary:Version}), ${misc:Depends},
-         libssl-dev,
-         libglib2.0-dev,
-         libcap-dev [linux-any]
+Depends: libzorpll6.0-6 (>= ${binary:Version}), ${misc:Depends}, libglib2.0-dev, libcap-dev [linux-any], libssl-dev
 Description: Low level library functions for Zorp, development files
  Zorp is a new generation firewall. It is essentially a transparent proxy
  firewall, with strict protocol analyzing proxies, a modular architecture,
@@ -45,37 +33,24 @@ Description: Low level library functions for Zorp, development files
  This package contains the development files necessary to create programs
  based on libzorpll.
 
-Package: libzorpll5.0-0-dbg
+Package: libzorpll6.0-6-dbg
 Section: debug
 Architecture: any
 Priority: extra
-Depends: libzorpll5.0-0 (= ${binary:Version}), ${misc:Depends}
+Depends: libzorpll6.0-6 (= ${binary:Version}), ${misc:Depends}
 Description: Low level library functions for Zorp, debug version
  Zorp is a new generation firewall. It is essentially a transparent proxy
  firewall, with strict protocol analyzing proxies, a modular architecture,
  and fine-grained control over the mediated traffic. Configuration decisions
  are scriptable with the Python based configuration language.
  .
- This package contains the debugging symbols for libzorpll5.0-0.
+ This package contains the debugging symbols for libzorpll6.0-6.
 
-Package: libzorpll-dbg
+Package: libzorpll6.0-6-memtrace
 Section: debug
 Architecture: any
 Priority: extra
-Depends: libzorpll
-Description: Low level library functions for Zorp, debug version for Windows
- Zorp is a new generation firewall. It is essentially a transparent proxy
- firewall, with strict protocol analyzing proxies, a modular architecture,
- and fine-grained control over the mediated traffic. Configuration decisions
- are scriptable with the Python based configuration language.
- .
- This package contains the debugging symbols for libzorpll.
-
-Package: libzorpll5.0-0-memtrace
-Section: debug
-Architecture: any
-Priority: extra
-Depends: libzorpll5.0-0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Depends: libzorpll6.0-6 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Low level library functions for Zorp, debug version
  Zorp is a new generation firewall. It is essentially a transparent proxy
  firewall, with strict protocol analyzing proxies, a modular architecture,
