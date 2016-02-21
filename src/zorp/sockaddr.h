@@ -230,6 +230,8 @@ ZSockAddr *z_sockaddr_inet_new2(struct sockaddr_in *sinaddr);
 ZSockAddr *z_sockaddr_inet_new_hostname(const gchar *hostname, guint16 port);
 ZSockAddr *z_sockaddr_inet_range_new(const gchar *ip, guint16 min_port, guint16 max_port);
 ZSockAddr *z_sockaddr_inet_range_new_inaddr(struct in_addr addr, guint16 min_port, guint16 max_port);
+ZSockAddr *z_sockaddr_inet_range_new_random(const gchar *ip, guint16 min_port, guint16 max_port);
+ZSockAddr *z_sockaddr_inet_range_new_inaddr_random(struct in_addr addr, guint16 min_port, guint16 max_port);
 
 /* AF_INET6 */
 

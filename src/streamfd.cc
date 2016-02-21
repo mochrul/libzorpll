@@ -37,7 +37,6 @@ typedef struct _ZStreamFD
   GIOChannel *channel;
   gint fd;
   gint keepalive;
-  gint tcp_nodelay;
   gboolean shutdown;
   GPollFD pollfd;
 #ifdef G_OS_WIN32
@@ -811,38 +810,6 @@ z_stream_fd_ctrl_method(ZStream *s, guint function, gpointer value, guint vlen)
       if (vlen == sizeof(gint))
         {
           self->keepalive = *((gint *)value);
-          z_leave();
-          return TRUE;
-        }
-      else
-        /*LOG
-          This message indicates that an internal error occurred, during getting the FD of a stream,
-          because the size of the parameter is wrong. Please report this event to the Balabit QA
-          Team (devel@balabit.com).
-          */
-        z_log(NULL, CORE_ERROR, 4, "Internal error, bad parameter is given for setting the KEEPALIVE option; size='%d'", vlen);
-      break;
-
-    case ZST_CTRL_GET_TCP_NODELAY:
-      if (vlen == sizeof(gint))
-        {
-          *((gint *)value) = self->tcp_nodelay;
-          z_leave();
-          return TRUE;
-        }
-      else
-        /*LOG
-          This message indicates that an internal error occurred, during getting the FD of a stream,
-          because the size of the parameter is wrong. Please report this event to the Balabit QA
-          Team (devel@balabit.com).
-          */
-        z_log(NULL, CORE_ERROR, 4, "Internal error, bad parameter is given for getting the KEEPALIVE option; size='%d'", vlen);
-      break;
-
-    case ZST_CTRL_SET_TCP_NODELAY:
-      if (vlen == sizeof(gint))
-        {
-          self->tcp_nodelay = *((gint *)value);
           z_leave();
           return TRUE;
         }

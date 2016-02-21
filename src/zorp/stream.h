@@ -75,8 +75,6 @@ enum
   ZST_CTRL_GET_KEEPALIVE        = 0x18,
   ZST_CTRL_SET_KEEPALIVE        = 0x19,
   ZST_CTRL_GET_BUFFERED_BYTES   = 0x20,
-  ZST_CTRL_GET_TCP_NODELAY      = 0x21,
-  ZST_CTRL_SET_TCP_NODELAY      = 0x22,
 };
 
 /* stream type */
@@ -597,15 +595,7 @@ z_stream_get_keepalive(ZStream *self)
 
 void z_stream_set_keepalive(ZStream *self, gint keepalive);
 
-static inline gint
-z_stream_get_tcp_nodelay(ZStream* self)
-{
-  gint tcp_nodelay;
-  z_stream_ctrl(self, ZST_CTRL_GET_TCP_NODELAY, &tcp_nodelay, sizeof(tcp_nodelay));
-  return tcp_nodelay;
-}
-
-void z_stream_set_tcp_nodelay(ZStream *self, gint tcp_nodelay);
+void z_stream_set_nodelay(ZStream *self, gint nodelay);
 
 static inline gsize
 z_stream_get_buffered_bytes(ZStream *self)
