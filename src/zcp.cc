@@ -24,7 +24,7 @@
 #define ZCP_STATE_READING_TRAILER 12
 
 #define ZCP_MAX_HEADERS       256
-#define ZCP_MAX_HEADER_LENGTH 4096
+#define ZCP_MAX_HEADER_LENGTH 16384
 
 struct _ZCPContext
 {
@@ -118,7 +118,7 @@ GIOStatus
 z_cp_context_read(ZCPContext *self, guint *session_id, ZCPCommand **cmd)
 {
   gchar *buf;
-  gsize buflen = 4096;
+  gsize buflen = ZCP_MAX_HEADER_LENGTH;
   gchar *tmpbuf;
   gint len;
   GIOStatus ret = G_IO_STATUS_ERROR;
@@ -258,7 +258,7 @@ z_cp_context_read(ZCPContext *self, guint *session_id, ZCPCommand **cmd)
             }
           else if (self->valuelen > 0)
             {
-              gchar buf2[4096];
+              gchar buf2[ZCP_MAX_HEADER_LENGTH];
 
               ret = z_stream_read(self->stream, buf2, MIN((gsize)self->valuelen, (gsize)sizeof(buf2)), &buflen, NULL);
               if (ret == G_IO_STATUS_NORMAL)

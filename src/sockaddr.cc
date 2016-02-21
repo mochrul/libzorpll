@@ -12,6 +12,7 @@
 #include <zorp/cap.h>
 #include <zorp/socket.h>
 #include <zorp/error.h>
+#include <zorp/random.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -419,7 +420,27 @@ typedef struct _ZSockAddrInetRange
   int salen;
   struct sockaddr_in sin;
   guint16 min_port, max_port, last_port;
+  gboolean random;
 } ZSockAddrInetRange;
+
+static bool
+z_sockaddr_inet_range_try_bind(ZSockAddrInetRange *self, int sock, guint32 sock_flags, guint16 port)
+{
+  /* attempt to bind */
+  self->sin.sin_port = htons(port);
+  if (z_ll_bind(sock, (struct sockaddr *) &self->sin, self->salen, sock_flags) == 0)
+    {
+      /*LOG
+        This message reports that the SockAddrInetRange was successfully bound
+        to the given port in the dynamic port range.
+       */
+      z_log(NULL, CORE_DEBUG, 6, "SockAddrInetRange, successfully bound; min_port='%d', max_port='%d', port='%d'", self->min_port, self->max_port, port);
+      self->last_port = ++port;
+      return true;
+    }
+
+  return false;
+}
 
 /**
  * This function is the bind callback of ZSockAddrInetRange.
@@ -447,31 +468,32 @@ z_sockaddr_inet_range_bind(int sock, ZSockAddr *a, guint32 sock_flags)
       z_log(NULL, CORE_ERROR, 3, "SockAddrInetRange, invalid range given; min_port='%d', max_port='%d'", self->min_port, self->max_port);
       return G_IO_STATUS_ERROR;
     }
-  for (port = self->last_port; port <= self->max_port; port++)
+  if (self->random == FALSE || (self->max_port - self->min_port == 0))
     {
-      /* attempt to bind */
-      self->sin.sin_port = htons(port);
-      if (z_ll_bind(sock, (struct sockaddr *) &self->sin, self->salen, sock_flags) == 0)
+      for (port = self->last_port; port <= self->max_port; port++)
         {
-          /*LOG
-            This message reports that the SockAddrInetRange was successfully bound
-            to the given port in the dynamic port range.
-           */
-          z_log(NULL, CORE_DEBUG, 6, "SockAddrInetRange, successfully bound; min_port='%d', max_port='%d', port='%d'", self->min_port, self->max_port, port);
-          self->last_port = port + 1;
-          return G_IO_STATUS_NORMAL;
+          if (z_sockaddr_inet_range_try_bind(self, sock, sock_flags, port))
+            return G_IO_STATUS_NORMAL;
+        }
+      for (port = self->min_port; port <= self->max_port; port++)
+        {
+          if (z_sockaddr_inet_range_try_bind(self, sock, sock_flags, port))
+            return G_IO_STATUS_NORMAL;
         }
     }
-  for (port = self->min_port; port <= self->max_port; port++)
+  else
     {
-      /* attempt to bind */
-      self->sin.sin_port = htons(port);
-      if (z_ll_bind(sock, (struct sockaddr *) &self->sin, self->salen, sock_flags) == 0)
+      auto random_ports = z_random_sequence_create(self->min_port, self->max_port);
+      if (random_ports.empty())
         {
-          /*NOLOG*/ /* the previous message is the same */
-          z_log(NULL, CORE_DEBUG, 6, "SockAddrInetRange, successfully bound; min_port='%d', max_port='%d', port='%d'", self->min_port, self->max_port, port);
-          self->last_port = port + 1;
-          return G_IO_STATUS_NORMAL;
+          z_log(NULL, CORE_ERROR, 3, "SockAddrInetRange, there was not enough entropy to generate random;");
+          return G_IO_STATUS_ERROR;
+        }
+
+      for (const auto &port : random_ports)
+        {
+          if (z_sockaddr_inet_range_try_bind(self, sock, sock_flags, port))
+            return G_IO_STATUS_NORMAL;
         }
     }
 
@@ -544,7 +566,7 @@ z_sockaddr_inet_check(ZSockAddr *s)
 
 /**
  * This constructor creates a new ZSockAddrInetRange instance with the
- * specified arguments.
+ * specified arguments. Will assign ports sequentally.
  *
  * @param[in] ip ip address in text form
  * @param[in] min_port minimal port to bind to
@@ -565,7 +587,47 @@ z_sockaddr_inet_range_new(const gchar *ip, guint16 min_port, guint16 max_port)
 
 /**
  * This constructor creates a new ZSockAddrInetRange instance with the
- * specified arguments.
+ * specified arguments. Will assign ports randomly.
+ *
+ * @param[in] ip ip address in text form
+ * @param[in] min_port minimal port to bind to
+ * @param[in] max_port maximum port to bind to
+ *
+ * @returns the new ZSockAddrInetRange instance
+ **/
+ZSockAddr *
+z_sockaddr_inet_range_new_random(const gchar *ip, guint16 min_port, guint16 max_port)
+{
+  struct in_addr netaddr;
+
+  if (!z_inet_aton(ip, &netaddr))
+    return NULL;
+
+  return z_sockaddr_inet_range_new_inaddr_random(netaddr, min_port, max_port);
+}
+
+/**
+ * This constructor creates a new ZSockAddrInetRange instance with the
+ * specified arguments. Will assignports randomly.
+ *
+ * @param[in] addr address
+ * @param[in] min_port minimal port to bind to
+ * @param[in] max_port maximum port to bind to
+ *
+ * @returns the new ZSockAddr instance
+ **/
+ZSockAddr *
+z_sockaddr_inet_range_new_inaddr_random(struct in_addr addr, guint16 min_port, guint16 max_port)
+{
+  ZSockAddrInetRange *self = (ZSockAddrInetRange*) z_sockaddr_inet_range_new_inaddr(addr, min_port, max_port);
+  self->random = TRUE;
+
+  return (ZSockAddr *)self;
+}
+
+/**
+ * This constructor creates a new ZSockAddrInetRange instance with the
+ * specified arguments. Will assign ports sequentally.
  *
  * @param[in] addr address
  * @param[in] min_port minimal port to bind to
@@ -596,6 +658,7 @@ z_sockaddr_inet_range_new_inaddr(struct in_addr addr, guint16 min_port, guint16 
     }
   self->min_port = min_port;
   self->max_port = max_port;
+  self->random = FALSE;
   
   return (ZSockAddr *) self;
 }
