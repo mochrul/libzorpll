@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: streamgzip.h,v 1.2 2003/11/14 15:49:09 sasa Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_STREAMGZIP_H_INCLUDED

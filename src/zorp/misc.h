@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: misc.h,v 1.20 2004/06/21 14:10:47 sasa Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_MISC_H_INCLUDED
@@ -100,6 +98,12 @@ void
 z_format_text_dump(const gchar *session_id, const gchar *class_, gint level, const void *buf, guint len);
 
 GString *g_string_assign_len(GString *s, const gchar *val, gint len);
+GString *g_string_assign_gstring(GString *target, const GString *source);
+
+#if !GLIB_CHECK_VERSION(2, 28, 0)
+void g_list_free_full(GList *list, GDestroyNotify free_func);
+#endif
+
 
 gint g_time_val_compare(const GTimeVal *t1, const GTimeVal *t2);
 glong g_time_val_diff(const GTimeVal *t1, const GTimeVal *t2);
