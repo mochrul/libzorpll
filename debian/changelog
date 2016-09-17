@@ -1,3 +1,12 @@
+libzorpll (6.0.6.0-1~1.gbp7e114g) UNRELEASED; urgency=medium
+
+  ** SNAPSHOT build @7e114f5907a98b040cc3c57ec6316da607c2c09d **
+
+  * [278a02a] Removed files not exists in upstream branch
+  * [ba349c7] Fixed difference between this branch and the upstream one
+
+ -- SZALAY Attila <sasa@debian.org>  Sat, 17 Sep 2016 14:26:21 +0200
+
 libzorpll (3.9.4.1-3) unstable; urgency=medium
 
   * Re-build in unstable to close the building issue (Closes: #777979)
