@@ -1,6 +1,6 @@
 Summary:		Low level library functions for Zorp
-Name:			libzorpll-6_0-6
-Version:		6.0.6.0
+Name:			libzorpll-6_0-8
+Version:		6.0.8.0
 Release:		1%{?dist}
 License:		LGPL-2.0
 Group:			System/Libraries
@@ -97,5 +97,7 @@ based on libzorpll.
 %{_includedir}/zorp/*.h
 
 %changelog
+* Sun Feb 21 2016 Balasys Development Team <devel@balasys.hu> - 6.0.8.0-1
+- Version bump
 * Sun Feb 15 2015 BalaBit Development Team <devel@balabit.hu> - 6.0.0.0-1
 - Version bump
