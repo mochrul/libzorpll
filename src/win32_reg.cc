@@ -164,12 +164,57 @@ z_reg_key_read_string(HKEY root, gchar *key, gchar *name, gchar **value)
 gboolean
 z_sid_to_text( PSID ps, char *buf, int bufSize )
 {
-  ZRegistryForeachCallbackData helper_data;
+  PSID_IDENTIFIER_AUTHORITY psia;
+  DWORD dwSubAuthorities;
+  DWORD dwSidRev = SID_REVISION;
+  DWORD i;
+  int n, size;
+  char *p;
 
-  g_assert(z_registry_is_type_valid(type));
+  if ( ! IsValidSid( ps ) )
+    return FALSE;
 
-  helper_data.user_func = func;
-  helper_data.user_data = user_data;
+  psia = GetSidIdentifierAuthority( ps );
 
-  g_hash_table_foreach(registry[type], z_registry_foreach_invoke_callback, &helper_data);
+  dwSubAuthorities = *GetSidSubAuthorityCount( ps );
+
+  size = 15 + 12 + ( 12 * dwSubAuthorities ) + 1;
+
+  if ( bufSize < size )
+    {
+      SetLastError( ERROR_INSUFFICIENT_BUFFER );
+      return FALSE;
+    }
+
+  size = wsprintf( buf, "S-%lu-", dwSidRev );
+  p = buf + size;
+
+  if ( psia->Value[0] != 0 || psia->Value[1] != 0 )
+    {
+      n = wsprintf( p, "0x%02hx%02hx%02hx%02hx%02hx%02hx",
+                    (USHORT) psia->Value[0], (USHORT) psia->Value[1],
+                    (USHORT) psia->Value[2], (USHORT) psia->Value[3],
+                    (USHORT) psia->Value[4], (USHORT) psia->Value[5] );
+      size += n;
+      p += n;
+    }
+  else
+    {
+      n = wsprintf( p, "%lu", ( (ULONG) psia->Value[5] ) +
+                    ( (ULONG) psia->Value[4] << 8 ) + ( (ULONG) psia->Value[3] << 16 ) +
+                    ( (ULONG) psia->Value[2] << 24 ) );
+      size += n;
+      p += n;
+    }
+
+  for ( i = 0; i < dwSubAuthorities; ++ i )
+    {
+      n = wsprintf( p, "-%lu", *GetSidSubAuthority( ps, i ) );
+      size += n;
+      p += n;
+    }
+
+  return TRUE;
 }
+
+#endif
