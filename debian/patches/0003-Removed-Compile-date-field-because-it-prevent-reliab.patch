@@ -3,14 +3,14 @@ Date: Sun, 28 Jun 2015 21:25:48 +0200
 Subject: Removed Compile-date field because it prevent reliable rebuilding
 
 ---
- src/misc.c | 3 +--
+ src/misc.cc | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/src/misc.c b/src/misc.c
-index 181737f..ad2eb84 100644
---- a/src/misc.c
-+++ b/src/misc.c
-@@ -542,14 +542,13 @@ z_libzorpll_version_info(void)
+diff --git a/src/misc.cc b/src/misc.cc
+index 6ac746b..f96ca72 100644
+--- a/src/misc.cc
++++ b/src/misc.cc
+@@ -563,14 +563,13 @@ z_libzorpll_version_info(void)
    g_snprintf(buf, sizeof(buf),
               "libzorpll %s\n"
               "Revision: %s\n"

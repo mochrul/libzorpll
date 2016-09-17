@@ -4,16 +4,16 @@ Subject: compile_problems2
 
 ===================================================================
 ---
- src/memtrace.c | 2 +-
+ src/memtrace.cc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/src/memtrace.c b/src/memtrace.c
-index eda45de..3ee4ef7 100644
---- a/src/memtrace.c
-+++ b/src/memtrace.c
-@@ -693,7 +693,7 @@ z_malloc(size_t size, gpointer backt[])
+diff --git a/src/memtrace.cc b/src/memtrace.cc
+index 93c8054..f5e4a25 100644
+--- a/src/memtrace.cc
++++ b/src/memtrace.cc
+@@ -684,7 +684,7 @@ z_malloc(size_t size, gpointer backt[])
+       if (temp_brk > MEMTRACE_TEMP_HEAP_SIZE)
          {
-           backtrace_info = temp_brk;
            temp_brk = 0;
 -          assert(0);
 +          assert(backtrace_info == 0);

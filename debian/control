@@ -3,10 +3,21 @@ Section: libs
 Priority: optional
 Maintainer: SZALAY Attila <sasa@debian.org>
 Standards-Version: 3.9.2
-Build-Depends: libssl-dev, libglib2.0-dev, debhelper (>= 7), libcap-dev [linux-any], zlib1g-dev, binutils (>= 2.14.90.0.7),
-    po-debconf, autoconf, automake, libtool, dpkg-dev (>= 1.16.1~)
+Build-Depends: libssl-dev,
+               libglib2.0-dev,
+               debhelper (>= 7),
+               libcap-dev [linux-any],
+               zlib1g-dev,
+               libboost-test-dev,
+               binutils (>= 2.14.90.0.7),
+               po-debconf,
+               autoconf,
+               automake,
+               libtool,
+               dpkg-dev (>= 1.16.1~),
+               dh-autoreconf
 
-Package: libzorpll3.9-1
+Package: libzorpll-6.0-6
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -32,11 +43,11 @@ Description: Zorp low-level functions - development files
  This package contains the development files necessary to create programs
  based on libzorpll.
 
-Package: libzorpll3.9-1-dbg
+Package: libzorpll-6.0-6-dbg
 Section: debug
 Architecture: any
 Priority: extra
-Depends: libzorpll3.9-1 (= ${binary:Version}), ${misc:Depends}
+Depends: libzorpll-6.0-6 (= ${binary:Version}), ${misc:Depends}
 Description: Zorp low-level functions - debugging version
  Zorp is an application-layer firewall using a modular architecture of
  strict protocol-analyzing transparent proxies, giving fine-grained
@@ -44,17 +55,3 @@ Description: Zorp low-level functions - debugging version
  scriptable in the Python-based configuration language.
  .
  This package contains the debugging symbols for libzorpll3.9-0.
-
-Package: libzorpll3.9-1-memtrace
-Section: debug
-Architecture: any
-Priority: extra
-Depends: libzorpll3.9-1 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Description: Zorp low-level functions - memory debugging version
- Zorp is an application-layer firewall using a modular architecture of
- strict protocol-analyzing transparent proxies, giving fine-grained
- control over the mediated traffic. Configuration decisions are
- scriptable in the Python-based configuration language.
- .
- This package contains the same library as libzorpll but with memtrace memory
- debugging code enabled.
