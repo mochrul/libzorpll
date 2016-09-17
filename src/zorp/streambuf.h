@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: streambuf.h,v 1.7 2003/06/04 09:34:06 bazsi Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_STREAMBUF_H_INCLUDED

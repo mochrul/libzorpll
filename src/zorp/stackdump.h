@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: zorplib.h,v 1.10 2003/04/08 13:32:29 sasa Exp $
- *
  ***************************************************************************/
 #ifndef ZORP_STACKDUMP_H_INCLUDED
 #define ZORP_STACKDUMP_H_INCLUDED
@@ -33,7 +31,7 @@ typedef void ZSignalContext;
 void z_stackdump_log(ZSignalContext *context);
 
 #ifdef G_OS_WIN32
-void z_enable_write_dump_file();
+void z_enable_write_dump_file(const gchar *prog_version);
   #ifndef _SYSCRT
   int z_set_unhandled_exception_filter(void);
   #else

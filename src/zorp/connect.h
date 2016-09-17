@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: connect.h,v 1.15 2004/10/05 14:06:37 chaoron Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_CONNECT_H_INCLUDED
@@ -48,7 +46,7 @@ typedef struct _ZConnector
   gpointer user_data;
   GDestroyNotify destroy_data;
   gint refcnt;
-  GStaticRecMutex lock;
+  GRecMutex lock;
   GMainContext *context;
   gboolean blocking;
   gint socket_type;

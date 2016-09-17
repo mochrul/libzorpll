@@ -5,8 +5,6 @@
  * under the terms of Zorp Professional Firewall System EULA located
  * on the Zorp installation CD.
  *
- * $Id: cap.h,v 1.6 2003/09/10 11:46:58 bazsi Exp $
- *
  ***************************************************************************/
 
 #ifndef ZORP_CAP_H_INCLUDED

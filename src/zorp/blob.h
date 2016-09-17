@@ -1,8 +1,9 @@
 /***************************************************************************
  *
- * COPYRIGHTHERE
- *
- * $Id: proxy.h,v 1.82 2004/06/11 12:57:39 bazsi Exp $
+ * This file is covered by a dual licence. You can choose whether you
+ * want to use it according to the terms of the GNU GPL version 2, or
+ * under the terms of Zorp Professional Firewall System EULA located
+ * on the Zorp installation CD.
  *
  ***************************************************************************/
 
@@ -30,8 +31,8 @@ typedef struct ZBlobSystem
   gsize         mem_max, mem_used;          /**< maximal and current memory usage */
   gsize         lowat, hiwat, noswap_max;   /**< control limits - see spec */
   
-  GMutex        *mtx_blobsys;               /**< gadgets used for signalling request like allocation, etc. */
-  GCond         *cond_thread_started;
+  GMutex        mtx_blobsys;               /**< gadgets used for signalling request like allocation, etc. */
+  GCond         cond_thread_started;
   
   GThread       *thr_management;            /**< management thread */
   GError        *thread_error;              /**< error structure for creating thr_management */
@@ -94,11 +95,11 @@ typedef struct ZBlob
   gint              fd;                     /**< swapfile descriptor */
   gchar             *data;                  /**< memory image pointer */
   ZBlobSystem       *system;                /**< blob system it belongs to */
-  GMutex            *mtx_lock;              /**< lock for concurrent accesses */
+  GMutex            mtx_lock;              /**< lock for concurrent accesses */
   ZBlobStatistic    stat;                   /**< statistics */
 
-  GMutex            *mtx_reply;             /**< mutex and conditional for waiting for reply */
-  GCond             *cond_reply;
+  GMutex            mtx_reply;             /**< mutex and conditional for waiting for reply */
+  GCond             cond_reply;
   gboolean          replied;
   
   gchar             *mapped_ptr;            /**< addr and length of the mapped area */

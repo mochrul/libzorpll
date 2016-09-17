@@ -1,0 +1,51 @@
+language: cpp
+
+compiler:
+  - gcc
+
+branches:
+  only:
+    - /^6\.0\.[0-9]*\.0$/
+
+before_install:
+  - source ci/obs_common.sh
+  - source ci/obs_before_install.sh
+
+before_script:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq devscripts equivs
+  - sudo mk-build-deps -i -r
+
+script:
+  - ./autogen.sh
+  - ./configure --prefix=$HOME
+  - make
+  - make check
+  - source ci/obs_common.sh
+  - source ci/obs_prepare.sh
+
+after_success:
+  - source ci/obs_common.sh
+  - source ci/obs_commit.sh
+
+env:
+  global:
+    - secure: "lvVaWeVS34BGosuG4V9T4Yih1ASvzZbpZKkR5QxG5YlDJf5UL8fbdhWNgRnQt87BtCDiFVeU6kPSQi9b7DgNINO29J5k6C1HeBiFwkQtx44Kpmkv07P0jP70WVJMFye1ARuUyTpDKPx+dLoD6x08pzCz8+kEeEBeiwjU7WzGlOI="
+    - OBS_HOME=security
+    - OBS_PROJECT=Zorp
+    - OBS_MAJOR_VERSION=6
+    - OBS_MINOR_VERSION=0
+    - OBS_MAINTENANCE_VERSION=6
+    - OBS_PACKAGE=libzorpll
+    - secure: "akyxoJN+WUcJOzxGQrqS60MLqNieVBgWhYk3c99TrpvSeixpLkWTuYIm8/0mncP4Ul4Bg1cQeN5/GCVNo9tw1dixGZg60lmkRFVtSehnnnj18d/6DypW+0VSkuGEqjcHuIqIUSIraGkEt89uFGmBykSrp52vLySnXEpo/RQvmL0="
+
+addons:
+  coverity_scan:
+    project:
+      name: "balabit/libzorpll"
+      version: 6.0.6
+      description: "Build submitted via Travis CI"
+    notification_email: coroner@pfeifferszilard.hu
+    build_command_prepend: "./autogen.sh; ./configure"
+    build_command:   "make -j4"
+    branch_pattern: 6.0.6.0
