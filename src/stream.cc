@@ -1474,15 +1474,14 @@ z_stream_set_keepalive(ZStream *self, gint keepalive)
 }
 
 void
-z_stream_set_tcp_nodelay(ZStream *self, gint tcp_nodelay)
+z_stream_set_nodelay(ZStream *self, gint nodelay)
 {
-  gint fd = z_stream_get_fd(self);
-
-  tcp_nodelay = !!tcp_nodelay;
-  if (fd != -1)
+  if (self)
     {
-      z_fd_set_tcp_nodelay(fd, tcp_nodelay);
-      z_stream_ctrl(self, ZST_CTRL_SET_TCP_NODELAY, &tcp_nodelay, sizeof(tcp_nodelay));
+      gint fd = z_stream_get_fd(self);
+      nodelay = !!nodelay;
+      if (fd != -1)
+        z_fd_set_nodelay(fd, nodelay);
     }
 }
 

@@ -9,6 +9,8 @@
 
 #include <zorp/random.h>
 #include <zorp/log.h>
+#include <numeric>
+#include <algorithm>
 
 #include <openssl/rand.h>
 
@@ -126,4 +128,45 @@ z_random_sequence_get_bounded(ZRandomStrength strength,
       g_assert(target[i] >= min && target[i] <= max);
     }
   z_return(TRUE);
+}
+
+class NotEnoughEntropyException : public std::exception
+{
+};
+
+/**
+ * This function generates a random sequence where each value is in the
+ * [min, max] range. It uses cryptographically secure random.
+ *
+ * @param[in]  min minimum value
+ * @param[in]  max maximum value
+ *
+ * @returns std::vector<unsigned int> with random numbers between [min, max]
+ *          or an empty vector if there was not enough entropy.
+ **/
+std::vector<unsigned int>
+z_random_sequence_create(const unsigned int min, const unsigned int max)
+{
+  std::vector<unsigned int> sequence(max - min + 1);
+
+  std::iota(sequence.begin(), sequence.end(), min);
+  try
+    {
+      std::random_shuffle(sequence.begin(), sequence.end(), [] (int max) {
+        unsigned char random;
+        do
+         {
+           if (RAND_bytes(&random, 1) != 1)
+             throw NotEnoughEntropyException();
+
+         } while (random >= max);
+        return random;
+        });
+    }
+  catch (const NotEnoughEntropyException &e)
+    {
+      sequence.clear();
+    }
+
+  return sequence;
 }

@@ -23,7 +23,7 @@ gboolean z_fd_set_nonblock(int fd, gboolean enable);
 gboolean z_fd_set_keepalive(int fd, gboolean enable);
 gboolean z_fd_set_oobinline(int fd, gboolean enable);
 void z_fd_set_our_mark(int fd, int mark);
-gboolean z_fd_set_tcp_nodelay(int fd, gboolean enable);
+gboolean z_fd_set_nodelay(int fd, gboolean enable);
 
 #if ZORPLIB_ENABLE_TOS
 

@@ -172,6 +172,28 @@ z_fd_set_our_mark(int fd, int mark)
     }
 }
 
+static int
+get_type(int fd)
+{
+  int type;
+  socklen_t len = sizeof(type);
+
+  if (getsockopt(fd, SOL_SOCKET, SO_TYPE, reinterpret_cast<char *>(&type), &len) != 0)
+    {
+      /*LOG
+        This message indicates that getting socket type on the given fd
+        failed for the given reason. Please report this event to the
+        Zorp QA team.
+       */
+      z_log(NULL, CORE_ERROR, 4,
+            "getsockopt(SOL_SOCKET, SO_TYPE) failed; fd='%d', error='%s'",
+            fd, g_strerror(errno));
+      return -1;
+    }
+
+  return type;
+}
+
 /**
  * This function enables or disables the TCP_NODELAY feature for socket
  * specified by fd. Setting TCP_NODELAY to TRUE disables the Nagle algorithm.
@@ -182,9 +204,17 @@ z_fd_set_our_mark(int fd, int mark)
  * @returns whether the operation was successful
  **/
 gboolean
-z_fd_set_tcp_nodelay(int fd, gboolean enable)
+z_fd_set_nodelay(int fd, gboolean enable)
 {
-  if (setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<const char *>(const_cast<const gboolean *>(&enable)), sizeof(enable)) == -1)
+  int type = get_type(fd);
+
+  if (type < 0)
+    return FALSE;
+
+  if (type != IPPROTO_TCP)
+    return TRUE;
+
+  if (setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<const char *>(&enable), sizeof(enable)) == -1)
     {
       /*LOG
         This message indicates that changing the TCP_NODELAY state on the given fd
@@ -192,9 +222,10 @@ z_fd_set_tcp_nodelay(int fd, gboolean enable)
         Zorp QA team.
        */
       z_log(NULL, CORE_ERROR, 4, "setsockopt(IPPROTO_TCP, TCP_NODELAY,) failed; fd='%d', enable='%d', error='%s'",
-                                    fd, enable, g_strerror(errno));
+            fd, enable, g_strerror(errno));
       return FALSE;
     }
+
   return TRUE;
 }
 
