@@ -1,4 +1,4 @@
-libzorpll (6.0.8.0-1) unstable; urgency=medium
+libzorpll (6.0.8.0-1) experimental; urgency=medium
 
   * [fb014a1] Re-create rules file in the base of dh
   * [0cf2d85] Change package names to follow upstream versioning.
