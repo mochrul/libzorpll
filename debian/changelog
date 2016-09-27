@@ -1,3 +1,12 @@
+libzorpll (6.0.8.0-2) unstable; urgency=medium
+
+  * [de245a8] Fixed libzorpll-dev package description.
+    The description of this package should contain
+    the "dependency package" phrase to make it
+    (almost) lintian clean.
+
+ -- SZALAY Attila <sasa@debian.org>  Tue, 27 Sep 2016 21:05:03 +0200
+
 libzorpll (6.0.8.0-1) unstable; urgency=medium
 
   * [fb014a1] Re-create rules file in the base of dh
