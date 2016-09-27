@@ -54,8 +54,7 @@ Description: Zorp low-level functions - development files
  control over the mediated traffic. Configuration decisions are
  scriptable in the Python-based configuration language.
  .
- This package contains the development files necessary to create programs
- based on libzorpll.
+ This package is a dependency package, which depends on the latest version.
 
 Package: libzorpll-6.0-8-dbg
 Section: debug
