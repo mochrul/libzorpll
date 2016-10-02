@@ -1,3 +1,11 @@
+libzorpll (6.0.8.0-2) experimental; urgency=medium
+
+  * [378a838] Fixed the issue caused with package renaming.
+    The dev package has been renamed to a version-dependent
+    package, but forgot to set the replace and break headers. (Closes: #839140)
+
+ -- SZALAY Attila <sasa@debian.org>  Sun, 02 Oct 2016 22:40:29 +0200
+
 libzorpll (6.0.8.0-1) experimental; urgency=medium
 
   * [fb014a1] Re-create rules file in the base of dh
