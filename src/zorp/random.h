@@ -10,6 +10,7 @@
 #define ZORPLIB_RANDOM_H_INCLUDED
 
 #include <glib.h>
+#include <vector>
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,5 +38,7 @@ z_random_sequence_get_bounded(ZRandomStrength strength,
 #ifdef __cplusplus
 }
 #endif
+
+std::vector<unsigned int> z_random_sequence_create(const unsigned int len, const unsigned int min);
 
 #endif

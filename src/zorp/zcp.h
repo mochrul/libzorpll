@@ -9,7 +9,7 @@
 #include <zorp/headerset.h>
 #include <zorp/stream.h>
 
-#define ZCP_LINE_LENGTH 4096
+#define ZCP_LINE_LENGTH 16384
 
 #ifdef __cplusplus
 extern "C" {
