@@ -1,3 +1,9 @@
+libzorpll (6.0.8.0-3) unstable; urgency=medium
+
+  * Bumped version to release to unstable
+
+ -- SZALAY Attila <sasa@debian.org>  Sat, 08 Oct 2016 22:21:24 +0200
+
 libzorpll (6.0.8.0-2) experimental; urgency=medium
 
   * [378a838] Fixed the issue caused with package renaming.
