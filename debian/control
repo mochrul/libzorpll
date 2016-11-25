@@ -3,7 +3,7 @@ Section: libs
 Priority: optional
 Maintainer: SZALAY Attila <sasa@debian.org>
 Standards-Version: 3.9.2
-Build-Depends: libssl-dev,
+Build-Depends: libssl1.0-dev | libssl-dev (<< 1.1.0~),
                libglib2.0-dev,
                debhelper (>= 9),
                libcap-dev [linux-any],
@@ -36,7 +36,7 @@ Section: libdevel
 Replaces: libzorpll-dev ( << 6.0.8.0-1)
 Breaks: libzorpll-dev ( << 6.0.8.0-1)
 Architecture: any
-Depends: libzorpll-6.0-8 (= ${binary:Version}), ${misc:Depends}, libglib2.0-dev, libcap-dev [linux-any], libssl-dev
+Depends: libzorpll-6.0-8 (= ${binary:Version}), ${misc:Depends}, libglib2.0-dev, libcap-dev [linux-any], libssl1.0-dev | libssl-dev (<< 1.1.0~)
 Description: Zorp low-level functions - development files for version 6.0-8
  Zorp is an application-layer firewall using a modular architecture of
  strict protocol-analyzing transparent proxies, giving fine-grained
