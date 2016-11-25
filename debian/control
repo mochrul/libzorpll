@@ -2,7 +2,7 @@ Source: libzorpll
 Section: libs
 Priority: optional
 Maintainer: SZALAY Attila <sasa@debian.org>
-Standards-Version: 3.9.2
+Standards-Version: 3.9.8
 Build-Depends: libssl1.0-dev | libssl-dev (<< 1.1.0~),
                libglib2.0-dev,
                debhelper (>= 9),
