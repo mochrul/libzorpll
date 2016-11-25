@@ -1,3 +1,11 @@
+libzorpll (6.0.8.0-4) unstable; urgency=medium
+
+  * [ecb7a72] Changed libssl dependency
+    to libzorpll1.0-dev (Closes: 828418)
+  * [9e03ae5] Updated Standards version to 3.9.8
+
+ -- SZALAY Attila <sasa@debian.org>  Fri, 25 Nov 2016 12:25:56 +0100
+
 libzorpll (6.0.8.0-3) unstable; urgency=medium
 
   * Bumped version to release to unstable
