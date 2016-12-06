@@ -440,6 +440,7 @@ src/libzorpll.rc
 src/Makefile
 src/zorp/Makefile
 scripts/Makefile
+scripts/failure_notify
 src/zorp/zorplibconfig.h-win32
 tests/Makefile
 zorplibll.pc

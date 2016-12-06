@@ -6,6 +6,8 @@ stamp-h1
 
 /aclocal.m4
 /autom4te.cache
+/balabit-unix-build
+/balabit-vs-build
 /config.guess
 /config.sub
 /config.status
@@ -28,6 +30,9 @@ stamp-h1
 
 /dist.conf
 /*.pc
+archived-changelogs
+debian/*.in
+debian/source.lintian-overrides
 scripts/failure_notify6*
 src/libzorpll.rc
 src/zorp/zorplibconfig.h
@@ -44,6 +49,7 @@ semantic.cache
 *.la
 .deps/
 .libs/
+/libzorpll-*.tar.gz
 /m4
 /INSTALL
 /tgz2build
