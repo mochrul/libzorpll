@@ -7,7 +7,7 @@ Subject: compile_problems3
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/zorp/io.h b/src/zorp/io.h
-index 076f19f..0f7353f 100644
+index c1c138f..d86bc11 100644
 --- a/src/zorp/io.h
 +++ b/src/zorp/io.h
 @@ -33,9 +33,9 @@ void z_fd_set_our_tos(gint fd, guint8 tos);

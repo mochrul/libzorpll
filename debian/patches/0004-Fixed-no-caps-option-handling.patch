@@ -1,0 +1,36 @@
+From: SZALAY Attila <sasa@debian.org>
+Date: Wed, 7 Dec 2016 22:04:30 +0100
+Subject: Fixed no-caps option handling
+
+Signed-off-by: SZALAY Attila <sasa@debian.org>
+---
+ src/process.cc | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/process.cc b/src/process.cc
+index 96db397..d9e3060 100644
+--- a/src/process.cc
++++ b/src/process.cc
+@@ -1425,6 +1425,13 @@ z_process_process_mode_arg(const gchar *option_name G_GNUC_UNUSED, const gchar *
+   return TRUE;
+ }
+ 
++static gboolean
++z_process_nocaps_arg(const gchar *option_name G_GNUC_UNUSED, const gchar *value G_GNUC_UNUSED, gpointer data G_GNUC_UNUSED, GError **error G_GNUC_UNUSED)
++{
++  process_opts.caps = NULL;
++  return TRUE;
++}
++
+ static GOptionEntry z_process_option_entries[] =
+ {
+   { "foreground",   'F', G_OPTION_FLAG_REVERSE, G_OPTION_ARG_NONE,     &process_opts.mode,              "Do not go into the background after initialization", NULL },
+@@ -1435,7 +1442,7 @@ static GOptionEntry z_process_option_entries[] =
+   { "gid",            0,  G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING,   &process_opts.group,             NULL, NULL },
+   { "chroot",       'R',                     0, G_OPTION_ARG_STRING,   &process_opts.chroot_dir,        "Chroot to this directory", "<dir>" },
+   { "caps",         'C',                     0, G_OPTION_ARG_STRING,   &process_opts.caps,              "Set default capability set", "<capspec>" },
+-  { "no-caps",      'N', G_OPTION_FLAG_REVERSE, G_OPTION_ARG_NONE,     &process_opts.caps,              "Disable managing Linux capabilities", NULL },
++  { "no-caps",      'N',                     0, G_OPTION_ARG_CALLBACK, reinterpret_cast<void *>(z_process_nocaps_arg), "Disable managing Linux capabilities", NULL },
+   { "pidfile",      'P',                     0, G_OPTION_ARG_STRING,   &process_opts.pidfile,           "Set path to pid file", "<pidfile>" },
+   { "enable-core",    0,                     0, G_OPTION_ARG_NONE,     &process_opts.core,              "Enable dumping core files", NULL },
+   { "fd-limit-min",       0,                  0, G_OPTION_ARG_INT,      &process_opts.fd_limit_min,      "The minimum required number of fds", NULL },
