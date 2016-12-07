@@ -1,3 +1,9 @@
+libzorpll (6.0.8.0-5) unstable; urgency=medium
+
+  * [1f0ea57] Added patch for no-caps option handling problem
+
+ -- SZALAY Attila <sasa@debian.org>  Wed, 07 Dec 2016 22:14:48 +0100
+
 libzorpll (6.0.8.0-4) unstable; urgency=medium
 
   * [ecb7a72] Changed libssl dependency
