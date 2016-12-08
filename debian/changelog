@@ -1,3 +1,10 @@
+libzorpll (6.0.8.0-6) unstable; urgency=medium
+
+  * [2d20217] Really fix the --no-caps option.
+    My previous patch was conceptually broken
+
+ -- SZALAY Attila <sasa@debian.org>  Thu, 08 Dec 2016 21:06:04 +0100
+
 libzorpll (6.0.8.0-5) unstable; urgency=medium
 
   * [1f0ea57] Added patch for no-caps option handling problem
