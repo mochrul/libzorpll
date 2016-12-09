@@ -1,3 +1,13 @@
+libzorpll (6.0.10.0-1) unstable; urgency=medium
+
+  * [8fe826b] Fixing differencies between upstream branches
+  * [494d0a9] Adopted debianization to the new version
+  * [2bb9e9c] Upgraded to compat version 10.
+    And also moved to automatic dbgsym
+    package generation
+
+ -- SZALAY Attila <sasa@debian.org>  Fri, 09 Dec 2016 23:16:25 +0100
+
 libzorpll (6.0.8.0-6) unstable; urgency=medium
 
   * [2d20217] Really fix the --no-caps option.
