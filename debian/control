@@ -5,7 +5,7 @@ Maintainer: SZALAY Attila <sasa@debian.org>
 Standards-Version: 3.9.8
 Build-Depends: libssl1.0-dev | libssl-dev (<< 1.1.0~),
                libglib2.0-dev,
-               debhelper (>= 9),
+               debhelper (>= 10),
                libcap-dev [linux-any],
                zlib1g-dev,
                libboost-test-dev,
@@ -57,17 +57,3 @@ Description: Zorp low-level functions - development files
  scriptable in the Python-based configuration language.
  .
  This package is a dependency package, which depends on the latest version.
-
-Package: libzorpll-6.0-10-dbg
-Section: debug
-Architecture: any
-Multi-Arch: same
-Priority: extra
-Depends: libzorpll-6.0-10 (= ${binary:Version}), ${misc:Depends}
-Description: Zorp low-level functions - debugging version
- Zorp is an application-layer firewall using a modular architecture of
- strict protocol-analyzing transparent proxies, giving fine-grained
- control over the mediated traffic. Configuration decisions are
- scriptable in the Python-based configuration language.
- .
- This package contains the debugging symbols for libzorpll-6.0-10.

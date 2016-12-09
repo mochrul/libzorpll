@@ -5,7 +5,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-export DH_OPTIONS += -O-Bdebian/build-tree --dbg-package=libzorpll-6.0-10-dbg
+export DH_OPTIONS += -O-Bdebian/build-tree
 
 CFLAGS		?= $(shell dpkg-buildflags --get CFLAGS)
 LDFLAGS		?= $(shell dpkg-buildflags --get LDFLAGS)
@@ -33,4 +33,4 @@ override_dh_auto_configure:
 
 # And for the rest, there is debhelper!
 %:
-	dh $@ --with autoreconf --parallel --list-missing
+	dh $@ --list-missing --automatic-dbgsym
