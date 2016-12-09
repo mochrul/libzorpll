@@ -16,58 +16,57 @@
 gchar testcert[512];
 gchar testkey[512];
 
-gint
+const std::string msg_from_client_to_server("msg_from_client_to_server");
+const std::string msg_from_server_to_client("msg_from_server_to_client");
+
+void
 test_server(gint fd)
 {
   ZStream *stream;
   ZSSLSession *ssl_session;
-  gsize bw, br;
-  gchar buf[512];
+  gsize bytes_written, bytes_read;
+  gchar text_sent_by_client[512];
 
   ssl_session = z_ssl_session_new("server/ssl", Z_SSL_MODE_SERVER, testkey, testcert, NULL, NULL, 9, Z_SSL_VERIFY_NONE);
-  g_return_val_if_fail(ssl_session, 1);
+  BOOST_CHECK(ssl_session);
 
   stream = z_stream_fd_new(fd, "server");
-  stream = z_stream_push(stream, 
-                         z_stream_ssl_new(NULL, ssl_session));
+  stream = z_stream_push(stream, z_stream_ssl_new(NULL, ssl_session));
 
   SSL_accept(ssl_session->ssl);
-  z_stream_write(stream, "helloka", 7, &bw, NULL);
-  z_stream_read(stream, buf, sizeof(buf), &br, NULL);
-  printf("%.*s", (int)br, buf);
-  if (memcmp(buf, "haliho", br) == 0)
-    return 0;
+  z_stream_write(stream, msg_from_server_to_client.c_str(), msg_from_server_to_client.length(), &bytes_written, NULL);
+  BOOST_CHECK_EQUAL(msg_from_server_to_client.length(), bytes_written);
 
-  return 1;
+  z_stream_read(stream, text_sent_by_client, sizeof(text_sent_by_client), &bytes_read, NULL);
+  BOOST_CHECK_EQUAL(std::string(text_sent_by_client, bytes_read), msg_from_client_to_server);
 }
 
-gint
+void
 test_client(gint fd)
 {
   ZStream *stream;
   ZSSLSession *ssl_session;
-  gchar buf[512];
-  gsize bw, br;
+  gchar text_sent_by_server[512];
+  gsize bytes_written, bytes_read;
 
   ssl_session = z_ssl_session_new("client/ssl", Z_SSL_MODE_CLIENT, NULL, NULL, NULL, NULL, 9, Z_SSL_VERIFY_NONE);
-  g_return_val_if_fail(ssl_session, 1);
+  BOOST_CHECK(ssl_session);
 
   stream = z_stream_fd_new(fd, "client");
   stream = z_stream_push(stream, z_stream_ssl_new(NULL, ssl_session));
+  BOOST_CHECK(stream);
   SSL_connect(ssl_session->ssl);
 
-  z_stream_write(stream, "haliho", 6, &bw, NULL);
-  z_stream_read(stream, buf, sizeof(buf), &br, NULL);
-  printf("%.*s", (int)br, buf);
-  if (memcmp(buf, "helloka", br) == 0)
-    return 0;
+  z_stream_write(stream, msg_from_client_to_server.c_str(), msg_from_client_to_server.length(), &bytes_written, NULL);
+  BOOST_CHECK_EQUAL(msg_from_client_to_server.length(), bytes_written);
 
-  return 1;
+  z_stream_read(stream, text_sent_by_server, sizeof(text_sent_by_server), &bytes_read, NULL);
+  BOOST_CHECK_EQUAL(std::string(text_sent_by_server, bytes_read), msg_from_server_to_client);
 }
 
 BOOST_AUTO_TEST_CASE(test_ssl)
 {
-  gint fds[2], rc, status;
+  gint fds[2], status;
 
   z_ssl_init();
   g_snprintf(testcert, sizeof(testcert), "%s/testx509.crt", SRCDIR);
@@ -78,16 +77,14 @@ BOOST_AUTO_TEST_CASE(test_ssl)
   if (fork() != 0)
     {
       close(fds[0]);
-      rc = test_client(fds[1]);
+      test_client(fds[1]);
 
       wait(&status);
-      if (status)
-        rc = 1;
-      BOOST_CHECK(rc == 0);
+      BOOST_CHECK(status == 0);
     }
   else
     {
       close(fds[1]);
-      _exit(test_server(fds[0]));
+      test_server(fds[0]);
     }
 }

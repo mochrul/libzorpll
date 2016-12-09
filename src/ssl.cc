@@ -395,7 +395,7 @@ z_ssl_verify_crl(int ok,
   z_return(ok);
 }
                                                   
-int
+static int
 z_ssl_verify_callback(int ok, X509_STORE_CTX *ctx)
 {
   ZSSLSession *verify_data;
@@ -617,28 +617,67 @@ z_ssl_set_trusted_ca_list(SSL_CTX *ctx, gchar *ca_path)
   z_return(TRUE);
 }
 
-
-/* FIXME: SSL context cache */
-#ifndef G_OS_WIN32
-
-static int
-z_ssl_password(char *buf G_GNUC_UNUSED, int size G_GNUC_UNUSED, int rwflag G_GNUC_UNUSED, void *userdata G_GNUC_UNUSED)
+bool
+z_ssl_ctx_setup_ecdh(SSL_CTX *ctx, const char *ecdh_curve_name)
 {
-  z_log(NULL, CORE_ERROR, 1, "Password protected key file detected;");
-  return -1;
+  int ecdh_nid = OBJ_sn2nid(ecdh_curve_name);
+  if (ecdh_nid == NID_undef)
+    {
+      z_log(NULL, CORE_ERROR, 6, "Unknown curve name; name='%s'", ecdh_curve_name);
+      return false;
+    }
+
+#if OPENSSL_VERSION_NUMBER > 0x10100000L
+  /* No need to setup as ECDH auto is the default */
+#elif OPENSSL_VERSION_NUMBER > 0x10002000L
+  if (SSL_CTX_set_ecdh_auto(ctx, 1) != 1)
+    {
+      z_log(NULL, CORE_ERROR, 6, "Unable to create curve; name='%s'", ecdh_curve_name);
+      return false;
+    }
+#elif OPENSSL_VERSION_NUMBER > 0x10001000L
+  EC_KEY *ecdh = EC_KEY_new_by_curve_name(ecdh_nid);
+  if (!ecdh)
+    {
+      z_log(NULL, CORE_ERROR, 6, "Unable to set curve");
+      return false;
+    }
+
+  if (SSL_CTX_set_tmp_ecdh(ctx, ecdh) != 1)
+    {
+      z_log(NULL, CORE_ERROR, 6, "Unable to set curve");
+      return false;
+    }
+  EC_KEY_free(ecdh);
+#else
+  return false;
+#endif
+
+  return true;
 }
 
+enum SSLContextType
+{
+  WEAK,
+  HARDENED
+};
+
 static SSL_CTX *
-z_ssl_create_ctx(const char *session_id, int mode)
+z_ssl_create_ctx(const char *session_id, int mode, SSLContextType ctx_type)
 {
   SSL_CTX *ctx;
   char buf[128];
 
   z_enter();
   if (mode == Z_SSL_MODE_CLIENT)
-    ctx = SSL_CTX_new(SSLv23_client_method());
+    {
+      ctx = SSL_CTX_new(SSLv23_client_method());
+    }
   else
-    ctx = SSL_CTX_new(SSLv23_server_method());
+    {
+      ctx = SSL_CTX_new(SSLv23_server_method());
+      SSL_CTX_set_options(ctx, SSL_OP_CIPHER_SERVER_PREFERENCE);
+    }
 
   if (!ctx)
     {
@@ -651,8 +690,35 @@ z_ssl_create_ctx(const char *session_id, int mode)
       z_log(session_id, CORE_ERROR, 3, "Error allocating new SSL_CTX; error='%s'", z_ssl_get_error_str(buf, sizeof(buf)));
       z_return(NULL);
     }
-  SSL_CTX_set_options(ctx, SSL_OP_ALL);  
+  SSL_CTX_set_options(ctx, SSL_OP_ALL);
+  switch (ctx_type)
+    {
+    case HARDENED:
+      SSL_CTX_set_options(ctx, SSL_OP_SINGLE_ECDH_USE | SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1);
+
+      if (!z_ssl_ctx_setup_ecdh(ctx))
+        {
+          SSL_CTX_free(ctx);
+          z_return(NULL);
+        }
+
+      SSL_CTX_set_cipher_list(ctx, "EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5");
+    break;
+
+    case WEAK:
+    break;
+    }
   z_return(ctx);
+}
+
+/* FIXME: SSL context cache */
+#ifndef G_OS_WIN32
+
+static int
+z_ssl_password(char *buf G_GNUC_UNUSED, int size G_GNUC_UNUSED, int rwflag G_GNUC_UNUSED, void *userdata G_GNUC_UNUSED)
+{
+  z_log(NULL, CORE_ERROR, 1, "Password protected key file detected;");
+  return -1;
 }
 
 static gboolean
@@ -897,7 +963,7 @@ z_ssl_session_new_inline(const char *session_id,
   X509_STORE *crl_store = NULL;
   
   z_enter();
-  ctx = z_ssl_create_ctx(session_id, mode);
+  ctx = z_ssl_create_ctx(session_id, mode, WEAK);
   if (!ctx)
     z_return(NULL);
 
@@ -927,7 +993,7 @@ z_ssl_session_new(const char *session_id,
   X509_STORE *crl_store = NULL;
   
   z_enter();
-  ctx = z_ssl_create_ctx(session_id, mode);
+  ctx = z_ssl_create_ctx(session_id, mode, HARDENED);
   if (!ctx)
     z_return(NULL);
 
@@ -956,26 +1022,12 @@ z_ssl_session_new(const char *session_id,
   SSL *session;
   int verify_mode = 0;
   char buf[128];
-  
-  z_enter();
-  if (mode == Z_SSL_MODE_CLIENT)
-    ctx = SSL_CTX_new(SSLv23_client_method());
-  else
-    ctx = SSL_CTX_new(SSLv23_server_method());
 
+  z_enter();
+  ctx = z_ssl_create_ctx(session_id, mode, HARDENED);
   if (!ctx)
-    {
-      /*LOG
-        This message indicates that an SSL_CTX couldn't be allocated, it
-        usually means that Zorp has not enough memory. You might want
-        to check your ulimit settings and/or the available physical/virtual
-        RAM in your firewall host.
-       */
-      z_log(session_id, CORE_ERROR, 3, "Error allocating new SSL_CTX; error='%s'", z_ssl_get_error_str(buf, sizeof(buf)));
-      z_return(NULL);
-    }
-  SSL_CTX_set_options(ctx, SSL_OP_ALL);  
-  
+    z_return(NULL);
+
   if (store)
     SSL_CTX_set_cert_store(ctx, store);
   
