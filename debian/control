@@ -35,6 +35,7 @@ Package: libzorpll-6.0-10-dev
 Section: libdevel
 Replaces: libzorpll-dev ( << 6.0.8.0-1)
 Breaks: libzorpll-dev ( << 6.0.8.0-1)
+Conflicts: libzorpll-6.0-8-dev
 Architecture: any
 Depends: libzorpll-6.0-10 (= ${binary:Version}), ${misc:Depends}, libglib2.0-dev, libcap-dev [linux-any], libssl1.0-dev | libssl-dev (<< 1.1.0~)
 Description: Zorp low-level functions - development files for version 6.0-10
