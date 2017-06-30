@@ -1,3 +1,11 @@
+libzorpll (6.0.10.0-3) unstable; urgency=medium
+
+  * [ee16f88] Fixed watchfile
+    The creator firm was renamed and related to it
+    a new GitHub account is created.
+
+ -- SZALAY Attila <sasa@debian.org>  Sat, 01 Jul 2017 01:18:41 +0200
+
 libzorpll (6.0.10.0-2) unstable; urgency=medium
 
   * [33858bf] Added Brazilian-Portuguese translation (Closes: #827494)
