@@ -1,10 +1,10 @@
-EXTRA_DIST = makefile.msc libzorpll.rc libzorpll.def
+EXTRA_DIST = libzorpll.rc libzorpll.def
 
 SUBDIRS = zorp
 
-lib_LTLIBRARIES = libzorpll.la
+lib_LTLIBRARIES = libzorpll-7.0.la
 
-libzorpll_la_SOURCES = \
+libzorpll_7_0_la_SOURCES = \
 	cap.cc \
 	connect.cc \
 	crypt.cc \
@@ -31,6 +31,7 @@ libzorpll_la_SOURCES = \
 	streamgzip.cc \
 	streamline.cc \
 	streamssl.cc \
+	string.cc \
 	thread.cc \
 	zobject.cc \
 	blob.cc \
@@ -38,20 +39,21 @@ libzorpll_la_SOURCES = \
 	streamtee.cc \
 	code_base64.cc \
 	code.cc \
-	code_cipher.cc \
 	code_gzip.cc \
 	headerset.cc \
 	zcp.cc \
 	zurlparse.cc
 	
 
-libzorpll_la_LDFLAGS = \
+libzorpll_7_0_la_LDFLAGS = \
+	$(REGULAR_LDFLAGS) \
 	-version-info $(LIBZORPLL_LT_CURRENT):0:$(LIBZORPLL_LT_AGE) \
-	-release $(LIBZORPLL_LT_RELEASE) \
 	-export-dynamic
 
-libzorpll_la_CPPFLAGS = -DCOMPILING_LIBZORPLL
+libzorpll_7_0_la_CPPFLAGS = -DCOMPILING_LIBZORPLL
+
+libzorpll_7_0_la_CXXFLAGS = $(REGULAR_CXXFLAGS)
 
 install-exec-local:
-	mkdir -p ${DESTDIR}/${ZORPLIB_TEMP_DIR}
-	mkdir -p ${DESTDIR}/${ZORPLIB_PIDFILE_DIR}
+	$(MKDIR_P) ${DESTDIR}/${ZORPLIB_TEMP_DIR}
+	$(MKDIR_P) ${DESTDIR}/${ZORPLIB_PIDFILE_DIR}
