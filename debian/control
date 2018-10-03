@@ -3,7 +3,7 @@ Section: libs
 Priority: optional
 Maintainer: SZALAY Attila <sasa@debian.org>
 Standards-Version: 3.9.8
-Build-Depends: libssl1.0-dev | libssl-dev (<< 1.1.0~),
+Build-Depends: libssl-dev,
                libglib2.0-dev,
                debhelper (>= 10),
                libcap-dev [linux-any],
@@ -12,12 +12,13 @@ Build-Depends: libssl1.0-dev | libssl-dev (<< 1.1.0~),
                binutils (>= 2.14.90.0.7),
                po-debconf,
                autoconf,
+               autoconf-archive,
                automake,
                libtool,
                dpkg-dev (>= 1.16.1~),
-               dh-autoreconf
+               libsystemd-dev
 
-Package: libzorpll-6.0-10
+Package: libzorpll-7.0-1
 Section: libs
 Architecture: any
 Multi-Arch: same
@@ -31,13 +32,13 @@ Description: Zorp low-level functions
  This package contains low-level library functions needed by Zorp and
  associated programs.
 
-Package: libzorpll-6.0-10-dev
+Package: libzorpll-7.0-1-dev
 Section: libdevel
 Replaces: libzorpll-dev ( << 6.0.8.0-1)
 Breaks: libzorpll-dev ( << 6.0.8.0-1)
 Conflicts: libzorpll-6.0-8-dev
 Architecture: any
-Depends: libzorpll-6.0-10 (= ${binary:Version}), ${misc:Depends}, libglib2.0-dev, libcap-dev [linux-any], libssl1.0-dev | libssl-dev (<< 1.1.0~)
+Depends: libzorpll-7.0-1 (= ${binary:Version}), ${misc:Depends}, libglib2.0-dev, libcap-dev [linux-any], libssl-dev
 Description: Zorp low-level functions - development files for version 6.0-10
  Zorp is an application-layer firewall using a modular architecture of
  strict protocol-analyzing transparent proxies, giving fine-grained
@@ -50,7 +51,7 @@ Description: Zorp low-level functions - development files for version 6.0-10
 Package: libzorpll-dev
 Section: libdevel
 Architecture: all
-Depends: libzorpll-6.0-10-dev (>= ${binary:Version}), ${misc:Depends}
+Depends: libzorpll-7.0-1-dev (>= ${binary:Version}), ${misc:Depends}
 Description: Zorp low-level functions - development files
  Zorp is an application-layer firewall using a modular architecture of
  strict protocol-analyzing transparent proxies, giving fine-grained

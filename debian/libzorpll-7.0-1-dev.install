@@ -1,0 +1,4 @@
+usr/lib/*/pkgconfig/zorpll-*.pc
+usr/lib/*/libzorpll*.a
+usr/lib/*/libzorpll*.so
+usr/include/zorp*/zorpll/*h
