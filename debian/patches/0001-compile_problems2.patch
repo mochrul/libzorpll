@@ -8,10 +8,10 @@ Subject: compile_problems2
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/memtrace.cc b/src/memtrace.cc
-index 93c8054..f5e4a25 100644
+index c2185dc..d8a4100 100644
 --- a/src/memtrace.cc
 +++ b/src/memtrace.cc
-@@ -684,7 +684,7 @@ z_malloc(size_t size, gpointer backt[])
+@@ -688,7 +688,7 @@ z_malloc(size_t size, gpointer backt[])
        if (temp_brk > MEMTRACE_TEMP_HEAP_SIZE)
          {
            temp_brk = 0;
