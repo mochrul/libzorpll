@@ -1,3 +1,14 @@
+libzorpll (7.0.1.0~alpha1-1) unstable; urgency=medium
+
+  * New upstream version (Closes: #859055)
+  * [b5d0815] Adapt gbp.conf to the new python config parser
+  * [52cc8f4] Adapt the packaging to the new upstream version
+  * [f90deef] Drop already merged patches from the patch series
+  * [109fc17] Update translations
+  * [c3bbce5] Remove binutils build dependency (Closes: #877597)
+
+ -- SZALAY Attila <sasa@debian.org>  Wed, 10 Oct 2018 22:21:22 +0200
+
 libzorpll (6.0.10.0-3) unstable; urgency=medium
 
   * [ee16f88] Fixed watchfile
