@@ -34,7 +34,7 @@ Description: Zorp low-level functions
 Package: libzorpll-7.0-1-dev
 Section: libdevel
 Replaces: libzorpll-dev ( << 6.0.8.0-1)
-Breaks: libzorpll-dev ( << 6.0.8.0-1)
+Breaks: libzorpll-dev ( << 6.0.8.0-1), libzorpll-6.0-10-dev, libssl1.0-dev
 Conflicts: libzorpll-6.0-8-dev
 Architecture: any
 Depends: libzorpll-7.0-1 (= ${binary:Version}), ${misc:Depends}, libglib2.0-dev, libcap-dev [linux-any], libssl-dev

@@ -1,3 +1,12 @@
+libzorpll (7.0.1.0~alpha1-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Apply patch from Andreas Beckmann to add "Breaks" on libzorpll-6.0-10-dev
+    and libssl1.0-dev for smoother upgrades from stretch. This resulted from
+    the switch from libssl1.0-dev to libssl-dev. (Closes: #928883)
+
+ -- Chris Lamb <lamby@debian.org>  Fri, 24 May 2019 14:06:05 +0100
+
 libzorpll (7.0.1.0~alpha1-1) unstable; urgency=medium
 
   * New upstream version (Closes: #859055)
