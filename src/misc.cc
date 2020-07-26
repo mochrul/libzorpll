@@ -14,13 +14,20 @@
 #include <zorpll/zorplib.h>
 #include <zorpll/misc.h>
 #include <zorpll/log.h>
+#include <zorpll/error.h>
 
 #include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include <ctype.h>
 #include <sys/types.h>
 
+#ifndef G_OS_WIN32
+#include <dirent.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstdint>
+#endif
 
 #define PARSE_STATE_START  0
 #define PARSE_STATE_DASH   1
@@ -48,7 +55,7 @@ z_charset_init(ZCharSet *self)
  *      nonexistent state and the parser returned to its starting state at the end)
  **/
 gboolean 
-z_charset_parse(ZCharSet *self, gchar *interval_str)
+z_charset_parse(ZCharSet *self, const gchar *interval_str)
 {
   guint i = 0;
   guchar j;
@@ -150,7 +157,7 @@ z_charset_parse(ZCharSet *self, gchar *interval_str)
  * @returns if the string contains valid characters only
  **/
 gboolean 
-z_charset_is_string_valid(ZCharSet *self, gchar *str, gint len)
+z_charset_is_string_valid(ZCharSet *self, const gchar *str, gint len)
 {
   gint i;
   
@@ -635,3 +642,92 @@ z_localtime_r(const time_t *timep, struct tm *result)
 #endif
 }
 
+// FreeBSD 8.0 or later (https://www.freebsd.org/cgi/man.cgi?query=closefrom)
+// NetBSD 3.0 or later (http://netbsd.gw.com/cgi-bin/man-cgi?closefrom++NetBSD-3.0)
+// OpenBSD 3.5 or later (https://man.openbsd.org/closefrom.2)
+// Solaris (https://docs.oracle.com/cd/E86824_01/html/E54766/closefrom-3c.html)
+#ifdef HAVE_CLOSEFROM
+int
+z_closefrom(const int lowfd)
+{
+  closefrom(lowfd);
+  z_log(nullptr, CORE_DEBUG, 6, "File descriptors successfully closed; lowfd='%d'", lowfd);
+
+  return 0;
+}
+
+// AIX 7.1 or later (https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.base/whatsnew.htm)
+// IRIX (http://polarhome.com/service/man/?qf=fcntl&tf=2&of=IRIX&sf=2)
+#elif HAVE_FCNTL_CLOSEM
+int
+z_closefrom(const int lowfd)
+{
+  int ret = 0;
+
+  if ((ret = fcntl(lowfd, F_CLOSEM, 0)) < 0)
+      z_log(nullptr, CORE_ERROR, 2, "Failed to call fcntl for F_CLOSEM; error='%s'", g_strerror(z_errno_get()));
+  else
+      z_log(nullptr, CORE_DEBUG, 6, "File descriptors successfully closed; lowfd='%d'", lowfd);
+
+  return ret;
+}
+
+// Since Linux do not have closefrom() or F_CLOSEM we use the /proc directly
+// https://www.kernel.org/doc/Documentation/filesystems/proc.txt
+#elif __linux__
+int
+z_closefrom(const int lowfd)
+{
+  int ret = 0;
+  std::int64_t maxfd = 0;
+  const char *fd_path = "/proc/self/fd";
+  DIR *dir = opendir(fd_path);
+  if (dir)
+    {
+      dirent *entry = nullptr;
+      while ((entry = readdir(dir)) != nullptr)
+        {
+          if (!(entry->d_type & DT_DIR))
+            {
+              char *end = nullptr;
+              const long fd = std::strtol(entry->d_name, &end, 10);
+              if (entry->d_name != end &&
+                  *end == '\0' &&
+                  fd >= 0 &&
+                  fd < INT_MAX &&
+                  fd >= lowfd)
+                {
+                  close(fd);
+                  maxfd = fd;
+                }
+            }
+        }
+      closedir(dir);
+      z_log(nullptr, CORE_DEBUG, 6, "File descriptors successfully closed; lowfd='%d', maxfd='%ld'", lowfd, maxfd);
+    }
+  else
+    {
+      ret = z_errno_get();
+      z_log(nullptr, CORE_ERROR, 2, "Failed to open dir; path='%s', error='%s'", fd_path, g_strerror(ret));
+    }
+
+  return ret;
+}
+
+// Generic POSIX fallback (http://pubs.opengroup.org/onlinepubs/009695399/functions/sysconf.html)
+#elif !defined(G_OS_WIN32)
+int
+z_closefrom(const int lowfd)
+{
+  std::int64_t maxfd = sysconf(_SC_OPEN_MAX);
+  if (maxfd < 0)
+    maxfd = INT_MAX;
+
+  for (std::int64_t i = lowfd; i < maxfd; ++i)
+    close(i);
+
+  z_log(nullptr, CORE_DEBUG, 6, "File descriptors successfully closed; lowfd='%d', maxfd='%ld'", lowfd, maxfd);
+
+  return 0;
+}
+#endif

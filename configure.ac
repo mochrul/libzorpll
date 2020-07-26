@@ -79,7 +79,7 @@ AC_PROG_CXXCPP
 
 AC_PROG_MKDIR_P
 
-AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
+AX_CXX_COMPILE_STDCXX_17([noext], [mandatory])
 
 AC_LANG(C++)
 
@@ -170,6 +170,18 @@ IP_RECVTOS
 if test "x$blb_cv_ip_recvtos" = "xyes"; then
 	AC_DEFINE(HAVE_IP_RECVTOS, 1, [have IP_RECVTOS])
 fi
+
+AC_CHECK_DECL([closefrom],
+  AC_DEFINE([HAVE_CLOSEFROM], [1], [Use closefrom() for z_closefrom]),
+  [],
+  [  #include <unistd.h> ]
+)
+
+AC_CHECK_DECL([F_CLOSEM],
+  AC_DEFINE([HAVE_FCNTL_CLOSEM], [1], [Use F_CLOSEM fcntl for z_closefrom]),
+  [],
+  [ #include <fcntl.h> ]
+)
 
 dnl ***************************************************************************
 dnl Checks for library functions.
@@ -285,7 +297,7 @@ LIBZORPLL_COMPAT_VERSION="`echo $VERSION | cut -d '.' -f 1-3`"
 dnl Library versioning, the resulting shared object is named:
 dnl 	libzorpll-<RELEASE>.so.<AGE>
 dnl 
-VERSION_NOSNAPSHOT="`echo $VERSION | cut -d '+' -d '~' -f 1`"
+VERSION_NOSNAPSHOT="`echo $VERSION | cut -d '+' -f 1 | cut -d '~' -f 1`"
 
 VERSION_MAJOR=`echo $VERSION_NOSNAPSHOT |  cut -d '.' -f 1`
 VERSION_MINOR=`echo $VERSION_NOSNAPSHOT |  cut -d '.' -f 2`
@@ -334,10 +346,10 @@ tos: $enable_tos
 EOF
 
 DIRECTORY_CXXFLAGS="-DZORPLIB_PIDFILE_DIR=\\\"${ZORPLIB_PIDFILE_DIR}\\\" -DZORPLIB_TEMP_DIR=\\\"${ZORPLIB_TEMP_DIR}\\\" -DZORPLIB_LIBEXECDIR=\\\"${ZORPLIB_LIBEXECDIR}\\\""
-WARNING_CXXFLAGS="-Wall -Wshadow -W -Werror-implicit-function-declaration -Wpointer-arith"
+WARNING_CXXFLAGS="-Wall -Wshadow -W -Werror-implicit-function-declaration -Wpointer-arith -Wwrite-strings"
 DEPS_CXXFLAGS="$GLIB_CFLAGS $GTHREAD_CFLAGS $GIO_CFLAGS $OPENSSL_CFLAGS"
 LOCAL_CXXFLAGS='-I$(top_srcdir)/src/zorp -I$(top_builddir)/src/zorp'
-REGULAR_CXXFLAGS="-std=c++11 $WARNING_CXXFLAGS $DIRECTORY_CXXFLAGS $DEPS_CXXFLAGS $LOCAL_CXXFLAGS"
+REGULAR_CXXFLAGS="$WARNING_CXXFLAGS $DIRECTORY_CXXFLAGS $DEPS_CXXFLAGS $LOCAL_CXXFLAGS"
 
 DEPS_LIBS="$GLIB_LIBS $GTHREAD_LIBS $GIO_LIBS $OPENSSL_LIBS $SYSTEMD_LIBS -DOPENSSL_NO_DEPRECATED -DOPENSSL_API_COMPAT=0x10100000L"
 REGULAR_LDFLAGS="$DEPS_LIBS"

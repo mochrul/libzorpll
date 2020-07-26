@@ -1,5 +1,5 @@
-Name:			libzorpll-7_0-1
-Version:		7.0.1.0
+Name:			libzorpll-7_0-4
+Version:		7.0.4.0
 Release:		1%{?dist}
 URL:			https://balasys.github.io/zorp/
 %if 0%{?fedora}
@@ -14,14 +14,14 @@ Summary:		Low level library functions for Zorp
 License:		GPL-2.0
 Group:			System/Libraries
 %if 0%{?fedora} || 0%{?rhel} || 0%{?centos}
-BuildRequires:		openssl-devel
+BuildRequires:		openssl-devel >= 1.1.0
 %else
-BuildRequires:		libopenssl-devel
+BuildRequires:		libopenssl-devel >= 1.1.0
 %endif
-BuildRequires:		glib2-devel
+BuildRequires:		glib2-devel >= 2.32
 BuildRequires:		libcap-devel
 BuildRequires:		zlib-devel
-BuildRequires:		binutils-devel
+BuildRequires:		binutils-devel >= 2.14.90.0.7
 BuildRequires:		automake
 BuildRequires:		autoconf
 BuildRequires:		autoconf-archive
@@ -76,14 +76,14 @@ Group:			Development/Libraries/C and C++
 Requires:		zlib-devel
 Requires:		glibc-devel
 Requires:		libcap-devel
-Requires:		glib2-devel
-Requires:		binutils-devel
+Requires:		glib2-devel >= 2.32.0
+Requires:		binutils-devel > 2.14.90.0.7
 Requires:		%{name} = %{version}
 
 %if 0%{?fedora} || 0%{?rhel} || 0%{?centos}
-Requires:		openssl-devel
+Requires:		openssl-devel >= 1.1.0
 %else
-Requires:		libopenssl-devel
+Requires:		libopenssl-devel >= 1.1.0
 %endif
 
 %description devel
@@ -108,6 +108,12 @@ based on libzorpll.
 %{_includedir}/zorp-7.0/zorpll/*.h
 
 %changelog
+* Wed Sep 11 2019 Balasys Development Team <devel@balasys.hu> - 7.0.4.0-1
+  - New upstream release 7.0.4.0
+* Tue May 7 2019 Balasys Development Team <devel@balasys.hu> - 7.0.3.0-1
+  - New upstream release 7.0.3.0
+* Wed Jan 30 2019 Balasys Development Team <devel@balasys.hu> - 7.0.2.0-1
+  - New upstream release 7.0.2.0
 * Wed Dec 5 2018 Balasys Development Team <devel@balasys.hu> - 7.0.1.0-1
   - New upstream release 7.0.1.0
 * Wed Nov 12 2018 Balasys Development Team <devel@balasys.hu> - 7.0.1.0-0.2
