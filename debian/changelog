@@ -1,3 +1,12 @@
+libzorpll (7.0.4.0-1) unstable; urgency=medium
+
+  * [89138c5] New upstream version 7.0.4.0
+  * [997ae16] Test new version
+  * [6ddf3d0] Fix compilation error
+  * [2391546] Align library package name with the soname
+
+ -- SZALAY Attila <sasa@debian.org>  Tue, 04 Aug 2020 12:16:35 +0200
+
 libzorpll (7.0.1.0~alpha1-1.1) unstable; urgency=medium
 
   * Non-maintainer upload.
