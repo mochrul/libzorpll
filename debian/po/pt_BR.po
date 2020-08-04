@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libzorpll 3.9.4.1-3\n"
 "Report-Msgid-Bugs-To: libzorpll@packages.debian.org\n"
-"POT-Creation-Date: 2018-10-09 21:04+0200\n"
+"POT-Creation-Date: 2020-08-04 11:55+0200\n"
 "PO-Revision-Date: 2016-05-22 17:58-0300\n"
 "Last-Translator: Adriano Rafael Gomes <adrianorg@arg.eti.br>\n"
 "Language-Team: Brazilian Portuguese <debian-l10n-portuguese@lists.debian."
@@ -19,13 +19,13 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../libzorpll-7.0-1.templates:2001
+#: ../libzorpll-7.0-4.templates:2001
 msgid "Email address for Zorp notifications:"
 msgstr "Endereço de e-mail para notificações do Zorp:"
 
 #. Type: string
 #. Description
-#: ../libzorpll-7.0-1.templates:2001
+#: ../libzorpll-7.0-4.templates:2001
 msgid ""
 "Some Zorp applications are able to send a notification email in case of an "
 "unexpected process termination. Leave this empty (or specify \"NONE\") if no "
