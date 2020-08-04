@@ -8,7 +8,7 @@ Subject: compile_problems2
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/memtrace.cc b/src/memtrace.cc
-index c2185dc..d8a4100 100644
+index f30f066..fcb5533 100644
 --- a/src/memtrace.cc
 +++ b/src/memtrace.cc
 @@ -688,7 +688,7 @@ z_malloc(size_t size, gpointer backt[])

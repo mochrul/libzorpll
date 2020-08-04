@@ -1,0 +1,20 @@
+From: SZALAY Attila <sasa@ubainba.hu>
+Date: Tue, 4 Aug 2020 10:25:01 +0200
+Subject: Fix compile error
+
+---
+ src/process.cc | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/process.cc b/src/process.cc
+index df9fda5..b24aa66 100644
+--- a/src/process.cc
++++ b/src/process.cc
+@@ -38,6 +38,7 @@
+ 
+ #include <chrono>
+ #include <exception>
++#include <stdexcept>
+ #include <string>
+ #include <thread>
+ 
